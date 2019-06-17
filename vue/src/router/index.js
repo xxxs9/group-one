@@ -42,8 +42,6 @@ export const asyncRouterMap = [
       },
     ]
   },
-
-
   {
     path: '/user',
     component: Layout,
@@ -63,24 +61,26 @@ export const asyncRouterMap = [
       },
     ]
   },
+
   {
-    path: '/user2',
+    path: '/comment',
     component: Layout,
-    redirect: '/user2/',
+    redirect: '/user/',
     name: '',
-    meta: {title: '用户权限', icon: 'table'},
+    meta: {title: '评论管理', icon: 'table'},
     children: [
       {
-        path: '', name: '用户列表', component: _import('user2/user2'), meta: {title: '用户列表', icon: 'user'}, menu: 'user'
+        path: '',
+        name: '评论列表',
+        component: _import('user/user'),
+        meta: {title: '评论列表', icon: 'user'},
+        menu: 'user'
       },
       {
-        path: 'role',
-        name: '权限管理',
-        component: _import('user/role2'),
-        meta: {title: '权限管理', icon: 'password'},
-        menu: 'role'
+
       },
     ]
   },
-  {path: '*', redirect: '/404', hidden: true}
+
+  {path: '*', redirect: '/404', hidden: true},
 ]
