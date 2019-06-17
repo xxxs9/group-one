@@ -8,6 +8,7 @@ import java.util.List;
  * @author: hxy
  * @description: 文章Dao层
  * @date: 2017/10/24 16:06
+ * @version 1
  */
 public interface ArticleDao {
 	/**
@@ -29,4 +30,5 @@ public interface ArticleDao {
 	 * 更新文章
 	 */
 	int updateArticle(JSONObject jsonObject);
+
 }
