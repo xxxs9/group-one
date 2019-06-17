@@ -7,8 +7,8 @@
           </el-button>
         </el-form-item>
       </el-form>
-    </div>
-    <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
+    </div>tabl
+    <el-e :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
       <el-table-column align="center" label="序号" width="80">
         <template slot-scope="scope">
