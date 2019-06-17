@@ -61,5 +61,37 @@ export const asyncRouterMap = [
       },
     ]
   },
+
+
+  {
+    path: '/externalUsers',
+    component: Layout,
+    redirect: '/externalUsers/',
+    name: '',
+    meta: {title: '外部用户管理', icon: 'table'},
+    children: [
+      {
+        path: '',
+        name: '用户列表',
+        component: '',
+        meta: {title: '用户列表', icon: 'user'},
+        menu: ''
+      },
+      {
+        path: '',
+        name: '权限管理',
+        component: '',
+        meta: {title: '权限管理', icon: 'password'},
+        menu: ''
+      }
+    ]
+  },
+
+
+
+
+
+
+
   {path: '*', redirect: '/404', hidden: true}
 ]
