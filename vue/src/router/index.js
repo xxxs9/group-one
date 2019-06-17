@@ -86,6 +86,52 @@ export const asyncRouterMap = [
       }
     ]
   },
+  {
+    path: '/post',
+    component: Layout,
+    redirect: '/post/',
+    name: '',
+    meta: {title: '帖子管理', icon: 'table'},
+    children: [
+      {
+        path: '', name: '帖子列表',
+        component: _import('post/post'),
+        meta: {title: '帖子列表', icon: 'post'},
+        menu: 'post'
+      },
+      {
+        path: '', name: '帖子列表',
+        component: _import('post/post'),
+        meta: {title: '帖子列表', icon: 'post'},
+        menu: 'post'
+      }
+    ]
+  },
+
+
+  {
+    path: '/externalUsers',
+    component: Layout,
+    redirect: '/externalUsers/',
+    name: '',
+    meta: {title: '外部用户管理', icon: 'table'},
+    children: [
+      {
+        path: '',
+        name: '用户列表',
+        component: '',
+        meta: {title: '用户列表', icon: 'user'},
+        menu: ''
+      },
+      {
+        path: '',
+        name: '权限管理',
+        component: '',
+        meta: {title: '权限管理', icon: 'password'},
+        menu: ''
+      }
+    ]
+  },
 
 
 
