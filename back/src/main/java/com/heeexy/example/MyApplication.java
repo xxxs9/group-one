@@ -20,6 +20,7 @@ public class MyApplication extends SpringBootServletInitializer {
 		SpringApplication application = new SpringApplication(MyApplication.class);
 		application.setBannerMode(Banner.Mode.OFF);
 		application.run(args);
+		System.out.println("");
 	}
 
 	@Override
