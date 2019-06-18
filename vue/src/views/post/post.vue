@@ -10,25 +10,61 @@
     </div>
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
-      <el-table-column align="center" label="发帖人昵称" width="100">
+      <el-table-column align="center" label="序号" width="100" prop="postId">
+      </el-table-column>
+      <el-table-column align="center" label="帖子类型" width="130">
         <template slot-scope="scope">
-          <span v-text="getIndex(scope.$index)"> </span>
+          <el-tag style="color:#fff;" v-text="scope.row.postType" size="medium" v-if="scope.row.postTypeId==1" color="#85D469"></el-tag>
+          <el-tag style="color:#fff;" v-text="scope.row.postType" size="medium" v-if="scope.row.postTypeId==2" color="#0ACCCE"></el-tag>
+          <el-tag style="color:#fff;" v-text="scope.row.postType" size="medium" v-if="scope.row.postTypeId==3" color="#FF90A3"></el-tag>
+          <el-tag style="color:#fff;" v-text="scope.row.postType" size="medium" v-if="scope.row.postTypeId==4" color="#A29EDB"></el-tag>
+          <el-tag style="color:#fff;" v-text="scope.row.postType" size="medium" v-if="scope.row.postTypeId==5" color="#0067C5"></el-tag>
+          <el-tag style="color:#fff;" v-text="scope.row.postType" size="medium" v-if="scope.row.postTypeId==6" color="#F78700"></el-tag>
+          <el-tag style="color:#fff;" v-text="scope.row.postType" size="medium" v-if="scope.row.postTypeId==7" color="#B4A294"></el-tag>
+          <el-tag style="color:#fff;" v-text="scope.row.postType" size="medium" v-if="scope.row.postTypeId==8" color="#798EA3"></el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="帖子内容" prop="nickname" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="用户名" prop="username" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="角色" width="100">
+
+      <el-table-column align="center" label="帖子内容" prop="postText" style="width: 100px;"></el-table-column>
+
+      <el-table-column align="center" label="发帖人昵称" prop="postOwnerName" width="100"></el-table-column>
+
+      <el-table-column align="center" label="发帖时间" prop="postTime" width="170"></el-table-column>
+
+      <el-table-column align="center" label="点赞数/增加量" prop="likeCount" width="120px">
         <template slot-scope="scope">
-          <el-tag type="success" v-text="scope.row.roleName" v-if="scope.row.roleId===1"></el-tag>
-          <el-tag type="primary" v-text="scope.row.roleName" v-else></el-tag>
+          <span style="font-size: 15px" v-text="scope.row.likeCount+'/'"></span>
+          <el-button type="primary" icon="edit" v-text="scope.row.likeOffset" size="mini" @click="showLikeOffset(scope.$index)"></el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="创建时间" prop="createTime" width="170"></el-table-column>
-      <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170"></el-table-column>
+
+      <el-table-column align="center" label="浏览数/增加量" prop="browseOffset" width="120px">
+        <template slot-scope="scope">
+          <span v-text="scope.row.browseCount+'/'"></span>
+          <el-button type="primary" icon="edit" v-text="scope.row.browseOffset" size="mini" @click="showBrowseOffset(scope.$index)"></el-button>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="标签" style="width: 90px;" width="290">
+        <template slot-scope="scope">
+          <div v-for="tags in list" style="text-align: left">
+            <el-tag v-for="tag in tags.postTagList" :key="index" v-text="tag"
+                    style="margin-right: 3px;"
+                    type="primary">
+            </el-tag>
+          </div>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="帖子详情" width="120" v-if="hasPerm('user:update')">
+        <template slot-scope="scope">
+          <el-button type="primary" icon="edit" @click="" size="medium">查看</el-button>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
-          <el-button type="danger" icon="delete" v-if="scope.row.userId!=userId "
+          <el-button type="primary" icon="edit" size="medium" @click="showUpdate(scope.$index)">修改</el-button>
+          <el-button type="danger" icon="delete" size="medium" v-if="scope.row.userId!=userId "
                      @click="removeUser(scope.$index)">删除
           </el-button>
         </template>
@@ -43,22 +79,32 @@
       :page-sizes="[10, 20, 50, 100]"
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="30%">
       <el-form class="small-space" :model="tempUser" label-position="left" label-width="80px"
                style='width: 300px; margin-left:50px;'>
         <el-form-item label="用户名" required v-if="dialogStatus=='create'">
           <el-input type="text" v-model="tempUser.username">
           </el-input>
         </el-form-item>
+        <el-form-item label="输入数量" required v-if="dialogStatus=='likeOffset'">
+          <el-input type="text" v-model="tempUser.likeOffset">
+          </el-input>
+        </el-form-item>
+
+        <el-form-item label="输入数量" required v-if="dialogStatus=='browseOffset'">
+          <el-input type="text" v-model="tempUser.browseOffset">
+          </el-input>
+        </el-form-item>
+
         <el-form-item label="密码" v-if="dialogStatus=='create'" required>
           <el-input type="password" v-model="tempUser.password">
           </el-input>
         </el-form-item>
-        <el-form-item label="新密码" v-else>
+        <el-form-item label="新密码" v-if="dialogStatus=='update'" v-else>
           <el-input type="password" v-model="tempUser.password" placeholder="不填则表示不修改">
           </el-input>
         </el-form-item>
-        <el-form-item label="角色" required>
+        <el-form-item label="角色" v-if="dialogStatus=='update'" required>
           <el-select v-model="tempUser.roleId" placeholder="请选择">
             <el-option
               v-for="item in roles"
@@ -68,7 +114,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="昵称" required>
+        <el-form-item label="昵称" v-if="dialogStatus=='update'" required>
           <el-input type="text" v-model="tempUser.nickname">
           </el-input>
         </el-form-item>
@@ -76,7 +122,7 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button v-if="dialogStatus=='create'" type="success" @click="createUser">创 建</el-button>
-        <el-button type="primary" v-else @click="updateUser">修 改</el-button>
+        <el-button type="primary" v-if="dialogStatus=='update'" v-else @click="updateUser">修 改</el-button>
       </div>
     </el-dialog>
   </div>
@@ -99,14 +145,18 @@
         dialogFormVisible: false,
         textMap: {
           update: '编辑',
-          create: '新建用户'
+          create: '新建用户',
+          likeOffset: '增加点赞数量',
+          browseOffset: '增加浏览数量'
         },
         tempUser: {
-          username: '',
-          password: '',
-          nickname: '',
-          roleId: '',
-          userId: ''
+          postId:'',
+          postType: '',
+          likeOffset: '',
+          browseOffset: '',
+          likeCount: '',
+          browseCount: '',
+          postTypeId: ''
         }
       }
     },
@@ -134,12 +184,13 @@
         //查询列表
         this.listLoading = true;
         this.api({
-          url: "/user/list",
+          url: "/post/list",
           method: "get",
           params: this.listQuery
         }).then(data => {
           this.listLoading = false;
           this.list = data.list;
+          console.log(this.list);
           this.totalCount = data.totalCount;
         })
       },
@@ -158,10 +209,6 @@
         this.listQuery.pageNum = 1
         this.getList()
       },
-      getIndex($index) {
-        //表格序号
-        return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
-      },
       showCreate() {
         //显示新增对话框
         this.tempUser.username = "";
@@ -169,8 +216,20 @@
         this.tempUser.nickname = "";
         this.tempUser.roleId = "";
         this.tempUser.userId = "";
-        this.dialogStatus = "create"
+        this.dialogStatus = "create";
         this.dialogFormVisible = true
+      },
+      showLikeOffset($index){
+        let post = this.list[$index];
+        this.tempUser.likeOffset = post.likeOffset;
+        this.dialogStatus = "likeOffset";
+        this.dialogFormVisible = true;
+      },
+      showBrowseOffset($index){
+        let post = this.list[$index];
+        this.tempUser.browseOffset = post.browseOffset;
+        this.dialogStatus = "browseOffset";
+        this.dialogFormVisible = true;
       },
       showUpdate($index) {
         let user = this.list[$index];

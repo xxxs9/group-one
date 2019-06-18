@@ -31,7 +31,8 @@
               <span style="width: 100px;display: inline-block;text-align: right ">{{menu.menuName}}</span>
               <el-tag v-for="perm in menu.permissions" :key="perm.permissionName" v-text="perm.permissionName"
                       style="margin-right: 3px;"
-                      type="primary"></el-tag>
+                      type="primary">
+              </el-tag>
             </div>
           </div>
         </template>
