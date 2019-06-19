@@ -3,6 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.heeexy.example.dao.PostDao">
 
+    <!--列表返回Map-->
     <resultMap id="postMap" type="com.heeexy.example.util.model.One2Many">
         <id column="postId" property="postId"/>
         <result column="postType" property="postType" />
@@ -20,13 +21,39 @@
         </collection>
     </resultMap>
 
+    <!--修改点赞偏移量-->
+    <update id="updateLikeOffset">
+        UPDATE post_table
+        SET
+          like_offset = #{likeOffset}
+        WHERE post_id = #{postId}
+    </update>
+
+    <!--修改浏览偏移量-->
+    <update id="updateBrowseOffset">
+        UPDATE post_table
+        SET
+          browse_offset = #{browseOffset}
+        WHERE post_id = #{postId}
+    </update>
+
+    <!--删除帖子-->
+    <update id="updatePostState">
+        UPDATE post_table
+        SET
+         post_state = #{postState}
+        WHERE post_id = #{postId}
+    </update>
+
+    <!--统计数据总数-->
     <select id="countUser" resultType="java.lang.Integer">
         SELECT count(0)
         FROM post_table p
         WHERE p.post_state = '0'
     </select>
 
-    <select id="listPost" resultMap="postMap">
+    <!--帖子列表-->
+    <select id="listPost" resultMap="postMap" >
         SELECT
           p.*,
           (SELECT count(0) FROM `like` WHERE `like`.post_id = p.postId)                          likeCount,
@@ -41,16 +68,31 @@
               post_owner_id                         postOwnerId,
               post_text                             postText,
               DATE_FORMAT(post_time, '%Y.%m.%d %T') postTime,
-              like_offset                           likeOffset,
+              like_offset                          likeOffset,
               browse_offset                         browseOffset,
               post_state                            postState
             FROM post_table
-            WHERE post_state = '0'
+            <where>
+                <if test="queryText != null and queryText != '' ">
+                    post_text LIKE concat('%',#{queryText},'%')
+                </if>
+            </where>
             ORDER BY post_id
             LIMIT #{offSet}, #{pageRow}
           ) p
           LEFT JOIN post_tag pt2 ON pt2.post_id = p.postId
           ORDER BY p.postId
+    </select>
+
+    <!--帖子详情Map-->
+    <resultMap id="postDetailMap" type="com.heeexy.example.util.model.One2Many">
+        <id column="postId" property="postId"/>
+        <result column=""></result>
+    </resultMap>
+
+    <!--根据帖子ID返回帖子详情-->
+    <select id="getPostById" resultType="com.alibaba.fastjson.JSONObject">
+
     </select>
 
 </mapper>

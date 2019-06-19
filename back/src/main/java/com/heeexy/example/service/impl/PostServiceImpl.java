@@ -26,6 +26,22 @@ public class PostServiceImpl implements PostService {
         CommonUtil.fillPageParam(jsonObject);
         int count = postDao.countUser(jsonObject);
         List<JSONObject> list = postDao.listPost(jsonObject);
+        for (JSONObject object : list) {
+            object.put("likeCount",Integer.parseInt(object.getString("likeOffset")) + Integer.parseInt(object.getString("likeCount")));
+            object.put("browseCount",Integer.parseInt(object.getString("browseOffset")) + Integer.parseInt(object.getString("browseCount")));
+        }
         return CommonUtil.successPage(jsonObject, list, count);
+    }
+
+    @Override
+    public JSONObject updateLikeOffset(JSONObject jsonObject) {
+        postDao.updateLikeOffset(jsonObject);
+        return CommonUtil.successJson();
+    }
+
+    @Override
+    public JSONObject updateBrowseOffset(JSONObject jsonObject) {
+        postDao.updateBrowseOffset(jsonObject);
+        return CommonUtil.successJson();
     }
 }

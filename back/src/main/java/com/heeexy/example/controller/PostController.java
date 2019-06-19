@@ -6,9 +6,7 @@ import com.heeexy.example.service.impl.PostServiceImpl;
 import com.heeexy.example.util.CommonUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,5 +28,24 @@ public class PostController {
     @GetMapping("/list")
     public JSONObject listUser(HttpServletRequest request) {
         return postService.listPost(CommonUtil.request2Json(request));
+    }
+
+    /**
+     * 修改点赞数量
+     * @param
+     * @return
+     */
+    @PostMapping("/updateLikeOffset")
+    public JSONObject updateLikeOffset(@RequestBody JSONObject requestJson) {
+        System.out.println(requestJson);
+        CommonUtil.hasAllRequired(requestJson, "likeOffset,postId");
+        return postService.updateLikeOffset(requestJson);
+    }
+
+    @PostMapping("/updateBrowseOffset")
+    public JSONObject updateBrowseOffset(@RequestBody JSONObject requestJson) {
+        System.out.println(requestJson);
+        CommonUtil.hasAllRequired(requestJson, "browseOffset,postId");
+        return postService.updateBrowseOffset(requestJson);
     }
 }

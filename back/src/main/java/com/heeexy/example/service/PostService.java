@@ -11,9 +11,17 @@ import com.alibaba.fastjson.JSONObject;
 public interface PostService {
     /**
      * @description: 帖子列表
-     * @create time: 2019/6/18 10:44
      * @param jsonObject 页码
      * @return 返回帖子列表
      */
     JSONObject listPost(JSONObject jsonObject);
+
+    /**
+     * 
+     * @param
+     * @return
+     */
+    JSONObject updateLikeOffset(JSONObject jsonObject);
+
+    JSONObject updateBrowseOffset(JSONObject jsonObject);
 }
