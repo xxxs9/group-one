@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.AdvertisementDao">
+
+    <resultMap id="advertisementMap" type="com.heeexy.example.util.model.One2Many">
+        <id column="advertisement_id" property="advertisementId" />
+        <result column="advertisement_name" property="advertisementName" />
+        <result column="src_url" property="srcUrl" />
+        <result column="advertisement_time" property="advertisementTime" />
+    </resultMap>
+
+    <select id="listAllAdvertisement" resultMap="advertisementMap">
+        SELECT a.advertisement_id,a.src_url,a.advertisement_time,a.advertisement_name
+        FROM advertisement a
+        <where>
+            <if test="advertisementId!=0">
+                advertisement_id = #{advertisementId}
+            </if>
+            <if test="advertisementName!=null and advertisementName!=''">
+                advertisement_name LIKE "%"#{advertisementName}"%"
+            </if>
+        </where>
+        LIMIT #{offSet}, #{pageRow}
+    </select>
+
+    <select id="countAdvertisement" parameterType="com.alibaba.fastjson.JSONObject">
+        SELECT COUNT (advertisement_id) FROM advertisement
+        <where>
+            <if test="advertisementName!=null and advertisementName!=''">
+                advertisement_name LIKE "%"#{advertisementName}"%"
+            </if>
+        </where>
+    </select>
+    
+    <insert id="addAdvertisement" useGeneratedKeys="true" keyProperty="advertisementId">
+        INSERT INTO advertisement(advertisement_id,src_url,advertisement_time,advertisement_name)
+        VALUES (#{srcUrl},#{advertisementTime},#{advertisementName})
+    </insert>
+    
+    <delete id="deleteAdvertisement" parameterType="java.lang.Integer">
+        DELETE FROM advertisement WHERE advertisement_id = #{advertisementId}
+    </delete>
+
+    <update id="updateAdvertisement">
+        UPDATE advertisement SET src_url = #{srcUrl},advertisement_time = #{advertisementTime}
+        advertisement_name = #{advertisementName} WHERE advertisement_id = #{advertisementId}
+    </update>
+</mapper>

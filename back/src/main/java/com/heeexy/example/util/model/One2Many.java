@@ -25,4 +25,6 @@ public class One2Many extends JSONObject {
 	private List<JSONObject> menus;
 	private List<JSONObject> users;
 	private List<JSONObject> permissions;
+
+	private List<JSONObject> comments;
 }
