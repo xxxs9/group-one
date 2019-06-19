@@ -17,11 +17,23 @@ public interface PostService {
     JSONObject listPost(JSONObject jsonObject);
 
     /**
-     * 
-     * @param
+     * 增加点赞数量
+     * @param jsonObject 帖子ID，点赞数量
      * @return
      */
     JSONObject updateLikeOffset(JSONObject jsonObject);
 
+    /**
+     * 增加浏览数量
+     * @param jsonObject 帖子ID，浏览量
+     * @return
+     */
     JSONObject updateBrowseOffset(JSONObject jsonObject);
+
+    /**
+     * 改变帖子状态
+     * @param jsonObject 帖子ID，状态 ：0为显示 1为隐藏
+     * @return
+     */
+    JSONObject updatePostState(JSONObject jsonObject);
 }

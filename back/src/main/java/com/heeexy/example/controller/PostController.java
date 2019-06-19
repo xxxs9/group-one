@@ -37,15 +37,19 @@ public class PostController {
      */
     @PostMapping("/updateLikeOffset")
     public JSONObject updateLikeOffset(@RequestBody JSONObject requestJson) {
-        System.out.println(requestJson);
         CommonUtil.hasAllRequired(requestJson, "likeOffset,postId");
         return postService.updateLikeOffset(requestJson);
     }
 
     @PostMapping("/updateBrowseOffset")
     public JSONObject updateBrowseOffset(@RequestBody JSONObject requestJson) {
-        System.out.println(requestJson);
         CommonUtil.hasAllRequired(requestJson, "browseOffset,postId");
         return postService.updateBrowseOffset(requestJson);
+    }
+
+    @PostMapping("/updatePostState")
+    public JSONObject updatePostState(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "postState,postId");
+        return postService.updatePostState(requestJson);
     }
 }

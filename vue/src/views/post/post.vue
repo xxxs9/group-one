@@ -1,28 +1,34 @@
 <style>
-  .cell{max-height: 50px !important;overflow: auto !important;}
+  .cell{height: 70px !important;overflow: auto !important; line-height:70px !important;}
+  .el-table__header th{height: 50px !important;overflow: auto !important;}
 </style>
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-form>
-        <el-form-item>
           <el-form class="small-space" inline="true" :model="tempPost">
             <el-form-item>
-              <el-input type="text" :type="queryInput" v-model="tempPost.queryText" placeholder="输入帖子内容搜索"/>
+              <el-date-picker v-model="tempPost.dataValue" type="daterange" align="right" unlink-panels validate-event @change="getList"
+                              start-placeholder="开始日期"
+                              range-separator="至"
+                              end-placeholder="结束日期"
+                              value-format="yyyy-MM-dd HH:mm:ss"
+                              :picker-options="pickerOptions"
+                              :default-time="['00:00:00', '23:59:59']">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item>
+              <el-input type="text" v-model="tempPost.queryText" placeholder="输入帖子内容搜索"/>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" class="el-icon-search" @click="getList"></el-button>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" class="el-icon-close" @click="refashList"></el-button>
+               <el-button type="primary" class="el-icon-close" @click="refashList"></el-button>
             </el-form-item>
           </el-form>
-        </el-form-item>
-      </el-form>
     </div>
-    <el-table :data="list" stripe="true" default-sor v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
-              highlight-current-row>
-      <el-table-column align="center" label="序号" sortable="true" width="100" prop="postId">
+    <el-table :data="list" stripe="true" default-sor v-loading.body="listLoading" element-loading-text="拼命加载中" border fit highlight-current-row>
+      <el-table-column align="center" label="序号" sortable width="100" prop="postId">
       </el-table-column>
       <el-table-column align="center" label="帖子类型" width="130">
         <template slot-scope="scope">
@@ -37,20 +43,28 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="帖子内容" prop="postText" style="width: 100px;"></el-table-column>
+      <el-table-column align="center" label="帖子内容" style="line-height:10px">
+        <template slot-scope="scope">
+          <div v-text="scope.row.postText" style="line-height:25px">
+          </div>
+        </template>
+      </el-table-column>
 
       <el-table-column align="center" label="发帖人昵称" prop="postOwnerName" width="100"></el-table-column>
 
-      <el-table-column align="center" label="发帖时间" sortable="true" prop="postTime" width="170"></el-table-column>
+      <el-table-column align="center" label="发帖时间" sortable prop="postTime" width="170"
+                       :filters="[{text: '一天内', value: '2016-05-01'}, {text: '一周内', value: '2016-05-02'}, {text: '一个月内', value: '2016-05-03'}, {text: '半年内', value: '2016-05-04'}]"
+                       :filter-method="filterHandler"
+      ></el-table-column>
 
-      <el-table-column align="center" label="点赞数/增加量" prop="likeCount" width="120px">
+      <el-table-column align="center" label="点赞数/增加量" sortable prop="likeCount" width="140px">
         <template slot-scope="scope">
           <span style="font-size: 15px" v-text="scope.row.likeCount+'/'"></span>
           <el-button type="primary" icon="edit" v-text="scope.row.likeOffset" size="mini" @click="showLikeOffset(scope.$index)"></el-button>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="浏览数/增加量" prop="browseOffset" width="120px">
+      <el-table-column align="center" label="浏览数/增加量" sortable prop="browseOffset" width="140px">
         <template slot-scope="scope">
           <span v-text="scope.row.browseCount+'/'"></span>
           <el-button type="primary" icon="edit" v-text="scope.row.browseOffset" size="mini" @click="showBrowseOffset(scope.$index)"></el-button>
@@ -60,7 +74,7 @@
       <el-table-column align="center" label="标签" style="width: 90px;" width="290">
         <template slot-scope="scope">
           <div v-for="posts in list" style="text-align: center">
-            <el-tag v-for="tag in posts.postTagList" :key="index" v-if="scope.$index+1==posts.postId" v-text="tag" style="margin-right: 3px;" type="primary" />
+            <el-tag v-for="tag in posts.postTagList" :key="index" v-if="scope.row.postId==posts.postId" v-text="tag" style="margin-right: 3px;" type="primary" />
           </div>
         </template>
       </el-table-column>
@@ -72,10 +86,9 @@
       </el-table-column>
       <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" size="medium" @click="showUpdate(scope.$index)">修改</el-button>
-          <el-button type="danger" icon="delete" size="medium" v-if="scope.row.userId!=userId "
-                     @click="removeUser(scope.$index)">删除
-          </el-button>
+          <el-button type="primary" icon="el-icon-edit" size="medium" @click="showUpdate(scope.$index)">修改</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="medium" v-if="scope.row.postState==0" @click="removePost(scope.$index)">删除</el-button>
+          <el-button type="success" icon="el-icon-refresh" size="medium" v-if="scope.row.postState==1" @click="removePost(scope.$index)">恢复</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -150,11 +163,14 @@
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
         listQuery: {
+          beforeDate:'',
+          afterDate:'',
           queryText: '',
           pageNum: 1,//页码
           pageRow: 10,//每页条数
         },
         roles: [],//角色列表
+
         dialogStatus: 'create',
         dialogFormVisible: false,
         textMap: {
@@ -166,13 +182,43 @@
         tempPost: {
           postId:'',
           postType: '',
+          postText: '',
           likeOffset: '',
           browseOffset: '',
           likeCount: '',
           browseCount: '',
           postTypeId: '',
           queryText: '',
+          dataValue: '', //日期选择初始化
+          postState:'',
           tagList: [],
+        },
+        pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
         }
       }
     },
@@ -192,6 +238,8 @@
       getList() {
         //查询列表
         this.listQuery.queryText = this.tempPost.queryText;
+        this.listQuery.beforeDate = this.tempPost.dataValue[0];
+        this.listQuery.afterDate = this.tempPost.dataValue[1];
         this.listLoading = true;
         this.api({
           url: "/post/list",
@@ -200,15 +248,12 @@
         }).then(data => {
           this.listLoading = false;
           this.list = data.list;
-          for (var i = 0; i < this.list.length ;i++){
-              this.tagList = this.list[i].postTagList;
-              console.log(this.list[i].postId+this.list[i].postTagList)
-          }
           this.totalCount = data.totalCount;
         })
       },
       refashList(){
-        this.queryInput = '';
+        this.tempPost.queryText = '';
+        this.tempPost.dataValue = '';
         this.getList();
       },
       handleSizeChange(val) {
@@ -333,23 +378,39 @@
           })
         })
       },
-      removeUser($index) {
+      removePost($index) {
         let _vue = this;
-        this.$confirm('确定删除此用户?', '提示', {
+        let post = _vue.list[$index];
+        let msg ;
+        if(post.postState == 0){
+          msg = '确定删除这个帖子?';
+        }else if(post.postState == 1){
+          msg = '确定恢复这个帖子?';
+        }
+        this.$confirm(msg, '提示', {
           confirmButtonText: '确定',
           showCancelButton: false,
           type: 'warning'
         }).then(() => {
-          let user = _vue.list[$index];
-          user.deleteStatus = '2';
+          if(post.postState == 0){
+            post.postState = 1;
+          }else if(post.postState == 1){
+            post.postState = 0;
+          }
           _vue.api({
-            url: "/user/updateUser",
+            url: "/post/updatePostState",
             method: "post",
-            data: user
+            data: post
           }).then(() => {
             _vue.getList()
           }).catch(() => {
-            _vue.$message.error("删除失败")
+            let defmsg;
+            if(post.postState == 0){
+              defmsg = '删除失败';
+            }else if(post.postState == 1){
+              defmsg = '恢复失败';
+            }
+            _vue.$message.error(defmsg)
           })
         })
       },

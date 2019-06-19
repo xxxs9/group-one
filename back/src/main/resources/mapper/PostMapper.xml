@@ -76,12 +76,15 @@
                 <if test="queryText != null and queryText != '' ">
                     post_text LIKE concat('%',#{queryText},'%')
                 </if>
+                <if test="beforeDate != null and beforeDate != '' and afterDate !=null and afterDate !=''">
+                   and DATE(post_time) between #{beforeDate} and #{afterDate}
+                </if>
             </where>
             ORDER BY post_id
             LIMIT #{offSet}, #{pageRow}
           ) p
           LEFT JOIN post_tag pt2 ON pt2.post_id = p.postId
-          ORDER BY p.postId
+          ORDER BY p.postState
     </select>
 
     <!--帖子详情Map-->

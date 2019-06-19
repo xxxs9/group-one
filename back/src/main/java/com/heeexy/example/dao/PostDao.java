@@ -51,7 +51,7 @@ public interface PostDao {
     /**
      * 修改帖子状态
      * @create time: 2019/6/19 14:05
-     * @param jsonObject 帖子ID
+     * @param jsonObject 帖子ID 状态0，1
      * @return
      */
     int updatePostState(JSONObject jsonObject);

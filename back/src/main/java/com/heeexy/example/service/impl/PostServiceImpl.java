@@ -44,4 +44,10 @@ public class PostServiceImpl implements PostService {
         postDao.updateBrowseOffset(jsonObject);
         return CommonUtil.successJson();
     }
+
+    @Override
+    public JSONObject updatePostState(JSONObject jsonObject) {
+        postDao.updatePostState(jsonObject);
+        return CommonUtil.successJson();
+    }
 }
