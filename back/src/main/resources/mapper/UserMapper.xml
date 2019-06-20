@@ -100,7 +100,7 @@
             p.id              permissionId,
             p.menu_code       menuCode,
             p.menu_name       menuName,
-            p.permission_name permissionName
+                p.permission_name permissionName
         FROM sys_role r
             LEFT JOIN sys_user u ON r.id = u.role_id AND u.delete_status = '1'
             LEFT JOIN sys_role_permission rp ON r.id = rp.role_id AND rp.delete_status = '1'
