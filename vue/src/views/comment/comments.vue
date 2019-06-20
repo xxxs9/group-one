@@ -8,6 +8,20 @@
               <el-input type="text" v-model="tempComment.commentText" placeholder="输入评论内容搜索"/>
             </el-form-item>
             <el-form-item>
+              <el-input type="text" v-model="tempComment.commentText" placeholder="输入评论用户搜索"/>
+            </el-form-item>
+            <el-date-picker
+              v-model="tempComment.commentTime"
+              type="daterange"
+              align="right"
+              unlink-panels validate-event
+              @change="getList"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              :default-time="['00:00:00', '23:59:59']">
+            </el-date-picker>
+            <el-form-item>
               <el-button type="primary" class="el-icon-search" @click="getList">搜索</el-button>
             </el-form-item>
           </el-form>
@@ -113,6 +127,33 @@
           commentText: '',
           commentTime: '',
           commentState: ''
+        },
+        pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
         }
       }
     },
@@ -127,6 +168,7 @@
         'commentId'
       ])
     },
+
     methods: {
       getList() {
         //查询列表

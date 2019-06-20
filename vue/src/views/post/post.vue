@@ -1,6 +1,5 @@
 <style>
   .cell{height: 70px !important;overflow: auto !important; line-height:70px !important;}
-  .el-table__header th{height: 50px !important;overflow: auto !important;}
 </style>
 <template>
   <div class="app-container">
@@ -9,7 +8,7 @@
             <el-form-item>
               <el-date-picker v-model="tempPost.dataValue" type="daterange" align="right" unlink-panels validate-event @change="getList"
                               start-placeholder="开始日期"
-                              range-separator="至"
+                              range-separator="-"
                               end-placeholder="结束日期"
                               value-format="yyyy-MM-dd HH:mm:ss"
                               :picker-options="pickerOptions"
@@ -28,7 +27,7 @@
           </el-form>
     </div>
     <el-table :data="list" stripe="true" default-sor v-loading.body="listLoading" element-loading-text="拼命加载中" border fit highlight-current-row>
-      <el-table-column align="center" label="序号" sortable width="100" prop="postId">
+      <el-table-column align="center" label="序号" sortable width="80" prop="postId">
       </el-table-column>
       <el-table-column align="center" label="帖子类型" width="130">
         <template slot-scope="scope">
@@ -43,7 +42,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="帖子内容" style="line-height:10px">
+      <el-table-column align="center" label="帖子内容" width="250" style="line-height:10px">
         <template slot-scope="scope">
           <div v-text="scope.row.postText" style="line-height:25px">
           </div>
@@ -71,7 +70,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="标签" style="width: 90px;" width="290">
+      <el-table-column align="center" label="标签" style="width: 90px;" width="250">
         <template slot-scope="scope">
           <div v-for="posts in list" style="text-align: center">
             <el-tag v-for="tag in posts.postTagList" :key="index" v-if="scope.row.postId==posts.postId" v-text="tag" style="margin-right: 3px;" type="primary" />
@@ -84,7 +83,7 @@
           <el-button type="primary" icon="edit" @click="" size="medium" class="el-icon-document">查看</el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
+      <el-table-column align="center" fixed="right" label="管理" width="220" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-edit" size="medium" @click="showUpdate(scope.$index)">修改</el-button>
           <el-button type="danger" icon="el-icon-delete" size="medium" v-if="scope.row.postState==0" @click="removePost(scope.$index)">删除</el-button>
