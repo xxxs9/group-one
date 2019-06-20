@@ -42,7 +42,7 @@ public class UserController {
 	public JSONObject updateUser(@RequestBody JSONObject requestJson) {
 		CommonUtil.hasAllRequired(requestJson, " nickname,   roleId, deleteStatus, userId");
 		return userService.updateUser(requestJson);
-	}
+}
 
 	@RequiresPermissions(value = {"user:add", "user:update"}, logical = Logical.OR)
 	@GetMapping("/getAllRoles")

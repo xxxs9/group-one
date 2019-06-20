@@ -56,7 +56,7 @@
     <select id="listPost" resultMap="postMap" >
         SELECT
           p.*,
-          (SELECT count(0) FROM `like` WHERE `like`.post_id = p.postId)                          likeCount,
+          (SELECT count(0) FROM click_goods WHERE click_goods.post_id = p.postId)                          likeCount,
           (SELECT count(0) FROM browse_records br WHERE br.post_id = p.postId)                   browseCount,
           (SELECT username FROM `user` u WHERE u.uuid = p.postOwnerId)                           postOwnerName,
           (SELECT tag_name FROM tag t WHERE t.tag_no = pt2.tag_id)                               postTagName,
@@ -77,7 +77,13 @@
                     post_text LIKE concat('%',#{queryText},'%')
                 </if>
                 <if test="beforeDate != null and beforeDate != '' and afterDate !=null and afterDate !=''">
-                   and DATE(post_time) between #{beforeDate} and #{afterDate}
+                    and DATE(post_time) between #{beforeDate} and #{afterDate}
+                </if>
+                <if test="postOwnerId != null and postOwnerId.size()>0 ">
+                    and
+                    <foreach collection="postOwnerId" item="id" open="post_owner_id in(" close=")" separator=",">
+                        #{id}
+                    </foreach>
                 </if>
             </where>
             ORDER BY post_id
