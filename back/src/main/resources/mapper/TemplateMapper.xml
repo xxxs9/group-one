@@ -7,7 +7,7 @@
         INSERT INTO Message_Template
             (template_name,template_content)
         VALUES
-            (#{template_name},#{template_content})
+            (#{tname},#{content})
     </insert>
 
     <select id="countTemplate" resultType="Integer">
@@ -22,7 +22,7 @@
             w.template_content                                content
 
         FROM Message_Template w
-
+        where w.status = '1'
         ORDER BY w.template_id DESC
         LIMIT #{offSet}, #{pageRow}
     </select>
@@ -30,8 +30,14 @@
     <update id="updateTemplate" parameterType="com.alibaba.fastjson.JSONObject">
         UPDATE Message_Template
         SET
-            content = #{content}
-        WHERE id = #{id}
+            template_name = #{tname},
+            template_content = #{content}
+        WHERE template_id = #{id}
     </update>
-
+    <update id="updateByStatus" parameterType="com.alibaba.fastjson.JSONObject">
+        UPDATE Message_Template
+        SET
+            status = '2'
+        WHERE template_id = #{id}
+    </update>
 </mapper>

@@ -8,7 +8,7 @@ public interface SortDao {
     /**
      * 新增文章
      */
-    int addArticle(JSONObject jsonObject);
+    int addSort(JSONObject jsonObject);
 
     /**
      * 统计文章总数
@@ -24,5 +24,7 @@ public interface SortDao {
     /**
      * 更新文章
      */
-    int updateArticle(JSONObject jsonObject);
+    int updateSort(JSONObject jsonObject);
+
+    int deleteSort(JSONObject jsonObject);
 }

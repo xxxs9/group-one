@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-form>
         <el-form-item>
-          <el-button type="primary" icon="plus" @click="showCreate" v-if="hasPerm('msgtemplate:add')">添加
+          <el-button type="primary" icon="plus" @click="showCreate" >添加
           </el-button>
         </el-form-item>
       </el-form>
@@ -18,10 +18,14 @@
       <el-table-column align="center" prop="tname" label="名字" style="width: 60px;"></el-table-column>
       <el-table-column align="center" prop="content" label="内容" style="width: 60px;"></el-table-column>
 
-      <el-table-column align="center" label="管理" width="200" v-if="hasPerm('msgtemplate:update')">
+      <el-table-column align="center" label="管理" width="200" >
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
+          <el-button type="danger" icon="delete" @click="removeTemplate(scope.$index)">删除</el-button>
+          <el-button type="danger" icon="delete" @click="sendAll(scope.$index)">发送所有人</el-button>
+
         </template>
+
       </el-table-column>
     </el-table>
     <el-pagination
@@ -36,7 +40,11 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="tempArticle" label-position="left" label-width="60px"
                style='width: 300px; margin-left:50px;'>
-        <el-form-item label="文章">
+        <el-form-item label="名字">
+          <el-input type="text" v-model="tempArticle.tname">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="内容">
           <el-input type="text" v-model="tempArticle.content">
           </el-input>
         </el-form-item>
@@ -81,9 +89,7 @@
       methods: {
         getList() {
           //查询列表
-          if (!this.hasPerm('msgtemplate:list')) {
-            return
-          }
+
           this.listLoading = true;
           this.api({
             url: "/template/listTemplate",
@@ -142,6 +148,26 @@
           }).then(() => {
             this.getList();
             this.dialogFormVisible = false
+          })
+        },
+        removeTemplate($index) {
+          let _vue = this;
+          this.$confirm('确定删除此用户?', '提示', {
+            confirmButtonText: '确定',
+            showCancelButton: false,
+            type: 'warning'
+          }).then(() => {
+            let user = _vue.list[$index];
+
+            _vue.api({
+              url: "/template/deleteTemplate",
+              method: "post",
+              data: user
+            }).then(() => {
+              _vue.getList()
+            }).catch(() => {
+              _vue.$message.error("删除失败")
+            })
           })
         },
       }

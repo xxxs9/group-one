@@ -43,4 +43,11 @@ public class TemplateServiceImpl implements TemplateService {
         templateDao.updateTemplate(jsonObject);
         return CommonUtil.successJson();
     }
+
+    @Override
+    public JSONObject updateByStatus(JSONObject jsonObject) {
+        templateDao.updateByStatus(jsonObject);
+
+        return CommonUtil.successJson();
+    }
 }

@@ -25,4 +25,6 @@ public interface SortService {
      * 更新文章
      */
     JSONObject updateSort(JSONObject jsonObject);
+    JSONObject deleteSort(JSONObject jsonObject);
+
 }

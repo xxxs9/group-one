@@ -27,4 +27,7 @@ public interface TemplateService {
      * 更新文章
      */
     JSONObject updateTemplate(JSONObject jsonObject);
+
+    JSONObject updateByStatus(JSONObject jsonObject);
+
 }

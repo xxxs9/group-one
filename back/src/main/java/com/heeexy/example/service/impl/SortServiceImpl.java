@@ -24,14 +24,15 @@ public class SortServiceImpl implements SortService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject addSort(JSONObject jsonObject) {
-        return null;
+        sortDao.addSort(jsonObject);
+        return CommonUtil.successJson();
     }
 
     @Override
     public JSONObject listSort(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
         int count = sortDao.countSort(jsonObject);
-        List<JSONObject> list = sortDao.listSortName(jsonObject);
+        List<JSONObject> list = sortDao.listSort(jsonObject);
         return CommonUtil.successPage(jsonObject, list, count);
     }
 
@@ -46,6 +47,16 @@ public class SortServiceImpl implements SortService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject updateSort(JSONObject jsonObject) {
-        return null;
+        sortDao.updateSort(jsonObject);
+        return CommonUtil.successJson();
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public JSONObject deleteSort(JSONObject jsonObject) {
+        sortDao.deleteSort(jsonObject);
+        return CommonUtil.successJson();
+    }
+
+
 }

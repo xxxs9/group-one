@@ -11,11 +11,11 @@
         <result column="status" property="status" />
     </resultMap>
 
-    <insert id="addArticle" parameterType="com.alibaba.fastjson.JSONObject">
-        INSERT INTO article
-            (content)
+    <insert id="addSort" parameterType="com.alibaba.fastjson.JSONObject">
+        INSERT INTO post_categories
+            (categories_name,categories_img)
         VALUES
-            (#{content})
+            (#{sortname},#{imageUrl})
     </insert>
     <!--统计数据总数-->
     <select id="countSort" resultType="java.lang.Integer">
@@ -30,7 +30,7 @@
         SELECT
             w.categories_id                                     id,
             w.categories_name                                 sortname,
-            w.categories_img                                 imgurl,
+            w.categories_img                                 imageUrl,
             w.status                                          status,
             date_format(w.create_time, '%Y.%m.%d %T')   createTime,
             date_format(w.update_time, '%Y.%m.%d %T')   updateTime
@@ -47,12 +47,18 @@
 
     </select>
     <!--帖子详情Map-->
-    <update id="updateArticle" parameterType="com.alibaba.fastjson.JSONObject">
-        UPDATE article
+    <update id="updateSort" parameterType="com.alibaba.fastjson.JSONObject">
+        UPDATE post_categories
         SET
-            content = #{content}
-        WHERE id = #{id}
+            categories_name = #{sortname},
+            categories_img = #{imageUrl}
+        WHERE categories_id = #{id}
     </update>
-
+    <update id="deleteSort" parameterType="com.alibaba.fastjson.JSONObject">
+        UPDATE post_categories
+        SET
+            status = '2'
+        WHERE categories_id = #{id}
+    </update>
 
 </mapper>

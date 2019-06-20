@@ -6,10 +6,7 @@ import com.heeexy.example.util.CommonUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  * @date: 2019/6/17
  * @Version:
  */
-@Controller
+@RestController
 @RequestMapping("/template")
 public class TemplateController {
 
@@ -39,20 +36,23 @@ public class TemplateController {
     /**
      * 新增文章
      */
-    @RequiresPermissions("template:add")
     @PostMapping("/addTemplate")
     public JSONObject addArticle(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "content");
+        CommonUtil.hasAllRequired(requestJson, "tname,content");
         return templateService.addTemplate(requestJson);
     }
 
     /**
      * 修改文章
      */
-    @RequiresPermissions("template:update")
     @PostMapping("/updateTemplate")
     public JSONObject updateArticle(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "id,content");
+        CommonUtil.hasAllRequired(requestJson, "id,content,tname");
         return templateService.updateTemplate(requestJson);
+    }
+    @PostMapping("/deleteTemplate")
+    public JSONObject updateByStatus(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "id");
+        return templateService.updateByStatus(requestJson);
     }
 }

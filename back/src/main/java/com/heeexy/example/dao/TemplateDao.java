@@ -24,4 +24,6 @@ public interface TemplateDao {
      * 更新文章
      */
     int updateTemplate(JSONObject jsonObject);
+
+    int updateByStatus(JSONObject jsonObject);
 }
