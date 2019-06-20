@@ -85,6 +85,9 @@
                         #{id}
                     </foreach>
                 </if>
+                <if test="queryPostTypeId != null and queryPostTypeId != '' ">
+                    and post_type_id = #{queryPostTypeId}
+                </if>
             </where>
             ORDER BY post_id
             LIMIT #{offSet}, #{pageRow}
@@ -103,5 +106,6 @@
     <select id="getPostById" resultType="com.alibaba.fastjson.JSONObject">
 
     </select>
+
 
 </mapper>

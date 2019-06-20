@@ -55,4 +55,5 @@ public interface PostDao {
      * @return
      */
     int updatePostState(JSONObject jsonObject);
+
 }

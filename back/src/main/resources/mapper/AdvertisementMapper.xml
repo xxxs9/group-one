@@ -24,7 +24,7 @@
         LIMIT #{offSet}, #{pageRow}
     </select>
 
-    <select id="countAdvertisement" parameterType="com.alibaba.fastjson.JSONObject">
+    <select id="countAdvertisement" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
         SELECT COUNT (advertisement_id) FROM advertisement
         <where>
             <if test="advertisementName!=null and advertisementName!=''">
