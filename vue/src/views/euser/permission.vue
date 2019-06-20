@@ -3,37 +3,37 @@
     <div class="filter-container">
       <el-form>
         <el-form-item>
-          <el-button type="success" icon="plus" v-if="hasPerm('user:add')" @click="showCreate">添加角色
-          </el-button>
+          <el-form class="small-space" inline="true" :model="tempPerm">
+            <el-form-item>
+              <el-input type="text" :type="queryInput" v-model="tempPerm.querykey" placeholder="输入用户昵称关键字搜索"/>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" class="el-icon-search" @click="getList"></el-button>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" class="el-icon-close" @click="refleshList"></el-button>
+            </el-form-item>
+          </el-form>
         </el-form-item>
       </el-form>
     </div>
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
-      <el-table-column align="center" label="序号" width="80">
-        <template slot-scope="scope">
-          <span v-text="getIndex(scope.$index)"> </span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="角色" prop="roleName" width="150"></el-table-column>
-      <el-table-column align="center" label="用户">
-        <template slot-scope="scope">
-          <div v-for="user in scope.row.users">
-            <div v-text="user.nickname" style="display: inline-block;vertical-align: middle;"></div>
-          </div>
-        </template>
-      </el-table-column>
+      <!--<el-table-column align="center" label="序号" width="80">-->
+        <!--<template slot-scope="scope">-->
+          <!--<span v-text="getIndex(scope.$index)"> </span>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
+      <el-table-column align="center" label="用户ID" prop="userId" width="150"></el-table-column>
+      <el-table-column align="center" label="UUID" prop="uuId" width="150"></el-table-column>
+      <el-table-column align="center" label="用户昵称" prop="username"></el-table-column>
       <el-table-column align="center" label="菜单&权限" width="420">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.roleName==adminName" type="success">全部</el-tag>
-          <div v-else>
-            <div v-for="menu in scope.row.menus" style="text-align: left">
-              <span style="width: 100px;display: inline-block;text-align: right ">{{menu.menuName}}</span>
-              <el-tag v-for="perm in menu.permissions" :key="perm.permissionName" v-text="perm.permissionName"
-                      style="margin-right: 3px;"
-                      type="primary">
-              </el-tag>
-            </div>
+          <div v-for="eperms in list">
+            <el-tag v-for="eperm in eperms.epermissionList" v-if="scope.row.uuId==eperms.uuId" :key="index" v-text="eperm"
+                    style="margin-right: 3px;"
+                    type="primary">
+            </el-tag>
           </div>
         </template>
       </el-table-column>
@@ -51,6 +51,7 @@
         </template>
       </el-table-column>
     </el-table>
+
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="tempRole" label-position="left" label-width="100px"
                style='width: 600px; margin-left:50px;'>
@@ -90,6 +91,13 @@
     data() {
       return {
         list: [],//表格的数据
+        queryInput: '',
+        totalCount: 0, //分页组件--数据总条数
+        listQuery: {
+          querykey:'',
+          pageNum: 1,//页码
+          pageRow: 50,//每页条数
+        },
         allPermission: [],
         listLoading: false,//数据加载等待动画
         dialogStatus: 'create',
@@ -103,7 +111,13 @@
           roleId: '',
           permissions: [],
         },
-        adminName: '管理员'
+        adminName: '管理员',
+        tempPerm: {
+          userId: '',
+          uuId: '',
+          username: '',
+          querykey:''
+        }
       }
     },
     created() {
@@ -122,18 +136,37 @@
       },
       getList() {
         //查询列表
+        this.listQuery.querykey = this.tempPerm.querykey;
         this.listLoading = true;
         this.api({
-          url: "/user/listRole",
-          method: "get"
+          url: "/euser/permlist",
+          method: "get",
+          params: this.listQuery,
         }).then(data => {
           this.listLoading = false;
           this.list = data.list;
+          this.totalCount = data.totalCount;
         })
       },
-      getIndex($index) {
-        //表格序号
-        return $index + 1
+      refleshList(){
+        this.listLoading = true;
+        this.tempPerm.querykey="";
+        this.getList();
+      },
+      handleSizeChange(val) {
+        //改变每页数量
+        this.listQuery.pageRow = val
+        this.handleFilter();
+      },
+      handleCurrentChange(val) {
+        //改变页码
+        this.listQuery.pageNum = val
+        this.getList();
+      },
+      handleFilter() {
+        //查询事件
+        this.listQuery.pageNum = 1
+        this.getList()
       },
       showCreate() {
         //显示新增对话框

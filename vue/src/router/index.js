@@ -3,10 +3,6 @@ import Router from 'vue-router'
 // in development env not use Lazy Loading,because Lazy Loading too many pages will cause webpack hot update too slow.so only in production use Lazy Loading
 /* layout */
 import Layout from '../views/layout/Layout'
-import Post from '../views/post/post'
-import Comments from '../views/comment/comments'
-import Advertisement from '../views/advertisement/advertisement'
-
 
 const _import = require('./_import_' + process.env.NODE_ENV)
 Vue.use(Router)
@@ -63,6 +59,85 @@ export const asyncRouterMap = [
         meta: {title: '权限管理', icon: 'password'},
         menu: 'role'
       },
+    ]
+  },
+
+
+  {
+    path: '/euser',
+    component: Layout,
+    redirect: '/euser/',
+    name: '',
+    meta: {title: '外部用户管理', icon: 'table'},
+    children: [
+      {
+        path: 'euser',
+        name: '用户列表',
+        component: _import('euser/euser'),
+        meta: {title: '用户列表', icon: 'user'},
+        menu: 'euser'
+      },
+      {
+        path: 'permission',
+        name: '权限管理',
+        component: _import('euser/permission'),
+        meta: {title: '权限管理', icon: 'password'},
+        menu: 'euser'
+      }
+    ]
+  },
+  {
+    path: '/post',
+    component: Layout,
+    redirect: '/post/',
+    name: '',
+    meta: {title: '帖子管理', icon: 'table'},
+    children: [
+      {
+        path: '', name: '帖子列表',
+        component: _import('post/post'),
+        meta: {title: '帖子列表', icon: 'post'},
+        menu: 'post'
+      },
+      {
+        path: '', name: '帖子列表',
+        component: _import('post/post'),
+        meta: {title: '帖子列表', icon: 'post'},
+        menu: 'post'
+      }
+    ]
+  },
+  {
+    path: '/comment',
+    component: Layout,
+    redirect: '/user/',
+    name: '',
+    meta: {title: '评论管理', icon: 'table'},
+    children: [
+      {
+        path: '',
+        name: '评论列表',
+        component: _import('user/user'),
+        meta: {title: '评论列表', icon: 'user'},
+        menu: 'user'
+      }
+    ]
+  },
+
+  {
+    path: '/post',
+    component: Layout,
+    redirect: '/post/',
+    name: '',
+    meta: {title: '帖子列表', icon: 'post'},
+    children: [
+      {
+        path: '',
+        name: '帖子列表',
+        component: _import('post/post'),
+        meta: {title: '帖子管理', icon: 'post'},
+        menu: 'post'
+      }
     ]
   },
   {
