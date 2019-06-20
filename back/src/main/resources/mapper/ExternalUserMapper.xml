@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.ExternalUserDao">
+
+
+    <select id="countUser" resultType="java.lang.Integer">
+        SELECT count(0) from user;
+    </select>
+    <resultMap id="euserMap" type="com.heeexy.example.util.model.One2Many">
+        <id column="userId" property="userId"></id>
+        <result column="uuid" property="uuId"/>
+        <result column="unionid" property="unionId"/>
+        <result column="username" property="username"/>
+        <result column="iconurl" property="iconUrl"/>
+        <result column="mobile" property="mobile"/>
+        <result column="sex" property="sex"/>
+        <result column="fans_offset" property="fansOffset"/>
+        <result column="login_time" property="loginTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="modify_name" property="modifyName"/>
+        <collection property="epermissionList" ofType="String">
+            <id column="permissionName" property="permissionName"/>
+        </collection>
+    </resultMap>
+    <select id="getUser" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+            u.*
+        FROM
+            (
+                 SELECT
+                     id                                      userId,
+                     uuid                                    uuId,
+                     username                                username,
+                     iconurl                                 iconUrl,
+                     sex                                     sex,
+                     mobile                                  mobile,
+                     fans_offset                             fansOffset,
+                     DATE_FORMAT(login_time, '%Y.%m.%d %T')  loginTime,
+                     DATE_FORMAT(modify_time, '%Y.%m.%d %T') modifyTime
+                 FROM example.user
+                    <where>
+                        <if test="querykey != null and querykey != '' ">
+                            username LIKE concat('%',#{querykey},'%')
+                        </if>
+                    </where>
+                 ORDER BY id
+                 LIMIT #{offSet}, #{pageRow}
+             ) u
+    </select>
+    <insert id="addUser" useGeneratedKeys="true" keyProperty="uuId">
+        INSERT INTO
+            user(uuid,unionid,username,iconurl,mobile,sex)
+            VALUES
+            (#{uuId},#{unionId},#{username},#{iconUrl},#{mobile},#{sex})
+    </insert>
+
+    <update id="updateFansOffset">
+        UPDATE user
+        SET fans_offset = #{fansOffset}
+        WHERE id = #{userId}
+    </update>
+
+
+    <select id="getUserPermission" resultMap="euserMap">
+        SELECT
+            u.*,
+            p.permission_name                               permissionName
+        FROM
+            (
+                 SELECT
+                     id                                      userId,
+                     uuid                                    uuId,
+                     username                                username
+                 FROM example.user
+                    <where>
+                        <if test="querykey != null and querykey != '' ">
+                            username LIKE concat('%',#{querykey},'%')
+                        </if>
+                        AND unionid IS NOT NULL
+                    </where>
+                 ORDER BY id
+                 LIMIT #{offSet}, #{pageRow}
+             ) u
+             LEFT JOIN user_permission up ON u.uuid = up.user_uuid AND up.delete_status='1'
+             LEFT JOIN permission p ON p.id = up.permission_id
+
+    </select>
+    <update id="removePermission">
+        UPDATE user_permission
+        SET delete_status = '2'
+        WHERE user_uuid = #{uuId}
+        AND permission_id in (
+        <foreach collection="epermissions" item="item" index="index" separator=",">
+            #{item}
+        </foreach>
+        )
+    </update>
+
+    <insert id="addPermission">
+        INSERT INTO user_permission(user_uuid, permission_id)
+        VALUES
+        <foreach collection="epermissions" item="item" index="index" separator=",">
+            (#{uuId}, #{item})
+        </foreach>
+    </insert>
+
+    <update id="updatePermissionStatus" parameterType="java.lang.Integer">
+        UPDATE user_permission
+        SET delete_status = '1'
+        WHERE delete_status = '2'
+        AND user_uuid = #{uuId}
+    </update>
+    <update id="removeUserAllPermission">
+        UPDATE user_permission
+        SET delete_status = '2'
+        WHERE user_uuid = #{uuId}
+        AND delete_status = '1'
+    </update>
+    <select id="queryExistUUID" resultType="int">
+        SELECT count(0)
+        FROM user
+        WHERE uuid=#{uuId}
+    </select>
+
+
+</mapper>
