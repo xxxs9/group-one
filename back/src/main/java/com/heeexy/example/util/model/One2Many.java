@@ -26,4 +26,10 @@ public class One2Many extends JSONObject {
 	private List<JSONObject> users;
 	private List<JSONObject> permissions;
 
+	private List<JSONObject> eusers;
+	private List<JSONObject> epermissions;
+	private Set<String> epermissionList;
+	private Set<Integer> epermissionIds;
+
+	private List<JSONObject> posts;
 }
