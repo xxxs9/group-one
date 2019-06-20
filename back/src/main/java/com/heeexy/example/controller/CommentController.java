@@ -32,4 +32,9 @@ public class CommentController {
         System.out.println(requestJson);
         return commentService.updateComment(requestJson);
     }
+
+    @GetMapping("/list1")
+    public JSONObject listcomment(HttpServletRequest request) {
+        return commentService.getByAcceptUserId(CommonUtil.request2Json(request));
+    }
 }

@@ -31,7 +31,7 @@
       <el-table-column align="center" label="评论状态" prop="commentState" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" v-if="scope.row.commentState==0" @click="updateComment(scope.$index)">显示</el-button>
+          <el-button type="primary" icon="edit" v-if="scope.row.commentState==0" @click="removeComment(scope.$index)">显示</el-button>
           <el-button type="primary" icon="edit" v-if="scope.row.commentState==1" @click="removeComment(scope.$index)">隐藏</el-button>
         </template>
       </el-table-column>
@@ -163,27 +163,6 @@
         return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
       },
 
-      updateComment($index) {
-        let _vue = this;
-        this.$confirm('确定修改状态?', '提示', {
-          confirmButtonText: '确定',
-          showCancelButton: false,
-          type: 'warning'
-        }).then(() => {
-          let comment = _vue.list[$index];
-          comment.commentState = '1';
-          _vue.api({
-            url: "/comment/updateComment",
-            method: "post",
-            data: comment
-          }).then(() => {
-            _vue.getList()
-          }).catch(() => {
-            _vue.$message.error("修改失败")
-          })
-        })
-      },
-
       removeComment($index) {
         let _vue = this;
         this.$confirm('确定修改状态?', '提示', {
@@ -192,7 +171,12 @@
           type: 'warning'
         }).then(() => {
           let comment = _vue.list[$index];
-          comment.commentState = '0';
+          if(comment.commentState==1){
+            comment.commentState = '0';
+          }else {
+            comment.commentState = '1';
+          }
+
           _vue.api({
             url: "/comment/updateComment",
             method: "post",

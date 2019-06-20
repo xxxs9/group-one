@@ -13,7 +13,7 @@ import java.util.List;
 public interface CommentDao {
 
     /**
-     *当评论内容和用户名为空时查询全部评论列表，反之根据用户名或者评论内容模糊查询评论列表
+     *当评论内容为空时查询全部评论列表，反之根据评论内容模糊查询评论列表
      * @param jsonObject
      * @return List<JSONObject>
      */
