@@ -7,9 +7,18 @@
     <div class="filter-container">
           <el-form class="small-space" inline="true" :model="tempPost">
             <el-form-item>
+              <el-input type="text" v-model="tempPost.queryText" placeholder="输入帖子内容搜索"/>
+            </el-form-item>
+            <el-form-item>
+              <el-input type="text" v-model="tempPost.queryOwnewName" placeholder="输入发帖人昵称搜索"/>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" class="el-icon-search" @click="getList"></el-button>
+            </el-form-item>
+            <el-form-item>
               <el-date-picker v-model="tempPost.dataValue" type="daterange" align="right" unlink-panels validate-event @change="getList"
                               start-placeholder="开始日期"
-                              range-separator="至"
+                              range-separator="-"
                               end-placeholder="结束日期"
                               value-format="yyyy-MM-dd HH:mm:ss"
                               :picker-options="pickerOptions"
@@ -17,14 +26,22 @@
               </el-date-picker>
             </el-form-item>
             <el-form-item>
-              <el-input type="text" v-model="tempPost.queryText" placeholder="输入帖子内容搜索"/>
+              <el-select v-model="value" placeholder="选择帖子类型">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+              <el-form-item>
+                <el-form-item>
+                  <el-select v-model="value2" multiple collapse-tags style="margin-left: 10px;" placeholder="选择帖子标签">
+                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-button type="primary" class="el-icon-close" @click="refashList"></el-button>
+              </el-form-item>
             </el-form-item>
-            <el-form-item>
-              <el-button type="primary" class="el-icon-search" @click="getList"></el-button>
-            </el-form-item>
-            <el-form-item>
-               <el-button type="primary" class="el-icon-close" @click="refashList"></el-button>
-            </el-form-item>
+
+
           </el-form>
     </div>
     <el-table :data="list" stripe="true" default-sor v-loading.body="listLoading" element-loading-text="拼命加载中" border fit highlight-current-row>
@@ -52,10 +69,7 @@
 
       <el-table-column align="center" label="发帖人昵称" prop="postOwnerName" width="100"></el-table-column>
 
-      <el-table-column align="center" label="发帖时间" sortable prop="postTime" width="170"
-                       :filters="[{text: '一天内', value: '2016-05-01'}, {text: '一周内', value: '2016-05-02'}, {text: '一个月内', value: '2016-05-03'}, {text: '半年内', value: '2016-05-04'}]"
-                       :filter-method="filterHandler"
-      ></el-table-column>
+      <el-table-column align="center" label="发帖时间" sortable prop="postTime" width="170"></el-table-column>
 
       <el-table-column align="center" label="点赞数/增加量" sortable prop="likeCount" width="140px">
         <template slot-scope="scope">
@@ -166,6 +180,7 @@
           beforeDate:'',
           afterDate:'',
           queryText: '',
+          queryOwnewName: '',
           pageNum: 1,//页码
           pageRow: 10,//每页条数
         },
@@ -191,6 +206,7 @@
           queryText: '',
           dataValue: '', //日期选择初始化
           postState:'',
+          queryOwnewName:'',
           tagList: [],
         },
         pickerOptions: {
@@ -240,6 +256,7 @@
         this.listQuery.queryText = this.tempPost.queryText;
         this.listQuery.beforeDate = this.tempPost.dataValue[0];
         this.listQuery.afterDate = this.tempPost.dataValue[1];
+        this.listQuery.queryOwnewName = this.tempPost.queryOwnewName;
         this.listLoading = true;
         this.api({
           url: "/post/list",
