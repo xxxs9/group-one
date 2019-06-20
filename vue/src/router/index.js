@@ -108,5 +108,38 @@ export const asyncRouterMap = [
       }
     ]
   },
+  {
+    path: '/comment',
+    component: Layout,
+    redirect: '/user/',
+    name: '',
+    meta: {title: '评论管理', icon: 'table'},
+    children: [
+      {
+        path: '',
+        name: '评论列表',
+        component: _import('user/user'),
+        meta: {title: '评论列表', icon: 'user'},
+        menu: 'user'
+      }
+    ]
+  },
+
+  {
+    path: '/post',
+    component: Layout,
+    redirect: '/post/',
+    name: '',
+    meta: {title: '帖子列表', icon: 'post'},
+    children: [
+      {
+        path: '',
+        name: '帖子列表',
+        component: _import('post/post'),
+        meta: {title: '帖子管理', icon: 'post'},
+        menu: 'post'
+      }
+    ]
+  },
   {path: '*', redirect: '/404', hidden: true}
 ]
