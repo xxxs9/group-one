@@ -61,24 +61,5 @@ export const asyncRouterMap = [
       },
     ]
   },
-  {
-    path: '/template',
-    component: Layout,
-    redirect: '/template/',
-    name: '',
-    meta: {title: '模板', icon: 'table'},
-    children: [
-      {
-        path: '', name: '消息模板管理', component: _import('template/msgtemplate'), meta: {title: '消息模板管理', icon: 'template'}, menu: 'template'
-      },
-      {
-        path: 'chat',
-        name: '消息记录管理',
-        component: _import('template/chat'),
-        meta: {title: '消息记录管理', icon: 'password'},
-        menu: 'chat'
-      },
-    ]
-  },
   {path: '*', redirect: '/404', hidden: true}
 ]
