@@ -38,5 +38,15 @@ public class ExternalUserController {
         return service.getUserPermission(CommonUtil.request2Json(request));
     }
 
+    @PostMapping("/updatePerm")
+    public JSONObject updatePermission(@RequestBody JSONObject requestJson){
+        CommonUtil.hasAllRequired(requestJson,"uuId,epermissionList");
+        return service.removePermission(requestJson);
+    }
+    @PostMapping("/refreshPerm")
+    public JSONObject refreshPermission(@RequestBody JSONObject requestJson){
+        CommonUtil.hasAllRequired(requestJson,"uuId");
+        return service.refreshPermissionStatus(requestJson);
+    }
 }
 
