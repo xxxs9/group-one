@@ -1,24 +1,29 @@
 <template>
   <div>
-    <p>{{postDetialId}}</p>
+    <span>{{addDetailData}}</span>
+    <el-button @click="getDetailData">显示</el-button>
   </div>
 </template>
 
 
 <script>
-  export default{
+  export default {
     name: 'Detail',
-    props:['postDetialId'],
-    data(){
-      return{
-        tempDetail:{
+    props: ['addDetailData'],
+    data() {
+      return {
+        detailData: {
           postId: ''
         }
       }
     },
-    created(){
+    created() {
+      console.log("传过来的数据"+this.addDetailData.postId)
     },
-    methods:{
+    mounted() {
+
+    },
+    methods: {
 
     }
   }
