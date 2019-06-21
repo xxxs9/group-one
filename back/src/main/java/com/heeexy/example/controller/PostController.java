@@ -52,4 +52,11 @@ public class PostController {
         CommonUtil.hasAllRequired(requestJson, "postState,postId");
         return postService.updatePostState(requestJson);
     }
+
+    @PostMapping("/queryPostById")
+    public JSONObject queryPostById(HttpServletRequest request) {
+        JSONObject requestJson = CommonUtil.request2Json(request);
+        CommonUtil.hasAllRequired(requestJson, "");
+        return postService.queryPostById(requestJson);
+    }
 }

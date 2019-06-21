@@ -1,6 +1,7 @@
 package com.heeexy.example.dao;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public interface PostDao {
      * @param jsonObject 帖子ID
      * @return 单个帖子详细
      */
-    JSONObject getPostById(JSONObject jsonObject);
+    JSONObject queryPostById(JSONObject jsonObject);
 
     /**
      * 增加点赞数量
@@ -55,4 +56,5 @@ public interface PostDao {
      * @return
      */
     int updatePostState(JSONObject jsonObject);
+
 }

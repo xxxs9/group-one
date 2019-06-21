@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.CommentDao">
+    <resultMap id="commentMap" type="com.heeexy.example.util.model.One2Many">
+        <id column="commentId" property="commentId" />
+        <result column="postId" property="postId" />
+        <result column="postUserId" property="postUserId" />
+        <result column="commentUserId" property="commentUserId" />
+        <result column="acceptUserId" property="acceptUserId" />
+        <result column="commentText" property="commentText" />
+        <result column="commentTime" property="commentTime" />
+        <result column="commentState" property="commentState" />
+    </resultMap>
+
+    <select id="listAllComment" resultMap="commentMap">
+        SELECT
+        comment_id                                                     commentId,
+        post_id                                                        postId,
+        (select username from user where user.uuid = c.postuser_id)    postUserName,
+        (select username from user where user.uuid = c.commentuser_id) commentUserName,
+        (select username from user where user.uuid = c.acceptuser_id)  acceptUserName,
+        comment_text                                                   commentText,
+        DATE_FORMAT(comment_time, '%Y.%m.%d %T')                       commentTime,
+        comment_state                                                  commentState
+        FROM comment c
+        <where>
+            <if test="commentText!=null and commentText!=''">
+                comment_text LIKE concat('%',#{commentText},'%')
+            </if>
+        </where>
+        ORDER BY postuser_id LIMIT #{offSet}, #{pageRow}
+    </select>
+
+    <select id="countComment" resultType="Integer">
+        SELECT COUNT(0) FROM comment
+        <where>
+            <if test="commentText!=null and commentText!=''">
+                comment_text LIKE concat('%',#{commentText},'%')
+            </if>
+        </where>
+    </select>
+
+    <update id="updateComment">
+        UPDATE comment
+        SET
+        comment_state = #{commentState}
+        WHERE comment_id = #{commentId}
+    </update>
+
+    <insert id="addComment" useGeneratedKeys="true" keyProperty="comment_id">
+        INSERT INTO comment(post_id,postuser_id,commentuser_id,acceptuser_id,
+        comment_text,comment_state)
+        VALUES (#{postId},#{postUserId},#{commentUserId},#{acceptUserId},#{commentText},
+        #{commentState})
+    </insert>
+
+    <select id="getByCommentUserId" resultMap="commentMap">
+        SELECT
+        comment_id                                                     commentId,
+        post_id                                                        postId,
+        commentuser_id                                                 commentUserId,
+        (select username from user where user.uuid = c.postuser_id)    postUserName,
+        (select username from user where user.uuid = c.commentuser_id) commentUserName,
+        (select username from user where user.uuid = c.acceptuser_id)  acceptUserName,
+        comment_text                                                   commentText,
+        DATE_FORMAT(comment_time, '%Y.%m.%d %T')                       commentTime,
+        comment_state                                                  commentState
+        FROM comment c
+        WHERE commentuser_id = #{commentUserId}
+        ORDER BY comment_time LIMIT #{offSet}, #{pageRow}
+    </select>
+
+    <select id="countByCommentUserId" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM comment WHERE commentuser_id = #{commentUserId}
+    </select>
+
+    <select id="getByAcceptUserId" resultMap="commentMap">
+        SELECT
+        comment_id                                                     commentId,
+        post_id                                                        postId,
+        (select username from user where user.uuid = c.postuser_id)    postUserName,
+        (select username from user where user.uuid = c.commentuser_id) commentUserName,
+        (select username from user where user.uuid = c.acceptuser_id)  acceptUserName,
+        comment_text                                                   commentText,
+        DATE_FORMAT(comment_time, '%Y.%m.%d %T')                       commentTime,
+        comment_state                                                  commentState
+        FROM comment c
+        WHERE acceptuser_id = #{acceptUserId}
+        ORDER BY comment_time LIMIT #{offSet}, #{pageRow}
+    </select>
+
+    <select id="countByAcceptUserId" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM comment WHERE acceptuser_id = #{acceptUserId}
+    </select>
+
+    <select id="getByPostId" resultMap="commentMap">
+
+    </select>
+</mapper>

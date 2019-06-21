@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.TemplateDao">
+
+    <insert id="addTemplate" parameterType="com.alibaba.fastjson.JSONObject">
+        INSERT INTO Message_Template
+            (template_name,template_content)
+        VALUES
+            (#{tname},#{content})
+    </insert>
+
+    <select id="countTemplate" resultType="Integer">
+        SELECT count(*)
+        FROM Message_Template
+    </select>
+
+    <select id="listTemplate" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+            w.template_id                                      id,
+            w.template_name                                   tname,
+            w.template_content                                content
+
+        FROM Message_Template w
+        where w.status = '1'
+        ORDER BY w.template_id DESC
+        LIMIT #{offSet}, #{pageRow}
+    </select>
+
+    <update id="updateTemplate" parameterType="com.alibaba.fastjson.JSONObject">
+        UPDATE Message_Template
+        SET
+            template_name = #{tname},
+            template_content = #{content}
+        WHERE template_id = #{id}
+    </update>
+    <update id="updateByStatus" parameterType="com.alibaba.fastjson.JSONObject">
+        UPDATE Message_Template
+        SET
+            status = '2'
+        WHERE template_id = #{id}
+    </update>
+</mapper>

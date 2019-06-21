@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.CollectionDao">
+    <resultMap id="collectionMap" type="com.heeexy.example.util.model.One2Many">
+        <id column="collection_id" property="collectionId" />
+        <result column="user_id" property="userId" />
+        <result column="post_id" property="postId" />
+        <result column="collection_time" property="collectionTime" />
+    </resultMap>
+
+    <select id="getByUserId" parameterType="java.lang.Integer" resultMap="collectionMap">
+        SELECT c.collection_id,c.collection_time,c.post_id FROM collection c
+        WHERE user_id = #{userId} ORDER BY collection_time DESC LIMIT #{offSet}, #{pageRow}
+    </select>
+
+    <select id="countByUserId" parameterType="com.alibaba.fastjson.JSONObject">
+        SELECT COUNT (collection_id) FROM collection WHERE user_id = #{userId}
+    </select>
+
+    <insert id="addCollection" useGeneratedKeys="true" keyProperty="collectionId">
+        INSERT INTO collection(user_id,post_id,collection_time)
+        VALUES (#{userId},#{postId},#{collectionTime})
+    </insert>
+
+    <delete id="deleteCollection" parameterType="java.lang.Integer">
+        DELETE FROM collection WHERE collection_id = #{collectionId}
+    </delete>
+</mapper>

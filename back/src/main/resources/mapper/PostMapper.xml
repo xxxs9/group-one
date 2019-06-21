@@ -56,7 +56,7 @@
     <select id="listPost" resultMap="postMap" >
         SELECT
           p.*,
-          (SELECT count(0) FROM `like` WHERE `like`.post_id = p.postId)                          likeCount,
+          (SELECT count(0) FROM click_goods WHERE click_goods.post_id = p.postId)                          likeCount,
           (SELECT count(0) FROM browse_records br WHERE br.post_id = p.postId)                   browseCount,
           (SELECT username FROM `user` u WHERE u.uuid = p.postOwnerId)                           postOwnerName,
           (SELECT tag_name FROM tag t WHERE t.tag_no = pt2.tag_id)                               postTagName,
@@ -77,7 +77,16 @@
                     post_text LIKE concat('%',#{queryText},'%')
                 </if>
                 <if test="beforeDate != null and beforeDate != '' and afterDate !=null and afterDate !=''">
-                   and DATE(post_time) between #{beforeDate} and #{afterDate}
+                    and DATE(post_time) between #{beforeDate} and #{afterDate}
+                </if>
+                <if test="postOwnerId != null and postOwnerId.size()>0 ">
+                    and
+                    <foreach collection="postOwnerId" item="id" open="post_owner_id in(" close=")" separator=",">
+                        #{id}
+                    </foreach>
+                </if>
+                <if test="queryPostTypeId != null and queryPostTypeId != '' ">
+                    and post_type_id = #{queryPostTypeId}
                 </if>
             </where>
             ORDER BY post_id
@@ -90,12 +99,38 @@
     <!--帖子详情Map-->
     <resultMap id="postDetailMap" type="com.heeexy.example.util.model.One2Many">
         <id column="postId" property="postId"/>
-        <result column=""></result>
+        <result column="postPhone" property="postPhone"></result>
+        <result column="postAddress" property="postAddress"></result>
+        <result column="priceFloor" property="priceFloor"></result>
+        <result column="priceTop" property="priceTop"></result>
+        <collection property="postImgList" ofType="String">
+            <id column="postImageSrc" property="postImageSrc"></id>
+        </collection>
+        <collection property="comments" ofType="String">
+            <id column="commentText" property="commentText"></id>
+        </collection>
     </resultMap>
 
     <!--根据帖子ID返回帖子详情-->
-    <select id="getPostById" resultType="com.alibaba.fastjson.JSONObject">
-
+    <select id="queryPostById" resultMap="postDetailMap">
+        SELECT
+          p.*,
+          pi.post_image_src             postImageSrc,
+          c.comment_text                commentText
+          FROM (
+            SELECT
+                post_id                 postId,
+                post_phone              postPhone,
+                post_address            postAddress,
+                price_floor             priceFloor,
+                price_top               priceTop
+            FROM
+              post_table
+            WHERE post_id = #{postId}
+          ) p
+          LEFT JOIN post_image pi ON pi.post_id = p.postId
+          LEFT JOIN comment c ON c.post_id = p.postId
     </select>
+
 
 </mapper>

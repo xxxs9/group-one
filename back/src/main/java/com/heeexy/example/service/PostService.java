@@ -36,4 +36,11 @@ public interface PostService {
      * @return
      */
     JSONObject updatePostState(JSONObject jsonObject);
+
+    /**
+     * 查找单个帖子详情
+     * @param jsonObject 帖子ID
+     * @return
+     */
+    JSONObject queryPostById(JSONObject jsonObject);
 }
