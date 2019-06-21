@@ -1,7 +1,13 @@
 <template>
+
   <div>
-    <span>{{addDetailData}}</span>
-    <el-button @click="getDetailData">显示</el-button>
+
+      <span>{{addDetailData}}</span>
+      <el-button @click="getDetailData">显示</el-button>
+
+
+
+
   </div>
 </template>
 
