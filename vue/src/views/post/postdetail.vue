@@ -2,7 +2,15 @@
 
   <div>
 
-      <span>{{addDetailData}}</span>
+      <span>
+        <el-header>
+          用户信息
+        </el-header>
+        <el-main>
+          {{addDetailData}}
+        </el-main>
+        {{addDetailData}}
+      </span>
       <el-button @click="getDetailData">显示</el-button>
 
 

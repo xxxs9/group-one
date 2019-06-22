@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface CollectionDao {
     /**
-     * 根据用户id去查询该用户下收藏的帖子列表
+     * 根据用户id去查询该用户下收藏的帖子
      * @param jsonObject
      * @return List<JSONObject>
      */
@@ -37,5 +37,18 @@ public interface CollectionDao {
      * @param jsonObject
      * @return int
      */
-    int deleteCollection(JSONObject jsonObject);
+    int removeCollection(JSONObject jsonObject);
+
+    /**
+     * 根据帖子id去判断帖子是否被收藏
+     * @param jsonObject
+     * @return int
+     */
+    int getByPostId(JSONObject jsonObject);
+
+    /**
+     * 根据用户id去查询此用户收藏的帖子总数
+     * @return
+     */
+    int getByCollectionCount(JSONObject jsonObject);
 }
