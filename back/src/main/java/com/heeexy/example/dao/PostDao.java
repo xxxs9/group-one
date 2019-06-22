@@ -57,12 +57,5 @@ public interface PostDao {
      */
     int updatePostState(JSONObject jsonObject);
 
-    /**
-     * 置顶帖子
-     * @param
-     * @return
-     */
-    int updatePostStick(JSONObject jsonObject);
 
-    List<JSONObject> listPostStick(JSONObject jsonObject);
 }

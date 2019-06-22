@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.StickDao">
+
+    <!--获取板块列表-->
+    <select id="listStick" resultType="com.alibaba.fastjson.JSONObject">
+      SELECT
+        stick_id stickId,stick_name stickName
+      FROM stick
+    </select>
+
+    <!--获取帖子置顶情况-->
+    <select id="listStickByPostId" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+          stick_id stickId,post_stick_static postStickStatic,post_id postId
+        FROM post_stick
+        WHERE post_id = #{postId}
+    </select>
+
+    <!--置顶帖子-->
+    <insert id="addStick">
+      INSERT INTO post_stick
+        (post_id, stick_id)
+      VALUES
+        (#{postId},#{stickId})
+    </insert>
+
+    <!--修改置顶状态-->
+    <update id="updatePostStick">
+        UPDATE post_stick
+        SET
+          post_stick_static = #{postStickStatic}
+        WHERE
+          post_id = #{postId} AND stick_id = #{stickId}
+    </update>
+</mapper>

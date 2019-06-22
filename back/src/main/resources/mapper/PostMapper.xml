@@ -45,14 +45,6 @@
         WHERE post_id = #{postId}
     </update>
 
-    <!--置顶帖子-->
-    <update id="updatePostStick">
-      INSERT INTO post_stick
-        (post_id, stick_id)
-       VALUES
-        (#{postId},#{stickId})
-    </update>
-
     <!--统计数据总数-->
     <select id="countUser" resultType="java.lang.Integer">
         SELECT count(0)
@@ -140,13 +132,5 @@
           LEFT JOIN comment c ON c.post_id = p.postId
     </select>
 
-    <!--获取板块列表-->
-    <select id="listPostStick">
-      SELECT
-        stick_id,stick_name
-      FROM stick
-    </select>
-
-    <!--置顶帖子-->
 
 </mapper>

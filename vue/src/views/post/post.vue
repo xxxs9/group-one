@@ -115,7 +115,7 @@
       </el-table-column>
       <el-table-column align="center" fixed="right" label="管理" width="350">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-arrow-up" size="medium" @click="updatePostStick(scope.$index)">置顶</el-button>
+          <el-button type="primary" icon="el-icon-arrow-up" size="medium" @click="showPostStick(scope.$index)">置顶</el-button>
           <el-button type="primary" icon="el-icon-edit" size="medium" @click="showUpdate(scope.$index)">修改</el-button>
           <el-button type="danger" icon="el-icon-delete" size="medium" v-if="scope.row.postState==0" v-else
                      @click="removePost(scope.$index)">删除
@@ -138,22 +138,68 @@
 
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="600px">
+
+      <!--详情页面组件-->
       <detail :addDetailData="tempPost" v-if="dialogStatus=='postDetail'" ref="detail"></detail>
+
       <el-form class="small-space" :model="tempPost" label-position="left" label-width="80px"
-               style='width: 300px; margin-left:50px;'>
+               style='width: 400px; margin-left:50px;'>
+
+        <!--点赞输入框-->
         <el-form-item label="输入数量" required v-if="dialogStatus=='likeOffset'">
           <el-input type="text" v-model="tempPost.likeOffset">
           </el-input>
         </el-form-item>
+
+        <!--浏览量输入框-->
         <el-form-item label="输入数量" required v-if="dialogStatus=='browseOffset'">
           <el-input type="text" v-model="tempPost.browseOffset">
           </el-input>
         </el-form-item>
+
+        <!--置顶多选框-->
+        <el-form-item label="置顶板块" required v-if="dialogStatus=='postStick'">
+          <div v-for="postStick in listStick">
+            <el-checkbox :label="postStick.stickName" :key="postStick.stickId">{{postStick.stickName}}</el-checkbox>
+            <!--<el-checkbox-group>-->
+              <!--<el-checkbox v-for="stick in tempPost.postStick" checked :label="stick.stickName" v-if="postStick.stickId==stick.stickId" :key="stick.stickId"></el-checkbox>-->
+              <!--&lt;!&ndash;<el-checkbox  :label="stick.stickName" v-else :key="stick.stickId"></el-checkbox>&ndash;&gt;-->
+            <!--</el-checkbox-group>-->
+          </div>
+        </el-form-item>
+
+        <el-form-item label="帖子内容" v-if="dialogStatus=='postUpdate'">
+        <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 6}" size="medium" v-model="tempPost.postText">{{tempPost.postText}}</el-input>
+      </el-form-item>
+
+        <el-form-item label="修改图片" v-if="dialogStatus=='postUpdate'" size="medium" :inline="true">
+          <el-upload action="/post" list-type="picture-card">
+            <img src="https://www.gravatar.com/avatar/6560ed55e62396e40b34aac1e5041028?imageView2/1/w/80/h/80" style="height: 100%;width: 100%"/>
+          </el-upload>
+          <el-upload action="/post" list-type="picture-card">
+            <img src="https://www.gravatar.com/avatar/6560ed55e62396e40b34aac1e5041028?imageView2/1/w/80/h/80" style="height: 100%;width: 100%"/>
+          </el-upload>
+          <el-upload action="/post" list-type="picture-card">
+            <img src="https://www.gravatar.com/avatar/6560ed55e62396e40b34aac1e5041028?imageView2/1/w/80/h/80" style="height: 100%;width: 100%"/>
+          </el-upload>
+          <el-upload action="/post" list-type="picture-card">
+            <img src="https://www.gravatar.com/avatar/6560ed55e62396e40b34aac1e5041028?imageView2/1/w/80/h/80" style="height: 100%;width: 100%"/>
+          </el-upload>
+          <el-upload action="/post" list-type="picture-card">
+            <img src="https://www.gravatar.com/avatar/6560ed55e62396e40b34aac1e5041028?imageView2/1/w/80/h/80" style="height: 100%;width: 100%"/>
+          </el-upload>
+
+
+        </el-form-item>
+
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" v-if="dialogStatus=='browseOffset'" @click="updateBrowseOffset">修改浏览数量</el-button>
         <el-button type="primary" v-if="dialogStatus=='likeOffset'" v-else @click="updateLikeOffset">修改点赞数量</el-button>
+        <el-button type="primary" v-if="dialogStatus=='postStick'" v-else @click="updatePostStick">修改置顶板块</el-button>
+        <el-button type="primary" v-if="dialogStatus=='postUpdate'" v-else @click="">确认修改</el-button>
       </div>
     </el-dialog>
   </div>
@@ -182,13 +228,16 @@
         },
         roles: [],//角色列表
         typeOption: '',//帖子类型下拉框数据
-        dialogStatus: 'create',
+        listStick:'',//置顶列表数据
+        dialogStatus: '',
         dialogFormVisible: false,
         dialogDetailVisible: false,
         textMap: {
           likeOffset: '增加点赞数量',
           browseOffset: '增加浏览数量',
-          postDetail: '帖子详情'
+          postDetail: '帖子详情',
+          postStick: '置顶帖子',
+          postUpdate: '修改帖子内容'
         },
         detailData:{
           postId: '',//帖子ID
@@ -216,7 +265,8 @@
           postAddress: '',//帖子地址
           priceFloor: '',//最低价
           priceTop: '',//最高价
-          commentText: ''//评论
+          commentText: '',//评论
+          postStick: ''
         },
         pickerOptions: {
           shortcuts: [{
@@ -275,6 +325,15 @@
           this.totalCount = data.totalCount;
         })
       },
+      getCategoriesList(){
+        this.api({
+          url: "/sort/listSort",
+          method: "get"
+        }).then(data => {
+          this.listLoading = false;
+          this.typeOption = data.list;
+        })
+      },
       refashList() {
         this.tempPost.queryText = '';
         this.tempPost.dataValue = '';
@@ -283,6 +342,7 @@
         this.getList();
       },
       showDetail($index) {
+        //显示帖子详情窗口
         let post = this.list[$index];
         this.detailData.postId = post.postId;   //帖子Id
         this.detailData.postOwnerId = post.postOwnerId;   //帖子Id
@@ -327,6 +387,7 @@
         this.getList()
       },
       showLikeOffset($index) {
+        //显示点赞修改框
         let post = this.list[$index];
         this.tempPost.likeOffset = post.likeOffset;
         this.tempPost.postId = post.postId;
@@ -334,35 +395,42 @@
         this.dialogFormVisible = true;
       },
       showBrowseOffset($index) {
+        //显示浏览修改框
         let post = this.list[$index];
         this.tempPost.browseOffset = post.browseOffset;
         this.tempPost.postId = post.postId;
         this.dialogStatus = "browseOffset";
         this.dialogFormVisible = true;
       },
-      showUpdate($index) {
-        let user = this.list[$index];
-        this.tempPost.username = user.username;
-        this.tempPost.nickname = user.nickname;
-        this.tempPost.roleId = user.roleId;
-        this.tempPost.userId = user.userId;
-        this.tempPost.deleteStatus = '1';
-        this.tempPost.password = '';
-        this.dialogStatus = "update"
+      showPostStick($index){
+        let post = this.list[$index];
+        this.detailData.postId = post.postId;
+        this.api({
+          url: "/stick/list",
+          method: "get",
+          params: this.detailData
+        }).then(data =>{
+          console.log(data)
+          this.listLoading = false;
+          this.listStick = data.listStick;
+          this.tempPost.postStick = data.listStickByPostId;
+        })
+        this.dialogStatus = 'postStick'
         this.dialogFormVisible = true
       },
-      createUser() {
-        //添加新用户
-        this.api({
-          url: "/user/addUser",
-          method: "post",
-          data: this.tempPost
-        }).then(() => {
-          this.getList();
-          this.dialogFormVisible = false
-        })
+      showUpdate($index) {
+        //显示修改框
+        let post = this.list[$index];
+        this.tempPost.postText = post.postText;
+
+        this.dialogStatus = 'postUpdate'
+        this.dialogFormVisible = true
+      },
+      updatePostStick(){
+        console.log(this.tempPost.postStick)
       },
       updateLikeOffset() {
+        //改变点赞数请求
         let _vue = this;
         this.api({
           url: "/post/updateLikeOffset",
@@ -382,6 +450,7 @@
         })
       },
       updateBrowseOffset() {
+        //改变浏览数请求
         let _vue = this;
         this.api({
           url: "/post/updateBrowseOffset",
@@ -424,6 +493,7 @@
         })
       },
       removePost($index) {
+        //改变帖子状态请求
         let _vue = this;
         let post = _vue.list[$index];
         let msg;
