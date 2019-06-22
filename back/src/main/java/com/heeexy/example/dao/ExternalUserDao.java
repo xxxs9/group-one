@@ -1,5 +1,6 @@
 package com.heeexy.example.dao;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import org.apache.ibatis.annotations.Param;
@@ -63,7 +64,7 @@ public interface ExternalUserDao {
      * @return
      * @description 将用户曾经拥有而修改为不再拥有的权限 delete_status改为'2'
     */
-    public int removePermission(@Param("uuId") Integer uuId, @Param("epermissions") List<Integer> permissions);
+    public int removePermission(@Param("uuId")Integer uuId,@Param("epermissions")List<Integer> epermissions);
 
     /**
      * @author liminhao
@@ -72,16 +73,16 @@ public interface ExternalUserDao {
      * @return
      * @description 给用户添加权限
     */
-    public int addPermission(@Param("uuId") Integer uuId, @Param("epermissions") List<Integer> permissions);
+    public int addPermission(JSONObject jsonObject);
 
     /**
      * @author liminhao
      * @date 2019-06-18 09:50
      * @param null
      * @return
-     * @description 修改用户被禁用的权限状态 delete_status改为'1'
+     * @description 恢复用户被禁用的权限状态 delete_status改为'1'
     */
-    public int updatePermissionStatus(@Param("uuId") Integer uuId);
+    public int refreshPermissionStatus(JSONObject object);
 
     /**
      * @author liminhao
@@ -99,5 +100,13 @@ public interface ExternalUserDao {
      */
     public int queryExistUUID(JSONObject jsonObject);
 
+    /**
+     * 根据权限名查询id
+     * @param jsonObject
+     * @return
+     */
+    public List<JSONObject> getPermIdByName(@Param("epermissionList") List<String> epermissionList);
 
+
+    public JSONObject findUserById(@Param("uuId")Integer uuId);
 }

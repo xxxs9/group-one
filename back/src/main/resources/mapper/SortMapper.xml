@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.SortDao">
+
+    <!--列表返回Map-->
+    <resultMap id="sortMap" type="com.heeexy.example.util.model.One2Many">
+        <id column="categories_id" property="id"/>
+        <result column="categories_name" property="sortname" />
+        <result column="categories_img" property="imgurl" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <insert id="addSort" parameterType="com.alibaba.fastjson.JSONObject">
+        INSERT INTO post_categories
+            (categories_name,categories_img)
+        VALUES
+            (#{sortname},#{imageUrl})
+    </insert>
+    <!--统计数据总数-->
+    <select id="countSort" resultType="java.lang.Integer">
+        SELECT count(0)
+        FROM post_categories
+        WHERE status = '1'
+    </select>
+
+    <!--帖子列表-->
+
+    <select id="listSort" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+            w.categories_id                                     id,
+            w.categories_name                                 sortname,
+            w.categories_img                                 imageUrl,
+            w.status                                          status,
+            date_format(w.create_time, '%Y.%m.%d %T')   createTime,
+            date_format(w.update_time, '%Y.%m.%d %T')   updateTime
+        FROM post_categories w
+        WHERE w.status = '1'
+        ORDER BY w.categories_id DESC
+        LIMIT #{offSet}, #{pageRow}
+    </select>
+    <select id="listSortName" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+            w.categories_name                                 sortname
+        FROM post_categories w
+        WHERE w.status = '1'
+
+    </select>
+    <!--帖子详情Map-->
+    <update id="updateSort" parameterType="com.alibaba.fastjson.JSONObject">
+        UPDATE post_categories
+        SET
+            categories_name = #{sortname},
+            categories_img = #{imageUrl}
+        WHERE categories_id = #{id}
+    </update>
+    <update id="deleteSort" parameterType="com.alibaba.fastjson.JSONObject">
+        UPDATE post_categories
+        SET
+            status = '2'
+        WHERE categories_id = #{id}
+    </update>
+
+</mapper>

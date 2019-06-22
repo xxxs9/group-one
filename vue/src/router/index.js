@@ -87,6 +87,23 @@ export const asyncRouterMap = [
     ]
   },
   {
+    path: '/comment',
+    component: Layout,
+    redirect: '/user/',
+    name: '',
+    meta: {title: '评论管理', icon: 'table'},
+    children: [
+      {
+        path: '',
+        name: '评论列表',
+        component: _import('user/user'),
+        meta: {title: '评论列表', icon: 'user'},
+        menu: 'user'
+      }
+    ]
+  },
+
+  {
     path: '/post',
     component: Layout,
     redirect: '/post/',
@@ -102,41 +119,43 @@ export const asyncRouterMap = [
       }
     ]
   },
-
   {
-    path: '/advertisement',
+    path: '/platform',
     component: Layout,
-    redirect: '/advertisement/',
+    redirect: '/platform/',
     name: '',
-    meta: {title: '广告管理', icon: 'table'},
+    meta: {title: '平台管理', icon: 'table'},
     children: [
       {
-        path: '',
-        name: '广告列表',
-        component: _import('advertisement/advertisement'),
-        meta: {title: '广告列表', icon: 'user'},
-        menu: 'user'
-      }
+        path: '', name: '帖子类别管理', component: _import('platform/sort'), meta: {title: '帖子类别管理', icon: 'user'}, menu: 'sort'
+      },
+      {
+        path: 'tag',
+        name: '帖子标签管理',
+        component: _import('platform/tag'),
+        meta: {title: '帖子标签管理', icon: 'password'},
+        menu: 'tag'
+      },
     ]
   },
-
   {
-    path: '/comment',
+    path: '/template',
     component: Layout,
-    redirect: '/comment/',
+    redirect: '/template/',
     name: '',
-    meta: {title: '评论管理', icon: 'table'},
+    meta: {title: '平台管理', icon: 'table'},
     children: [
       {
-        path: '',
-        name: '评论列表',
-        component: _import('comment/comments'),
-        meta: {title: '评论列表', icon: 'example'},
-        menu: 'user'
-      }
+      path: '', name: '帖子类别管理', component: _import('template/msgtemplate'), meta: {title: '帖子类别管理', icon: 'user'}, menu: 'msgtemplate'
+},
+      {
+        path: 'chat',
+        name: '帖子标签管理',
+        component: _import('template/chat'),
+        meta: {title: '帖子标签管理', icon: 'password'},
+        menu: 'chat'
+      },
     ]
   },
-
-
   {path: '*', redirect: '/404', hidden: true}
 ]

@@ -8,6 +8,7 @@ import com.heeexy.example.util.constants.ErrorEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +27,9 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         CommonUtil.fillPageParam(jsonObject);
         int count = userDao.countUser(jsonObject);
         List<JSONObject> list = userDao.getUser(jsonObject);
+        for (JSONObject object : list) {
+            object.put("fansCount",Integer.parseInt(object.getString("fansCount")));
+        }
         System.out.println(jsonObject.getString("querykey"));
         return CommonUtil.successPage(jsonObject, list, count);
     }
@@ -58,22 +62,38 @@ public class ExternalUserServiceImpl implements ExternalUserService {
     }
 
     @Override
+
     public JSONObject removePermission(JSONObject jsonObject) {
-        userDao.removePermission(jsonObject.getInteger("uuId"),(List<Integer>)jsonObject.get("epermissions"));
+//        JSONObject jsonObject1 = new JSONObject();
+//        jsonObject1.put("epermissionList",jsonObject.getJSONArray("epermissionList"));
+//        jsonObject.put("epermissions",userDao.getPermIdByName(jsonObject1));
+//        int i = userDao.removePermission(jsonObject);
+        List<String> epermissionList = (List<String>) jsonObject.get("epermissionList");
+        List<JSONObject> permIdByName = userDao.getPermIdByName(epermissionList);
+        List<Integer> epermissions = new ArrayList<>();
+        for(int i=0;i<permIdByName.size();i++){
+
+            epermissions.add(permIdByName.get(i).getInteger("id"));
+
+        }
+        Integer uuId = jsonObject.getInteger("uuId");
+        userDao.removePermission(uuId,epermissions);
+
         return CommonUtil.successJson();
     }
 
     @Override
-    public JSONObject updatePermissionStatus(JSONObject jsonObject) {
-        userDao.updatePermissionStatus(jsonObject.getInteger("uuId"));
+    public JSONObject refreshPermissionStatus(JSONObject jsonObject) {
+        userDao.refreshPermissionStatus(jsonObject);
         return CommonUtil.successJson();
     }
 
     @Override
     public JSONObject addPermission(JSONObject jsonObject) {
-        userDao.addPermission(jsonObject.getInteger("uuId"),(List<Integer>)jsonObject.get("epermissions"));
+        userDao.addPermission(jsonObject);
         return CommonUtil.successJson();
     }
+
 
 
 

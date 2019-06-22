@@ -85,6 +85,9 @@
                         #{id}
                     </foreach>
                 </if>
+                <if test="queryPostTypeId != null and queryPostTypeId != '' ">
+                    and post_type_id = #{queryPostTypeId}
+                </if>
             </where>
             ORDER BY post_id
             LIMIT #{offSet}, #{pageRow}
@@ -96,12 +99,38 @@
     <!--帖子详情Map-->
     <resultMap id="postDetailMap" type="com.heeexy.example.util.model.One2Many">
         <id column="postId" property="postId"/>
-        <result column=""></result>
+        <result column="postPhone" property="postPhone"></result>
+        <result column="postAddress" property="postAddress"></result>
+        <result column="priceFloor" property="priceFloor"></result>
+        <result column="priceTop" property="priceTop"></result>
+        <collection property="postImgList" ofType="String">
+            <id column="postImageSrc" property="postImageSrc"></id>
+        </collection>
+        <collection property="comments" ofType="String">
+            <id column="commentText" property="commentText"></id>
+        </collection>
     </resultMap>
 
     <!--根据帖子ID返回帖子详情-->
-    <select id="getPostById" resultType="com.alibaba.fastjson.JSONObject">
-
+    <select id="queryPostById" resultMap="postDetailMap">
+        SELECT
+          p.*,
+          pi.post_image_src             postImageSrc,
+          c.comment_text                commentText
+          FROM (
+            SELECT
+                post_id                 postId,
+                post_phone              postPhone,
+                post_address            postAddress,
+                price_floor             priceFloor,
+                price_top               priceTop
+            FROM
+              post_table
+            WHERE post_id = #{postId}
+          ) p
+          LEFT JOIN post_image pi ON pi.post_id = p.postId
+          LEFT JOIN comment c ON c.post_id = p.postId
     </select>
+
 
 </mapper>

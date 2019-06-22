@@ -32,7 +32,7 @@ public class PostServiceImpl implements PostService {
         String queryOwnewName = jsonObject.getString("queryOwnewName");
         if(queryOwnewName != null && "".equals(queryOwnewName)==false){
             JSONObject queryKey = new JSONObject();
-            queryKey.put("queryKey",queryOwnewName);
+            queryKey.put("querykey",queryOwnewName);
             queryKey.put("offSet",0);
             queryKey.put("pageRow",10);
             List<JSONObject> user = externalUserDao.getUser(queryKey);
@@ -67,5 +67,11 @@ public class PostServiceImpl implements PostService {
     public JSONObject updatePostState(JSONObject jsonObject) {
         postDao.updatePostState(jsonObject);
         return CommonUtil.successJson();
+    }
+
+    @Override
+    public JSONObject queryPostById(JSONObject jsonObject) {
+        JSONObject DetailData = postDao.queryPostById(jsonObject);
+        return CommonUtil.successJson(DetailData);
     }
 }
