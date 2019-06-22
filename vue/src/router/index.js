@@ -91,12 +91,13 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/post/',
     name: '',
-    meta: {title: '帖子管理', icon: 'table'},
+    meta: {title: '帖子列表', icon: 'post'},
     children: [
       {
-        path: '', name: '帖子列表',
+        path: '',
+        name: '帖子列表',
         component: _import('post/post'),
-        meta: {title: '帖子列表', icon: 'post'},
+        meta: {title: '帖子管理', icon: 'post'},
         menu: 'post'
       }
     ]

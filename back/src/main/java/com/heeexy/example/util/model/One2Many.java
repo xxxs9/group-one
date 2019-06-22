@@ -22,6 +22,12 @@ public class One2Many extends JSONObject {
 	private Set<String> permissionList;
 	private Set<String> postTagList;
 	private Set<Integer> permissionIds;
+	//帖子标签数组
+	private Set<Integer> postTagList;
+	/**
+	 * 帖子图片数组
+	 */
+    private Set<Integer> postImgList;
 	private List<JSONObject> picList;
 	private List<JSONObject> menus;
 	private List<JSONObject> users;
