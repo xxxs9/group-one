@@ -7,9 +7,6 @@
             <el-form-item>
               <el-input type="text" v-model="tempComment.commentText" placeholder="输入评论内容搜索"/>
             </el-form-item>
-            <el-form-item>
-              <el-input type="text" v-model="tempComment.commentText" placeholder="输入评论用户搜索"/>
-            </el-form-item>
             <el-date-picker
               v-model="tempComment.commentTime"
               type="daterange"
@@ -46,7 +43,7 @@
       <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" v-if="scope.row.commentState==0" @click="removeComment(scope.$index)">显示</el-button>
-          <el-button type="primary" icon="edit" v-if="scope.row.commentState==1" @click="removeComment(scope.$index)">隐藏</el-button>
+          <el-button type="info" icon="edit" v-if="scope.row.commentState==1" @click="removeComment(scope.$index)">隐藏</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -108,6 +105,8 @@
         listLoading: false,//数据加载等待动画
         listQuery: {
           commentText: '',
+          beforeDate:'',
+          afterDate:'',
           pageNum: 1,//页码
           pageRow: 50,//每页条数
         },
@@ -173,7 +172,10 @@
       getList() {
         //查询列表
         this.listLoading = true;
-        this.listQuery.commentText = this.tempComment.commentText
+        this.listQuery.commentText = this.tempComment.commentText;
+        console.log(this.tempComment.commentTime[0]);
+        this.listQuery.beforeDate = this.tempComment.commentTime[0];
+        this.listQuery.afterDate = this.tempComment.commentTime[1];
         this.api({
           url: "/comment/list",
           method: "get",
