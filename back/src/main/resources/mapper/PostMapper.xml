@@ -95,6 +95,22 @@
         WHERE post_id = #{postId}
     </update>
 
+    <!--修改帖子内容-->
+    <update id="updatePost">
+        UPDATE post_table
+        SET
+          post_text = #{postText}, post_type_id = #{postTypeId};
+        FROM post_table
+        WHERE post_id = #{postId}
+    </update>
+
+    <update id="updatePostImg">
+        UPDATE post_image
+        SET
+          post_image_src = #{postImageSrc}
+        WHERE post_id = #{postId}
+    </update>
+
     <!--统计数据总数-->
     <select id="countUser" resultType="java.lang.Integer">
         SELECT count(0)
@@ -126,6 +142,7 @@
           FROM (
             SELECT
                 post_id                 postId,
+                post_text               postText,
                 post_phone              postPhone,
                 post_address            postAddress,
                 price_floor             priceFloor,

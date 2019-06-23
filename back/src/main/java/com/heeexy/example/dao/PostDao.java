@@ -58,4 +58,6 @@ public interface PostDao {
     int updatePostState(JSONObject jsonObject);
 
 
+    int updatePost(JSONObject jsonObject);
+
 }
