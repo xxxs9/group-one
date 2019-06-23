@@ -1,10 +1,16 @@
 package com.heeexy.example.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.AdvertisementDao;
 import com.heeexy.example.service.AdvertisementService;
+import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author L-YX
@@ -18,21 +24,32 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Override
     public JSONObject listAllAdvertisement(JSONObject jsonObject) {
-        return null;
-    }
-
-    @Override
-    public JSONObject countAdvertisement(JSONObject jsonObject) {
-        return null;
+        CommonUtil.fillPageParam(jsonObject);
+        List<JSONObject> list = advertisementDao.listAllAdvertisement(jsonObject);
+        int count = advertisementDao.countAdvertisement(jsonObject);
+        return CommonUtil.successPage(jsonObject, list, count);
     }
 
     @Override
     public JSONObject addAdvertisement(JSONObject jsonObject) {
-        return null;
+        JSONArray src = jsonObject.getJSONArray("src");
+        for (Object o : src) {
+            jsonObject.put("advertisementStatus",1 );
+            jsonObject.put("srcUrl",o );
+            advertisementDao.addAdvertisement(jsonObject);
+        }
+        return CommonUtil.successJson();
     }
 
     @Override
     public JSONObject updateAdvertisement(JSONObject jsonObject) {
-        return null;
+        advertisementDao.updateAdvertisement(jsonObject);
+        return CommonUtil.successJson();
+    }
+
+    @Override
+    public JSONObject removeAdvertisement(JSONObject jsonObject) {
+        advertisementDao.removeAdvertisement(jsonObject);
+        return CommonUtil.successJson();
     }
 }

@@ -28,11 +28,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public JSONObject countComment(JSONObject jsonObject) {
-        return null;
-    }
-
-    @Override
     public JSONObject updateComment(JSONObject jsonObject) {
         commentDao.updateComment(jsonObject);
         return CommonUtil.successJson();
@@ -53,11 +48,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public JSONObject countByCommentUserId(JSONObject jsonObject) {
-        return null;
-    }
-
-    @Override
     public JSONObject getByAcceptUserId(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
         jsonObject.put("acceptUserId",10001 );
@@ -70,10 +60,5 @@ public class CommentServiceImpl implements CommentService {
         int count = commentDao.countByAcceptUserId(jsonObject);
         List<JSONObject> list = commentDao.getByAcceptUserId(jsonObject);
         return CommonUtil.successPage(jsonObject, list, count);
-    }
-
-    @Override
-    public JSONObject countByAcceptUserId(JSONObject jsonObject) {
-        return null;
     }
 }
