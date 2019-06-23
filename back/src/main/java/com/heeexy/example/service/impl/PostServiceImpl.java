@@ -74,4 +74,9 @@ public class PostServiceImpl implements PostService {
         JSONObject DetailData = postDao.queryPostById(jsonObject);
         return CommonUtil.successJson(DetailData);
     }
+
+    @Override
+    public JSONObject updatePost(JSONObject jsonObject) {
+        return null;
+    }
 }

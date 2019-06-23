@@ -18,7 +18,6 @@
         </el-form-item>
       </el-form>
     </div>
-    <img src="../../assets/upload/2b1d502e-8e28-4639-97e1-5940a4c9db2620150822214445_ERtxY.thumb.700_0.jpeg"/>
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
       <el-table-column align="center" label="序号" style="width: 60px;">
