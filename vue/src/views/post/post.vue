@@ -1,8 +1,11 @@
-<style>
+<style xmlns:30pxwidth="http://www.w3.org/1999/xhtml" xmlns:height="http://www.w3.org/1999/xhtml">
   .cell {
     height: 70px !important;
     overflow: auto !important;
     line-height: 70px !important;
+  }
+  .el-row {
+    margin-bottom: 130px;
   }
 </style>
 <template>
@@ -30,11 +33,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="tempPost.queryPostTypeId"
-                     filterable
-                     clearable
-                     placeholder="选择帖子类型"
-                     @change="getList">
+          <el-select v-model="tempPost.queryPostTypeId" filterable clearable placeholder="选择帖子类型" @change="getList">
             <el-option v-for="item in typeOption" :key="item.id" :label="'# '+item.sortname+' #'" :value="item.id">
             </el-option>
           </el-select>
@@ -136,6 +135,105 @@
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
 
+    <el-dialog title="修改帖子内容" width="50%" :visible.sync="dialogUpdateVisible">
+      <el-form class="small-space" :model="updateData" label-position="left" label-width="120px"
+               style='width: 100%; margin-left:50px;'>
+        <el-form-item label="帖子类型">
+          <el-select v-model="updateData.postTypeId" filterable clearable :placeholder="'# '+tempPost.postType+' #'">
+            <el-option :key="tempPost.postTypeId" :label="'# '+tempPost.postType+' #'" :value="tempPost.postTypeId" >{{'# '+tempPost.postType+' #'}}</el-option>
+            <el-option-group>
+              <el-option v-for="item in typeOption" :key="item.id" :label="'# '+item.sortname+' #'" :value="item.id">
+              </el-option>
+            </el-option-group>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="帖子内容" style="width: 80%">
+          <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" size="medium" v-model="tempPost.postText">{{tempPost.postText}}</el-input>
+        </el-form-item>
+
+        <el-form-item label="修改图片" size="medium" :inline="true">
+
+          <div>
+            <el-row style="margin-right: 280px">
+              <el-col :span="8">
+                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                  <img :src="tempPost.postImgList[0]" style="height: 100%;width: 100%" />
+                </el-upload>
+              </el-col>
+              <el-col :span="8">
+                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                  <img :src="tempPost.postImgList[3]" style="height: 100%;width: 100%" />
+                </el-upload>
+              </el-col>
+              <el-col :span="8">
+                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                  <img :src="tempPost.postImgList[6]" style="height: 100%;width: 100%" />
+                </el-upload>
+              </el-col>
+            </el-row>
+
+            <el-row style="margin-right: 280px">
+              <el-col :span="8">
+                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                  <img :src="tempPost.postImgList[1]" style="height: 100%;width: 100%" />
+                </el-upload>
+              </el-col>
+              <el-col :span="8">
+                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                  <img :src="tempPost.postImgList[4]" style="height: 100%;width: 100%" />
+                </el-upload>
+              </el-col>
+              <el-col :span="8">
+                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                  <img :src="tempPost.postImgList[7]" style="height: 100%;width: 100%" />
+                </el-upload>
+              </el-col>
+            </el-row>
+
+            <el-row style="margin-right: 280px">
+              <el-col :span="8">
+                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                  <img :src="tempPost.postImgList[2]" style="height: 100%;width: 100%" />
+                </el-upload>
+              </el-col>
+              <el-col :span="8">
+                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                  <img :src="tempPost.postImgList[5]" style="height: 100%;width: 100%" />
+                </el-upload>
+              </el-col>
+              <el-col :span="8">
+                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                  <img :src="tempPost.postImgList[8]" style="height: 100%;width: 100%" />
+                </el-upload>
+              </el-col>
+            </el-row>
+
+            <!--<el-col style="margin-right: 40px!important;" :span="3" >-->
+             <!--<el-upload  v-if="tempPost.postImgList.indexOf(img)<3" action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
+              <!--<img :src="img" style="height: 100%;width: 100%" />-->
+             <!--</el-upload>-->
+              <!--<el-upload v-if="tempPost.postImgList.indexOf(img)>=3 && tempPost.postImgList.indexOf(img)<=5" action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
+                <!--<img :src="img" style="height: 100%;width: 100%"/>-->
+              <!--</el-upload>-->
+              <!--<br/>-->
+              <!--<br/>-->
+              <!--<br/>-->
+              <!--<br/>-->
+              <!--<br/>-->
+              <!--<el-upload v-if="tempPost.postImgList.indexOf(img)>=6 && tempPost.postImgList.indexOf(img)<=9" action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
+                <!--<img :src="img" style="height: 100%;width: 100%"/>-->
+              <!--</el-upload>-->
+            <!--</el-col>-->
+
+          </div>
+        </el-form-item>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+       <el-button type="primary" @click="">确认修改</el-button>
+      </div>
+    </el-dialog>
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="600px">
 
@@ -168,38 +266,12 @@
           </div>
         </el-form-item>
 
-        <el-form-item label="帖子内容" v-if="dialogStatus=='postUpdate'">
-        <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 6}" size="medium" v-model="tempPost.postText">{{tempPost.postText}}</el-input>
-      </el-form-item>
-
-        <el-form-item label="修改图片" v-if="dialogStatus=='postUpdate'" size="medium" :inline="true">
-          <el-upload action="/post" list-type="picture-card">
-            <img src="https://www.gravatar.com/avatar/6560ed55e62396e40b34aac1e5041028?imageView2/1/w/80/h/80" style="height: 100%;width: 100%"/>
-          </el-upload>
-          <el-upload action="/post" list-type="picture-card">
-            <img src="https://www.gravatar.com/avatar/6560ed55e62396e40b34aac1e5041028?imageView2/1/w/80/h/80" style="height: 100%;width: 100%"/>
-          </el-upload>
-          <el-upload action="/post" list-type="picture-card">
-            <img src="https://www.gravatar.com/avatar/6560ed55e62396e40b34aac1e5041028?imageView2/1/w/80/h/80" style="height: 100%;width: 100%"/>
-          </el-upload>
-          <el-upload action="/post" list-type="picture-card">
-            <img src="https://www.gravatar.com/avatar/6560ed55e62396e40b34aac1e5041028?imageView2/1/w/80/h/80" style="height: 100%;width: 100%"/>
-          </el-upload>
-          <el-upload action="/post" list-type="picture-card">
-            <img src="https://www.gravatar.com/avatar/6560ed55e62396e40b34aac1e5041028?imageView2/1/w/80/h/80" style="height: 100%;width: 100%"/>
-          </el-upload>
-
-
-        </el-form-item>
-
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" v-if="dialogStatus=='browseOffset'" @click="updateBrowseOffset">修改浏览数量</el-button>
         <el-button type="primary" v-if="dialogStatus=='likeOffset'" v-else @click="updateLikeOffset">修改点赞数量</el-button>
         <el-button type="primary" v-if="dialogStatus=='postStick'" v-else @click="updatePostStick">修改置顶板块</el-button>
-        <el-button type="primary" v-if="dialogStatus=='postUpdate'" v-else @click="">确认修改</el-button>
       </div>
     </el-dialog>
   </div>
@@ -226,12 +298,11 @@
           pageNum: 1,//页码
           pageRow: 10,//每页条数
         },
-        roles: [],//角色列表
-        typeOption: '',//帖子类型下拉框数据
+        typeOption: '',//帖子类型下拉框数据a
         listStick:'',//置顶列表数据
         dialogStatus: '',
         dialogFormVisible: false,
-        dialogDetailVisible: false,
+        dialogUpdateVisible: false,
         textMap: {
           likeOffset: '增加点赞数量',
           browseOffset: '增加浏览数量',
@@ -242,6 +313,12 @@
         detailData:{
           postId: '',//帖子ID
           postOwnerId: '',//帖子ID
+        },
+        updateData:{
+          postId:'',
+          postTypeId:'',
+          postText:'',
+          postImgList:''
         },
         tempPost: {
           postId: '',//帖子ID
@@ -332,6 +409,7 @@
         }).then(data => {
           this.listLoading = false;
           this.typeOption = data.list;
+
         })
       },
       refashList() {
@@ -345,9 +423,9 @@
         //显示帖子详情窗口
         let post = this.list[$index];
         this.detailData.postId = post.postId;   //帖子Id
-        this.detailData.postOwnerId = post.postOwnerId;   //帖子Id
+        this.detailData.postOwnerId = post.postOwnerId;
         this.tempPost.postId = post.postId;   //帖子Id
-        this.tempPost.postOwnerId = post.postOwnerId;   //帖子Id
+        this.tempPost.postOwnerId = post.postOwnerId;
         this.tempPost.postText = post.postText;  //帖子内容
         this.tempPost.postType = post.postType;  //帖子类型
         this.tempPost.likeCount = post.likeCount; //点赞总数
@@ -422,9 +500,14 @@
         //显示修改框
         let post = this.list[$index];
         this.tempPost.postText = post.postText;
-
-        this.dialogStatus = 'postUpdate'
-        this.dialogFormVisible = true
+        this.tempPost.postType = post.postType;
+        this.tempPost.postTypeId = post.postTypeId;
+        this.tempPost.postImgList = post.postImgList;
+        console.log(this.tempPost.postImgList)
+        for(let i = 0 ; i<this.tempPost.postImgList.length;i++){
+          console.log(this.tempPost.postImgList[i].index)
+        }
+        this.dialogUpdateVisible = true
       },
       updatePostStick(){
         console.log(this.tempPost.postStick)

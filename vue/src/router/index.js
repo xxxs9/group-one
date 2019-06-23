@@ -89,14 +89,14 @@ export const asyncRouterMap = [
   {
     path: '/comment',
     component: Layout,
-    redirect: '/user/',
+    redirect: '/comment/',
     name: '',
     meta: {title: '评论管理', icon: 'table'},
     children: [
       {
         path: '',
         name: '评论列表',
-        component: _import('user/user'),
+        component: _import('comment/comments'),
         meta: {title: '评论列表', icon: 'user'},
         menu: 'user'
       }

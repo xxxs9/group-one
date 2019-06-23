@@ -2,7 +2,7 @@
 
   <div>
 
-      <span>{{addDetailData}}</span>
+      <span>{{addDetailData.postText}}</span>
       <el-button @click="getDetailData">显示</el-button>
 
 

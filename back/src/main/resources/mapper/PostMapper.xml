@@ -19,7 +19,57 @@
         <collection property="postTagList" ofType="String">
             <id column="postTagName" property="postTagName"/>
         </collection>
+        <collection property="postImgList" ofType="String">
+            <id column="postImageSrc" property="postImageSrc"></id>
+        </collection>
     </resultMap>
+
+
+    <!--帖子列表-->
+    <select id="listPost" resultMap="postMap" >
+        SELECT
+        p.*,
+        (SELECT count(0) FROM click_goods WHERE click_goods.post_id = p.postId)                likeCount,
+        (SELECT count(0) FROM browse_records br WHERE br.post_id = p.postId)                   browseCount,
+        (SELECT username FROM `user` u WHERE u.uuid = p.postOwnerId)                           postOwnerName,
+        (SELECT tag_name FROM tag t WHERE t.tag_no = pt2.tag_id)                               postTagName,
+        (SELECT categories_name FROM post_categories pc WHERE pc.categories_id = p.postTypeId) postType,
+        post_image.post_image_src                                                              postImageSrc
+        FROM(
+            SELECT
+            post_id                               postId,
+            post_type_id                          postTypeId,
+            post_owner_id                         postOwnerId,
+            post_text                             postText,
+            DATE_FORMAT(post_time, '%Y.%m.%d %T') postTime,
+            like_offset                          likeOffset,
+            browse_offset                         browseOffset,
+            post_state                            postState
+        FROM post_table
+        <where>
+            <if test="queryText != null and queryText != '' ">
+                post_text LIKE concat('%',#{queryText},'%')
+            </if>
+            <if test="beforeDate != null and beforeDate != '' and afterDate !=null and afterDate !=''">
+                and DATE(post_time) between #{beforeDate} and #{afterDate}
+            </if>
+            <if test="postOwnerId != null and postOwnerId.size()>0 ">
+                and
+                <foreach collection="postOwnerId" item="id" open="post_owner_id in(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="queryPostTypeId != null and queryPostTypeId != '' ">
+                and post_type_id = #{queryPostTypeId}
+            </if>
+        </where>
+        ORDER BY post_id
+        LIMIT #{offSet}, #{pageRow}
+        ) p
+        LEFT JOIN post_tag pt2 ON pt2.post_id = p.postId
+        LEFT JOIN post_image ON post_image.post_id = p.postId
+        ORDER BY p.postState
+    </select>
 
     <!--修改点赞偏移量-->
     <update id="updateLikeOffset">
@@ -50,50 +100,6 @@
         SELECT count(0)
         FROM post_table p
         WHERE p.post_state = '0'
-    </select>
-
-    <!--帖子列表-->
-    <select id="listPost" resultMap="postMap" >
-        SELECT
-          p.*,
-          (SELECT count(0) FROM click_goods WHERE click_goods.post_id = p.postId)                          likeCount,
-          (SELECT count(0) FROM browse_records br WHERE br.post_id = p.postId)                   browseCount,
-          (SELECT username FROM `user` u WHERE u.uuid = p.postOwnerId)                           postOwnerName,
-          (SELECT tag_name FROM tag t WHERE t.tag_no = pt2.tag_id)                               postTagName,
-          (SELECT categories_name FROM post_categories pc WHERE pc.categories_id = p.postTypeId) postType
-          FROM(
-            SELECT
-              post_id                               postId,
-              post_type_id                          postTypeId,
-              post_owner_id                         postOwnerId,
-              post_text                             postText,
-              DATE_FORMAT(post_time, '%Y.%m.%d %T') postTime,
-              like_offset                          likeOffset,
-              browse_offset                         browseOffset,
-              post_state                            postState
-            FROM post_table
-            <where>
-                <if test="queryText != null and queryText != '' ">
-                    post_text LIKE concat('%',#{queryText},'%')
-                </if>
-                <if test="beforeDate != null and beforeDate != '' and afterDate !=null and afterDate !=''">
-                    and DATE(post_time) between #{beforeDate} and #{afterDate}
-                </if>
-                <if test="postOwnerId != null and postOwnerId.size()>0 ">
-                    and
-                    <foreach collection="postOwnerId" item="id" open="post_owner_id in(" close=")" separator=",">
-                        #{id}
-                    </foreach>
-                </if>
-                <if test="queryPostTypeId != null and queryPostTypeId != '' ">
-                    and post_type_id = #{queryPostTypeId}
-                </if>
-            </where>
-            ORDER BY post_id
-            LIMIT #{offSet}, #{pageRow}
-          ) p
-          LEFT JOIN post_tag pt2 ON pt2.post_id = p.postId
-          ORDER BY p.postState
     </select>
 
     <!--帖子详情Map-->

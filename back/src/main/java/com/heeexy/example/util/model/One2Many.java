@@ -20,7 +20,6 @@ public class One2Many extends JSONObject {
 	private Set<String> roleList;
 	private Set<String> menuList;
 	private Set<String> permissionList;
-	private Set<String> postTagList;
 	private Set<Integer> permissionIds;
 	private List<JSONObject> picList;
 	private List<JSONObject> menus;
