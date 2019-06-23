@@ -2,7 +2,6 @@
 
   <div>
 
-      <span>
         <el-header>
           用户信息
         </el-header>
@@ -43,12 +42,14 @@
           </span>
         </el-footer>
         <el-header>
-          <el-button type="text">评论</el-button>
+          <el-button type="text" style="font-size: 20px">评论</el-button>
         </el-header>
-        <el-main v-for="text in addDetailData.commentText">
-          <span>评论用户 回复 被评论用户： <el-tag v-text="text" /></span>
-        </el-main>
-      </span>
+      <div v-for="text in addDetailData.comments" style="margin-left: 25px">
+      <span v-if="addDetailData.comments.indexOf(text)==0"><el-button type="text">{{text.commentUserName}}</el-button>： {{text.commentText}}</span>
+
+      <span v-else><el-button type="text">{{text.commentUserName}}</el-button> 回复 <el-button type="text">{{"@"+text.acceptUserName}}</el-button>： {{text.commentText}}</span>
+      <br/>
+    </div>
   </div>
 </template>
 
@@ -65,7 +66,7 @@
       }
     },
     created() {
-      console.log("传过来的数据"+this.addDetailData.postId)
+      console.log(this.addDetailData)
     },
     mounted() {
 
@@ -79,6 +80,7 @@
 
 <style scoped>
   .el-header {
+    margin-left: -20px;
     color: #333;
     text-align: left;
     line-height: 20px;
