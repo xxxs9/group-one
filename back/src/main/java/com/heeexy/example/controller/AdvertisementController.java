@@ -77,4 +77,16 @@ public class AdvertisementController {
         return advertisementService.removeAdvertisement(requestJson);
     }
 
+    @PostMapping("/update")
+    public JSONObject updateAdvertisement(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, " advertisementType,srcUrl");
+        if (list.size()!=0) {
+            for (String s : list) {
+                String srcUrl = s;
+                requestJson.put("srcUrl",srcUrl );
+            }
+        }
+        return advertisementService.updateAdvertisement(requestJson);
+    }
+
 }

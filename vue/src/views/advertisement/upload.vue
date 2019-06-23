@@ -9,7 +9,7 @@
               </el-button>
             </el-form-item>
             <el-form-item>
-              <el-input type="text" v-model="tempAdvertisement.advertisementType" placeholder="输入评论内容搜索"/>
+              <el-input type="text" v-model="tempAdvertisement.name" placeholder="输入评论内容搜索"/>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" class="el-icon-search" @click="getList">搜索</el-button>
@@ -29,15 +29,15 @@
       <el-table-column align="center" label="广告类型" prop="advertisementType" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="图片路径" style="width: 60px;">
         <template slot-scope="scope">
-          <img :src="scope.row.srcUrl" width="200" height="80" class="head_pic"/>
+          <img :src="scope.row.srcUrl" width="200" height="80" class="head_pic" style="display: block"/>
         </template>
       </el-table-column>
       <el-table-column align="center" label="广告状态" prop="advertisementStatus" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" v-if="" @click="showUpdate(scope.$index)">修改</el-button>
-          <el-button type="primary" icon="edit" v-if="scope.row.advertisementStatus==0" @click="removeAdvertisement(scope.$index)">显示</el-button>
-          <el-button type="info" icon="edit" v-if="scope.row.advertisementStatus==1" @click="removeAdvertisement(scope.$index)">隐藏</el-button>
+          <el-button type="warning" v-if="" icon="el-icon-edit" @click="showUpdate(scope.$index)">修改</el-button>
+          <el-button type="primary" icon="el-icon-view" v-if="scope.row.advertisementStatus==0" @click="removeAdvertisement(scope.$index)">显示</el-button>
+          <el-button type="info" icon="el-icon-delete" v-if="scope.row.advertisementStatus==1" @click="removeAdvertisement(scope.$index)">隐藏</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -53,17 +53,17 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="tempUser" label-position="left" label-width="80px"
                style='width: 300px; margin-left:50px;'>
-        <el-form-item label="类型" required v-if="dialogStatus=='create'">
+        <el-form-item label="类型">
           <el-input type="text" v-model="tempAdvertisement.advertisementType">
           </el-input>
         </el-form-item>
-        <el-form-item label="上传" v-if="dialogStatus=='create'" required>
+        <el-form-item label="上传" required>
           <el-upload
             action="/api/src/upload"
             list-type="picture-card"
             :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove">
-            <i class="el-icon-plus"></i>
+            <img :src="tempAdvertisement.srcUrl" style="width: 100%;height:100%"/>
           </el-upload>
           <el-dialog :visible.sync="dialogVisible">
             <img width="100%" :src="dialogImageUrl" alt="" ref="imgs">
@@ -73,7 +73,7 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button v-if="dialogStatus=='create'" type="success" @click="createAdvertisement">添 加</el-button>
-        <el-button type="primary" v-if="dialogStatus=='update'" @click="updateUser">修 改</el-button>
+        <el-button type="primary" v-if="dialogStatus=='update'" @click="updateAdvertisement">修 改</el-button>
       </div>
     </el-dialog>
   </div>
@@ -88,7 +88,7 @@
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
         listQuery: {
-          advertisementType: '',
+          name: '',
           pageNum: 1,//页码
           pageRow: 50,//每页条数
         },
@@ -123,7 +123,7 @@
       getList() {
         //查询列表
         this.listLoading = true;
-        this.listQuery.advertisementType = this.tempAdvertisement.advertisementType;
+        this.listQuery.name = this.tempAdvertisement.name;
         this.api({
           url: "/src/list",
           method: "get",
@@ -171,7 +171,7 @@
         this.tempAdvertisement.srcUrl = advertisement.srcUrl;
         this.tempAdvertisement.advertisementStatus = advertisement.advertisementStatus;
         this.tempAdvertisement.advertisementId = advertisement.advertisementId;
-        this.dialogStatus = "create"
+        this.dialogStatus = "update"
         this.dialogFormVisible = true
       },
       createAdvertisement() {
@@ -190,9 +190,9 @@
         //修改用户信息
         let _vue = this;
         this.api({
-          url: "/user/updateUser",
+          url: "/src/update",
           method: "post",
-          data: this.tempUser
+          data: this.tempAdvertisement
         }).then(() => {
           let msg = "修改成功";
           this.dialogFormVisible = false

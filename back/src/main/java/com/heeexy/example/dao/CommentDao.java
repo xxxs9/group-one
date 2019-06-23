@@ -67,4 +67,6 @@ public interface CommentDao {
      * @return
      */
     int countByAcceptUserId(JSONObject jsonObject);
+
+    List<JSONObject> getByPostId(JSONObject jsonObject);
 }
