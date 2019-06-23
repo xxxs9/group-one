@@ -157,5 +157,40 @@ export const asyncRouterMap = [
       },
     ]
   },
+
+  {
+    path: '/comment',
+    component: Layout,
+    redirect: '/comment/',
+    name: '',
+    meta: {title: '评论管理', icon: 'post'},
+    children: [
+      {
+        path: '',
+        name: '评论列表',
+        component: _import('comment/comments'),
+        meta: {title: '评论管理', icon: 'post'},
+        menu: 'post'
+      }
+    ]
+  },
+
+  {
+    path: '/advertisement',
+    component: Layout,
+    redirect: '/advertisement/',
+    name: '',
+    meta: {title: '广告管理', icon: 'post'},
+    children: [
+      {
+        path: '',
+        name: '广告列表',
+        component: _import('advertisement/upload'),
+        meta: {title: '广告管理', icon: 'post'},
+        menu: 'post'
+      }
+    ]
+  },
+
   {path: '*', redirect: '/404', hidden: true}
 ]

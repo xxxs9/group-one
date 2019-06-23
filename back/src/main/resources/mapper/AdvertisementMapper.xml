@@ -4,46 +4,49 @@
 <mapper namespace="com.heeexy.example.dao.AdvertisementDao">
 
     <resultMap id="advertisementMap" type="com.heeexy.example.util.model.One2Many">
-        <id column="advertisement_id" property="advertisementId" />
-        <result column="advertisement_name" property="advertisementName" />
-        <result column="src_url" property="srcUrl" />
-        <result column="advertisement_time" property="advertisementTime" />
+        <id column="advertisementId" property="advertisementId" />
+        <result column="advertisementType" property="advertisementType" />
+        <result column="srcUrl" property="srcUrl" />
+        <result column="advertisementStatus" property="advertisementStatus" />
     </resultMap>
 
     <select id="listAllAdvertisement" resultMap="advertisementMap">
-        SELECT a.advertisement_id,a.src_url,a.advertisement_time,a.advertisement_name
-        FROM advertisement a
+        SELECT
+        advertisement_id      advertisementId
+        ,src_url              srcUrl
+        ,advertisement_status advertisementStatus
+        ,advertisement_type   advertisementType
+        FROM advertisement
         <where>
-            <if test="advertisementId!=0">
-                advertisement_id = #{advertisementId}
-            </if>
-            <if test="advertisementName!=null and advertisementName!=''">
-                advertisement_name LIKE "%"#{advertisementName}"%"
+            <if test="advertisementType!=null and advertisementType!=''">
+                advertisement_type LIKE "%"#{advertisementType}"%"
             </if>
         </where>
         LIMIT #{offSet}, #{pageRow}
     </select>
 
-    <select id="countAdvertisement" parameterType="com.alibaba.fastjson.JSONObject" resultType="java.lang.Integer">
-        SELECT COUNT (advertisement_id) FROM advertisement
+    <select id="countAdvertisement" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM advertisement
         <where>
-            <if test="advertisementName!=null and advertisementName!=''">
-                advertisement_name LIKE "%"#{advertisementName}"%"
+            <if test="advertisementType!=null and advertisementType!=''">
+                advertisement_type LIKE "%"#{advertisementType}"%"
             </if>
         </where>
     </select>
     
     <insert id="addAdvertisement" useGeneratedKeys="true" keyProperty="advertisementId">
-        INSERT INTO advertisement(advertisement_id,src_url,advertisement_time,advertisement_name)
-        VALUES (#{srcUrl},#{advertisementTime},#{advertisementName})
+        INSERT INTO
+        advertisement(src_url,advertisement_type,advertisement_status)
+        VALUES (#{srcUrl},#{advertisementType},#{advertisementStatus})
     </insert>
-    
-    <delete id="deleteAdvertisement" parameterType="java.lang.Integer">
-        DELETE FROM advertisement WHERE advertisement_id = #{advertisementId}
-    </delete>
 
     <update id="updateAdvertisement">
-        UPDATE advertisement SET src_url = #{srcUrl},advertisement_time = #{advertisementTime}
-        advertisement_name = #{advertisementName} WHERE advertisement_id = #{advertisementId}
+        UPDATE advertisement SET src_url = #{srcUrl},advertisement_type = #{advertisementType}
+        WHERE advertisement_id = #{advertisementId}
+    </update>
+
+    <update id="removeAdvertisement">
+        UPDATE advertisement SET advertisement_status = #{advertisementStatus}
+        WHERE advertisement_id = #{advertisementId}
     </update>
 </mapper>

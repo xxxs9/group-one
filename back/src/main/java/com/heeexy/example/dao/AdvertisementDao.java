@@ -32,9 +32,16 @@ public interface AdvertisementDao {
     int addAdvertisement(JSONObject jsonObject);
 
     /**
-     * 修改广告（一般是修改同一客户需求的不同图片路径）
+     * 修改广告（修改客户需求的不同图片路径）
      * @param jsonObject
      * @return int
      */
     int updateAdvertisement(JSONObject jsonObject);
+
+    /**
+     * 修改广告状态，决定播放与否
+     * @param jsonObject
+     * @return int
+     */
+    int removeAdvertisement (JSONObject jsonObject);
 }
