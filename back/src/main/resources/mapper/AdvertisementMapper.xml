@@ -18,8 +18,8 @@
         ,advertisement_type   advertisementType
         FROM advertisement
         <where>
-            <if test="name!=null and name!=''">
-                advertisement_type LIKE "%"#{name}"%"
+            <if test="advertisementType!=null and advertisementType!=''">
+                advertisement_type LIKE "%"#{advertisementType}"%"
             </if>
         </where>
         LIMIT #{offSet}, #{pageRow}
@@ -28,8 +28,8 @@
     <select id="countAdvertisement" resultType="java.lang.Integer">
         SELECT COUNT(0) FROM advertisement
         <where>
-            <if test="name!=null and name!=''">
-                advertisement_type LIKE "%"#{name}"%"
+            <if test="advertisementType!=null and advertisementType!=''">
+                advertisement_type LIKE "%"#{advertisementType}"%"
             </if>
         </where>
     </select>

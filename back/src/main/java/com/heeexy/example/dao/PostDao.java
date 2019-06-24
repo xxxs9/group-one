@@ -57,4 +57,5 @@ public interface PostDao {
      */
     int updatePostState(JSONObject jsonObject);
 
+
 }

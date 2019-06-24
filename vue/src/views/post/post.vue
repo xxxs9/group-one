@@ -1,13 +1,11 @@
-<style>
+<style xmlns:30pxwidth="http://www.w3.org/1999/xhtml" xmlns:height="http://www.w3.org/1999/xhtml">
   .cell {
     height: 70px !important;
     overflow: auto !important;
     line-height: 70px !important;
   }
-
-  .el-table__header th {
-    height: 50px !important;
-    overflow: auto !important;
+  .el-row {
+    margin-bottom: 130px;
   }
 </style>
 <template>
@@ -35,11 +33,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="tempPost.queryPostTypeId"
-                     filterable
-                     clearable
-                     placeholder="选择帖子类型"
-                     @change="getList">
+          <el-select v-model="tempPost.queryPostTypeId" filterable clearable placeholder="选择帖子类型" @change="getList">
             <el-option v-for="item in typeOption" :key="item.id" :label="'# '+item.sortname+' #'" :value="item.id">
             </el-option>
           </el-select>
@@ -50,31 +44,31 @@
       </el-form>
     </div>
     <el-table :data="list" stripe default-sor v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
-              highlight-current-row>
-      <el-table-column align="center" label="序号" sortable width="100" prop="postId">
+              highlight-current-row max-height = "100% ">
+      <el-table-column align="center" label="序号" fixed="left" sortable width="100" prop="postId">
       </el-table-column>
       <el-table-column align="center" label="帖子类型" width="130">
         <template slot-scope="scope">
           <el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==1"
-                  v-else color="#85D469"></el-tag>
+                   color="#85D469"></el-tag>
           <el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==2"
-                  v-else color="#0ACCCE"></el-tag>
+                   color="#0ACCCE"></el-tag>
           <el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==3"
-                  v-else color="#FF90A3"></el-tag>
+                   color="#FF90A3"></el-tag>
           <el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==4"
-                  v-else color="#A29EDB"></el-tag>
+                  color="#A29EDB"></el-tag>
           <el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==5"
-                  v-else color="#0067C5"></el-tag>
+                   color="#0067C5"></el-tag>
           <el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==6"
-                  v-else color="#F78700"></el-tag>
+                   color="#F78700"></el-tag>
           <el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==7"
-                  v-else color="#B4A294"></el-tag>
+                   color="#B4A294"></el-tag>
           <el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==8"
-                  v-else color="#798EA3"></el-tag>
+                   color="#798EA3"></el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="帖子内容" style="line-height:10px">
+      <el-table-column align="center" label="帖子内容" style="line-height:10px" width="300px">
         <template slot-scope="scope">
           <div v-text="scope.row.postText" style="line-height:25px">
           </div>
@@ -104,27 +98,28 @@
       <el-table-column align="center" label="标签" style="width: 90px;" width="290">
         <template slot-scope="scope">
           <div v-for="posts in list" style="text-align: center">
-            <el-tag v-for="tag in posts.postTagList" :key="index" v-if="scope.row.postId==posts.postId" v-text="tag"
+            <el-tag v-for="tag in posts.postTagList" v-if="scope.row.postId==posts.postId" v-text="tag"
                     style="margin-right: 3px;" type="primary"/>
           </div>
         </template>
       </el-table-column>
 
 
-      <el-table-column align="center" label="帖子详情" width="120">
+      <el-table-column align="center" label="帖子详情" width="120" fixed="right">
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" @click="showDetail(scope.$index)"
                      size="medium" class="el-icon-document">查看
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="管理" width="220">
+      <el-table-column align="center" fixed="right" label="管理" width="350">
         <template slot-scope="scope">
+          <el-button type="primary" icon="el-icon-arrow-up" size="medium" @click="showPostStick(scope.$index)">置顶</el-button>
           <el-button type="primary" icon="el-icon-edit" size="medium" @click="showUpdate(scope.$index)">修改</el-button>
-          <el-button type="danger" icon="el-icon-delete" size="medium" v-if="scope.row.postState==0" v-else
+          <el-button type="danger" icon="el-icon-delete" size="medium" v-if="scope.row.postState==0"
                      @click="removePost(scope.$index)">删除
           </el-button>
-          <el-button type="success" icon="el-icon-refresh" size="medium" v-if="scope.row.postState==1" v-else
+          <el-button type="success" icon="el-icon-refresh" size="medium" v-if="scope.row.postState==1"
                      @click="removePost(scope.$index)">恢复
           </el-button>
         </template>
@@ -140,24 +135,135 @@
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
 
+    <el-dialog title="修改帖子内容" width="50%" :visible.sync="dialogUpdateVisible">
+      <el-form class="small-space" :model="updateData" label-position="left" label-width="120px"
+               style='width: 100%; margin-left:50px;'>
+        <el-form-item label="帖子类型">
+          <el-select v-model="updateData.postTypeId" filterable clearable :placeholder="'# '+tempPost.postType+' #'" :value="tempPost.postTypeId">
+            <el-option :key="tempPost.postTypeId" :label="'# '+tempPost.postType+' #'" :value="tempPost.postTypeId" >{{'# '+tempPost.postType+' #'}}</el-option>
+            <el-option-group>
+              <el-option v-for="item in typeOption" :key="item.id" :label="'# '+item.sortname+' #'" :value="item.id">
+              </el-option>
+            </el-option-group>
+          </el-select>
+        </el-form-item>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="600px">
-      <detail :addDetailData="tempPost" v-if="dialogStatus=='postDetail'" ref="detail"></detail>
+        <el-form-item label="帖子内容" style="width: 80%" v-model="updateData.postText">
+          <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" size="medium" v-model="tempPost.postText">{{tempPost.postText}}</el-input>
+        </el-form-item>
+
+        <!--<el-form-item label="修改图片" size="medium" :inline="true">-->
+          <!--<div>-->
+            <!--<el-row style="margin-right: 280px">-->
+              <!--<el-col :span="8">-->
+                <!--<el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
+                  <!--<i v-if="tempPost.postImgList[0]==null" class="el-icon-plus avatar-uploader-icon"></i>-->
+                  <!--<img v-else :src="tempPost.postImgList[0]" style="height: 100%;width: 100%" />-->
+                <!--</el-upload>-->
+              <!--</el-col>-->
+              <!--<el-col :span="8">-->
+                <!--<el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
+                  <!--<i v-if="tempPost.postImgList[3]==null" class="el-icon-plus avatar-uploader-icon"></i>-->
+                  <!--<img v-else :src="tempPost.postImgList[3]" style="height: 100%;width: 100%" />-->
+                <!--</el-upload>-->
+              <!--</el-col>-->
+              <!--<el-col :span="8">-->
+                <!--<el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
+                  <!--<i v-if="tempPost.postImgList[6]==null" class="el-icon-plus avatar-uploader-icon"></i>-->
+                  <!--<img v-else :src="tempPost.postImgList[6]" style="height: 100%;width: 100%" />-->
+                <!--</el-upload>-->
+              <!--</el-col>-->
+            <!--</el-row>-->
+
+            <!--<el-row style="margin-right: 280px">-->
+              <!--<el-col :span="8">-->
+                <!--<el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
+                  <!--<i v-if="tempPost.postImgList[1]==null" class="el-icon-plus avatar-uploader-icon"></i>-->
+                  <!--<img v-else :src="tempPost.postImgList[1]" style="height: 100%;width: 100%" />-->
+                <!--</el-upload>-->
+              <!--</el-col>-->
+              <!--<el-col :span="8">-->
+                <!--<el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
+                  <!--<i v-if="tempPost.postImgList[4]==null" class="el-icon-plus avatar-uploader-icon"></i>-->
+                  <!--<img v-else :src="tempPost.postImgList[4]" style="height: 100%;width: 100%" />-->
+                <!--</el-upload>-->
+              <!--</el-col>-->
+              <!--<el-col :span="8">-->
+                <!--<el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
+                  <!--<i v-if="tempPost.postImgList[7]==null" class="el-icon-plus avatar-uploader-icon"></i>-->
+                  <!--<img v-else :src="tempPost.postImgList[7]" style="height: 100%;width: 100%" />-->
+                <!--</el-upload>-->
+              <!--</el-col>-->
+            <!--</el-row>-->
+
+            <!--<el-row style="margin-right: 280px">-->
+              <!--<el-col :span="8">-->
+                <!--<el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
+                  <!--<i v-if="tempPost.postImgList[2]==null" class="el-icon-plus avatar-uploader-icon"></i>-->
+                  <!--<img v-else :src="tempPost.postImgList[2]" style="height: 100%;width: 100%" />-->
+                <!--</el-upload>-->
+              <!--</el-col>-->
+              <!--<el-col :span="8">-->
+                <!--<el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
+                  <!--<i v-if="tempPost.postImgList[5]==null" class="el-icon-plus avatar-uploader-icon"></i>-->
+                  <!--<img v-else :src="tempPost.postImgList[5]" style="height: 100%;width: 100%" />-->
+                <!--</el-upload>-->
+              <!--</el-col>-->
+              <!--<el-col :span="8">-->
+                <!--<el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
+                  <!--<i v-if="tempPost.postImgList[8]==null" class="el-icon-plus avatar-uploader-icon"></i>-->
+                  <!--<img v-else :src="tempPost.postImgList[8]" style="height: 100%;width: 100%" />-->
+                <!--</el-upload>-->
+              <!--</el-col>-->
+            <!--</el-row>-->
+
+          <!--</div>-->
+        <!--</el-form-item>-->
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogUpdateVisible = false">取 消</el-button>
+       <el-button type="primary" @click="updatePost">确认修改</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="600px" lock-scroll>
+
+      <!--详情页面组件-->
+      <detail :addDetailData="postdetailDeta" v-if="dialogStatus=='postDetail'" ref="detail"></detail>
+
       <el-form class="small-space" :model="tempPost" label-position="left" label-width="80px"
-               style='width: 300px; margin-left:50px;'>
+               style='width: 400px; margin-left:50px;'>
+
+        <!--点赞输入框-->
         <el-form-item label="输入数量" required v-if="dialogStatus=='likeOffset'">
           <el-input type="text" v-model="tempPost.likeOffset">
           </el-input>
         </el-form-item>
+
+        <!--浏览量输入框-->
         <el-form-item label="输入数量" required v-if="dialogStatus=='browseOffset'">
           <el-input type="text" v-model="tempPost.browseOffset">
           </el-input>
         </el-form-item>
+
+        <!--置顶多选框-->
+        <el-form-item label="置顶板块" required v-if="dialogStatus=='postStick'">
+          <div v-for="postStick in listStick">
+            <el-checkbox :label="postStick.stickName" :key="postStick.stickId">{{postStick.stickName}}</el-checkbox>
+            <!--<el-checkbox-group>-->
+              <!--<el-checkbox v-for="stick in tempPost.postStick" checked :label="stick.stickName" v-if="postStick.stickId==stick.stickId" :key="stick.stickId"></el-checkbox>-->
+              <!--&lt;!&ndash;<el-checkbox  :label="stick.stickName" v-else :key="stick.stickId"></el-checkbox>&ndash;&gt;-->
+            <!--</el-checkbox-group>-->
+          </div>
+        </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" v-if="dialogStatus=='browseOffset'" @click="updateBrowseOffset">修改浏览数量</el-button>
-        <el-button type="primary" v-if="dialogStatus=='likeOffset'" v-else @click="updateLikeOffset">修改点赞数量</el-button>
+        <el-button type="primary" v-if="dialogStatus=='likeOffset'" @click="updateLikeOffset">修改点赞数量</el-button>
+        <el-button type="primary" v-if="dialogStatus=='postStick'" @click="updatePostStick">修改置顶板块</el-button>
       </div>
     </el-dialog>
   </div>
@@ -184,19 +290,27 @@
           pageNum: 1,//页码
           pageRow: 10,//每页条数
         },
-        roles: [],//角色列表
-        typeOption: '',//帖子类型下拉框数据
-        dialogStatus: 'create',
+        postdetailDeta:'',
+        typeOption: '',//帖子类型下拉框数据a
+        listStick:'',//置顶列表数据
+        dialogStatus: '',
         dialogFormVisible: false,
-        dialogDetailVisible: false,
+        dialogUpdateVisible: false,
         textMap: {
           likeOffset: '增加点赞数量',
           browseOffset: '增加浏览数量',
-          postDetail: '帖子详情'
+          postDetail: '帖子详情',
+          postStick: '置顶帖子',
+          postUpdate: '修改帖子内容'
         },
         detailData:{
           postId: '',//帖子ID
-          postOwnerId: '',//帖子ID
+        },
+        updateData:{
+          postId:'',
+          postTypeId:'',
+          postText:'',
+          postImgList:''
         },
         tempPost: {
           postId: '',//帖子ID
@@ -220,7 +334,8 @@
           postAddress: '',//帖子地址
           priceFloor: '',//最低价
           priceTop: '',//最高价
-          commentText: ''//评论
+          commentText: '',//评论
+          postStick: ''
         },
         pickerOptions: {
           shortcuts: [{
@@ -279,6 +394,16 @@
           this.totalCount = data.totalCount;
         })
       },
+      getCategoriesList(){
+        this.api({
+          url: "/sort/listSort",
+          method: "get"
+        }).then(data => {
+          this.listLoading = false;
+          this.typeOption = data.list;
+
+        })
+      },
       refashList() {
         this.tempPost.queryText = '';
         this.tempPost.dataValue = '';
@@ -287,27 +412,19 @@
         this.getList();
       },
       showDetail($index) {
+        //显示帖子详情窗口
         let post = this.list[$index];
         this.detailData.postId = post.postId;   //帖子Id
-        this.detailData.postOwnerId = post.postOwnerId;   //帖子Id
-        this.tempPost.postId = post.postId;   //帖子Id
-        this.tempPost.postOwnerId = post.postOwnerId;   //帖子Id
-        this.tempPost.postText = post.postText;  //帖子内容
-        this.tempPost.postType = post.postType;  //帖子类型
-        this.tempPost.likeCount = post.likeCount; //点赞总数
-        this.tempPost.browseCount = post.browseCount; //浏览总数
-        this.tempPost.postTagList = post.postTagList; //标签数组
+        console.log(this.detailData.postId)
         this.api({
           url: "/post/queryPostById",
           method: "post",
           params: this.detailData
         }).then(data => {
-          this.tempPost.postPhone = data.postPhone; //电话
-          this.tempPost.postAddress = data.postAddress; //地址
-          this.tempPost.priceFloor = data.priceFloor; //最低价
-          this.tempPost.priceTop = data.priceTop; //最高价
-          this.tempPost.postImgList = data.postImgList;//图片数组
-          this.tempPost.commentText = data.comments; //评论
+          this.postdetailDeta = data;
+          this.dialogStatus = "postDetail";
+          this.dialogFormVisible = true;
+          console.log(data)
         }).catch(error => {
 
         })
@@ -331,6 +448,7 @@
         this.getList()
       },
       showLikeOffset($index) {
+        //显示点赞修改框
         let post = this.list[$index];
         this.tempPost.likeOffset = post.likeOffset;
         this.tempPost.postId = post.postId;
@@ -338,35 +456,44 @@
         this.dialogFormVisible = true;
       },
       showBrowseOffset($index) {
+        //显示浏览修改框
         let post = this.list[$index];
         this.tempPost.browseOffset = post.browseOffset;
         this.tempPost.postId = post.postId;
         this.dialogStatus = "browseOffset";
         this.dialogFormVisible = true;
       },
-      showUpdate($index) {
-        let user = this.list[$index];
-        this.tempPost.username = user.username;
-        this.tempPost.nickname = user.nickname;
-        this.tempPost.roleId = user.roleId;
-        this.tempPost.userId = user.userId;
-        this.tempPost.deleteStatus = '1';
-        this.tempPost.password = '';
-        this.dialogStatus = "update"
+      showPostStick($index){
+        let post = this.list[$index];
+        this.detailData.postId = post.postId;
+        this.api({
+          url: "/stick/list",
+          method: "get",
+          params: this.detailData
+        }).then(data =>{
+          console.log(data)
+          this.listLoading = false;
+          this.listStick = data.listStick;
+          this.tempPost.postStick = data.listStickByPostId;
+        })
+        this.dialogStatus = 'postStick'
         this.dialogFormVisible = true
       },
-      createUser() {
-        //添加新用户
-        this.api({
-          url: "/user/addUser",
-          method: "post",
-          data: this.tempPost
-        }).then(() => {
-          this.getList();
-          this.dialogFormVisible = false
-        })
+      showUpdate($index) {
+        //显示修改框
+        let post = this.list[$index];
+        this.tempPost.postText = post.postText;
+        this.updateData.postId = post.postId;
+        this.tempPost.postType = post.postType;
+        this.tempPost.postTypeId = post.postTypeId;
+        this.tempPost.postImgList = post.postImgList;
+        this.dialogUpdateVisible = true
+      },
+      updatePostStick(){
+        console.log(this.tempPost.postStick)
       },
       updateLikeOffset() {
+        //改变点赞数请求
         let _vue = this;
         this.api({
           url: "/post/updateLikeOffset",
@@ -374,7 +501,7 @@
           data: this.tempPost
         }).then(() => {
           let msg = "修改成功";
-          this.dialogFormVisible = false
+          this.dialogUpdateVisible = false;
           this.$message({
             message: msg,
             type: 'success',
@@ -386,6 +513,7 @@
         })
       },
       updateBrowseOffset() {
+        //改变浏览数请求
         let _vue = this;
         this.api({
           url: "/post/updateBrowseOffset",
@@ -404,19 +532,18 @@
           })
         })
       },
-      updateUser() {
-        //修改用户信息
+      updatePost($index){
         let _vue = this;
+        this.updateData.postText = this.tempPost.postText;
+        this.updateData.postTypeId = this.tempPost.postTypeId;
+        console.log(this.updateData)
         this.api({
-          url: "/user/updateUser",
+          url: "/post/updatePost",
           method: "post",
-          data: this.tempPost
+          data: this.updateData
         }).then(() => {
           let msg = "修改成功";
-          this.dialogFormVisible = false
-          if (this.userId === this.tempPost.userId) {
-            msg = '修改成功,部分信息重新登录后生效'
-          }
+          this.dialogUpdateVisible = false
           this.$message({
             message: msg,
             type: 'success',
@@ -428,6 +555,7 @@
         })
       },
       removePost($index) {
+        //改变帖子状态请求
         let _vue = this;
         let post = _vue.list[$index];
         let msg;

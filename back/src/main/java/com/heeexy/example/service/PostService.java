@@ -43,4 +43,11 @@ public interface PostService {
      * @return
      */
     JSONObject queryPostById(JSONObject jsonObject);
+
+    /**
+     * 修改帖子内容
+     * @param jsonObject 帖子id,内容
+     * @return
+     */
+    JSONObject updatePost(JSONObject jsonObject);
 }
