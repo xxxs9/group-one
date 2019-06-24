@@ -16,6 +16,7 @@ public interface TemplateService {
      */
     JSONObject addTemplate(JSONObject jsonObject);
 
+    JSONObject addChatTemplate(JSONObject jsonObject);
 
 
     /**

@@ -76,12 +76,16 @@ public class PostServiceImpl implements PostService {
     @Override
     public JSONObject queryPostById(JSONObject jsonObject) {
         JSONObject DetailData = postDao.queryPostById(jsonObject);
-        externalUserDao.findUserById(DetailData.getInteger("uuid"));
+        JSONObject postUser = externalUserDao.findUserById(DetailData.getInteger("postOwnerId"));
+        List<JSONObject> comment = commentDao.getByPostId(jsonObject);
+        DetailData.put("externalUser",postUser);
+        DetailData.put("comments",comment);
         return CommonUtil.successJson(DetailData);
     }
 
     @Override
     public JSONObject updatePost(JSONObject jsonObject) {
-        return null;
+        postDao.updatePost(jsonObject);
+        return CommonUtil.successJson();
     }
 }
