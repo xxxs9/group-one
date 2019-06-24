@@ -34,7 +34,7 @@ public class StickController {
 
     @PostMapping("/updatePostStick")
     public JSONObject updatePostStick(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "");
+        CommonUtil.hasAllRequired(requestJson, "postId");
         return stickService.updatePostStick(requestJson);
     }
 }
