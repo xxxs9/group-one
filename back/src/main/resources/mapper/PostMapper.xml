@@ -145,7 +145,7 @@
           pi.post_image_src             postImageSrc,
           c.comment_text                commentText,
           (SELECT categories_name FROM post_categories pc WHERE pc.categories_id = p.postTypeId) postType,
-          (SELECT tag_name FROM tag t WHERE t.tag_no = pt2.tag_id)                               postTagName
+          (SELECT tag_name FROM tag t WHERE t.tag_ id= pt2.tag_id)                               postTagName
           FROM (
             SELECT
                 post_id                 postId,
