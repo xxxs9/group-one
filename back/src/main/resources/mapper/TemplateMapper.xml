@@ -9,6 +9,16 @@
         VALUES
             (#{tname},#{content})
     </insert>
+    <insert id="addChatTemplate" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into chat_message (chat_content,first_user_id,second_user_id)
+        values
+
+        <foreach collection="ulist" item="item" index="index" separator=",">
+            (#{content},'1',#{item.id})
+        </foreach>
+
+    </insert>
+
 
     <select id="countTemplate" resultType="Integer">
         SELECT count(*)
@@ -25,6 +35,12 @@
         where w.status = '1'
         ORDER BY w.template_id DESC
         LIMIT #{offSet}, #{pageRow}
+    </select>
+
+    <select id="getAllUserId" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+           id
+        FROM test
     </select>
 
     <update id="updateTemplate" parameterType="com.alibaba.fastjson.JSONObject">

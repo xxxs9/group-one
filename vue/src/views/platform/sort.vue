@@ -1,6 +1,10 @@
 <template>
+
   <div class="app-container">
+
     <div class="filter-container">
+
+
       <el-form>
         <el-form-item>
           <el-button type="primary" icon="plus"  @click="showCreate">添加
@@ -16,7 +20,6 @@
           </el-select>
       </el-form>
 
-
     </div>
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
@@ -27,7 +30,7 @@
       </el-table-column>
       <el-table-column align="center" label="类别名称" prop="sortname" style="width: 60px;"></el-table-column>
       <el-table-column label="头像" width="100">
-        <template scope="scope">
+        <template slot-scope="scope">
           <img :src="scope.row.imageUrl" width="40" height="40" class="head_pic"/>
         </template>
       </el-table-column>
@@ -53,22 +56,19 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="tempUser" label-position="left" label-width="80px"
                style='width: 300px; margin-left:50px;'>
-
-
         <el-form-item label="分类名称" required>
           <el-input type="text" v-model="tempUser.sortname">
           </el-input>
         </el-form-item>
         <el-upload
           class="avatar-uploader"
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action="/api/sort/upload"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload">
-          <img v-if="imageUrl" :src="imageUrl" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          <img v-if="dialogStatus=='update'" :src="tempUser.imageUrl" class="avatar">
+          <i v-if="dialogStatus=='create'" class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>

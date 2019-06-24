@@ -25,8 +25,18 @@ public class TemplateServiceImpl implements TemplateService {
     @Transactional(rollbackFor = Exception.class)
     public JSONObject addTemplate(JSONObject jsonObject) {
         templateDao.addTemplate(jsonObject);
+
         return CommonUtil.successJson();
 
+    }
+
+    @Override
+    public JSONObject addChatTemplate(JSONObject jsonObject) {
+        List<JSONObject> ulist = templateDao.getAllUserId(jsonObject);
+        jsonObject.put("ulist",ulist);
+        int i = templateDao.addChatTemplate(jsonObject);
+
+        return CommonUtil.successJson();
     }
 
     @Override
