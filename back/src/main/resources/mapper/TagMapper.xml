@@ -4,7 +4,7 @@
 <mapper namespace="com.heeexy.example.dao.TagDao">
 
     <insert id="addTag" parameterType="com.alibaba.fastjson.JSONObject">
-        INSERT INTO Message_Template
+        INSERT INTO message_template
             (template_name,template_content)
         VALUES
             (#{tname},#{content})
@@ -12,7 +12,7 @@
 
     <select id="countTag" resultType="Integer">
         SELECT count(*)
-        FROM Message_Template
+        FROM message_template
     </select>
 
     <select id="listTag" resultType="com.alibaba.fastjson.JSONObject">
@@ -28,7 +28,7 @@
     </select>
 
     <update id="updateTag" parameterType="com.alibaba.fastjson.JSONObject">
-        UPDATE Message_Template
+        UPDATE message_template
         SET
             template_name = #{tname},
             template_content = #{content}
