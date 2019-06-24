@@ -19,13 +19,6 @@ public interface CollectionService {
     JSONObject getByUserId(JSONObject jsonObject);
 
     /**
-     * 根据用户id去查询该用户下收藏的帖子总数
-     * @param jsonObject
-     * @return JSONObject
-     */
-    JSONObject countByUserId(JSONObject jsonObject);
-
-    /**
      * 添加收藏
      * @param jsonObject
      * @return JSONObject
@@ -37,5 +30,18 @@ public interface CollectionService {
      * @param jsonObject
      * @return JSONObject
      */
-    JSONObject deleteCollection(JSONObject jsonObject);
+    JSONObject removeCollection(JSONObject jsonObject);
+
+    /**
+     * 根据帖子id去判断帖子是否被收藏
+     * @param jsonObject
+     * @return jsonObject
+     */
+    JSONObject getByPostId(JSONObject jsonObject);
+
+    /**
+     * 根据用户id去查询此用户收藏的帖子总数
+     * @return jsonObject
+     */
+    JSONObject getByCollectionCount(JSONObject jsonObject);
 }

@@ -30,15 +30,15 @@
       <el-table-column align="center" label="头像" prop="iconUrl" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="电话" prop="mobile" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="性别" prop="sex" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="粉丝数量/偏移量" prop="fansOffset" style="width: 60px;">
+      <el-table-column align="center" label="粉丝数量/偏移量" prop="fansOffset" width="120">
         <template slot-scope="scope">
-          <span style="font-size: 15px" v-text="scope.row.likeCount+'/'"></span>
+          <span style="font-size: 15px" v-text="scope.row.fansCount+'/'"></span>
           <el-button type="primary" icon="edit" v-text="scope.row.fansOffset" size="mini" @click="showfansOffset(scope.$index)"></el-button>
         </template>
       </el-table-column>
       <el-table-column align="center" label="登录时间" prop="loginTime" width="170"></el-table-column>
       <el-table-column align="center" label="修改时间" prop="modifyTime" width="170"></el-table-column>
-      <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
+      <el-table-column align="center" label="管理" width="100" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
           <!--<el-button type="danger" icon="delete" v-if="scope.row.userId!=userId "-->
@@ -67,15 +67,15 @@
           <el-input type="text" v-model="tempUser.username" disabled="true">
           </el-input>
         </el-form-item>
-        <el-form-item label="头像" >
+        <el-form-item label="头像" v-if="dialogStatus=='update'">
           <el-input type="text" v-model="tempUser.iconUrl" disabled="true">
           </el-input>
         </el-form-item>
-        <el-form-item label="电话" >
+        <el-form-item label="电话" v-if="dialogStatus=='update'">
           <el-input type="text" v-model="tempUser.mobile" disabled="true">
           </el-input>
         </el-form-item>
-        <el-form-item label="性别" >
+        <el-form-item label="性别" v-if="dialogStatus=='update'">
           <el-input type="text" v-model="tempUser.sex" disabled="true">
           </el-input>
         </el-form-item>
@@ -83,15 +83,14 @@
           <el-input type="text" v-model="tempUser.fansOffset">
           </el-input>
         </el-form-item>
-        <el-form-item label="登录时间" >
+        <el-form-item label="登录时间" v-if="dialogStatus=='update'">
           <el-input type="text" v-model="tempUser.loginTime" disabled="true">
           </el-input>
         </el-form-item>
-        <el-form-item label="修改时间" >
+        <el-form-item label="修改时间" v-if="dialogStatus=='update'">
           <el-input type="text" v-model="tempUser.modifyTime" disabled="true">
           </el-input>
         </el-form-item>
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -121,7 +120,8 @@
         dialogFormVisible: false,
         textMap: {
           update: '编辑',
-          create: '新建用户'
+          create: '新建用户',
+          fansOffset: '粉丝偏移量'
         },
         tempUser: {
           userId: '',
@@ -129,6 +129,7 @@
           username: '',
           iconUrl: '',
           mobile: '',
+          fansCount: '',
           fansOffset: '',
           sex: '',
           loginTime: '',
@@ -200,6 +201,7 @@
         let user = this.list[$index];
         this.tempUser.fansOffset = user.fansOffset;
         this.tempUser.uuId = user.uuId;
+        this.tempUser.username = user.username;
         this.dialogStatus = "fansOffset";
         this.dialogFormVisible = true;
       },

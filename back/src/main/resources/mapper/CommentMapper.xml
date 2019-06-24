@@ -28,6 +28,9 @@
             <if test="commentText!=null and commentText!=''">
                 comment_text LIKE concat('%',#{commentText},'%')
             </if>
+            <if test="beforeDate != null and beforeDate != '' and afterDate !=null and afterDate !=''">
+                AND DATE(comment_time) BETWEEN #{beforeDate} AND #{afterDate}
+            </if>
         </where>
         ORDER BY postuser_id LIMIT #{offSet}, #{pageRow}
     </select>
@@ -95,6 +98,17 @@
     </select>
 
     <select id="getByPostId" resultMap="commentMap">
-
+        SELECT
+        comment_id                                                     commentId,
+        post_id                                                        postId,
+        (select username from user where user.uuid = c.postuser_id)    postUserName,
+        (select username from user where user.uuid = c.commentuser_id) commentUserName,
+        (select username from user where user.uuid = c.acceptuser_id)  acceptUserName,
+        comment_text                                                   commentText,
+        DATE_FORMAT(comment_time, '%Y.%m.%d %T')                       commentTime,
+        comment_state                                                  commentState
+        FROM comment c
+        WHERE post_id = #{postId}
+        ORDER BY comment_time DESC
     </select>
 </mapper>

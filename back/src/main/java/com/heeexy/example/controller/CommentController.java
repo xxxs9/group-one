@@ -29,7 +29,6 @@ public class CommentController {
 
     @PostMapping("/updateComment")
     public JSONObject updateComment(@RequestBody JSONObject requestJson){
-        System.out.println(requestJson);
         return commentService.updateComment(requestJson);
     }
 

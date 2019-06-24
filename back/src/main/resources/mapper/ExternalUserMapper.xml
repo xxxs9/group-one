@@ -26,7 +26,8 @@
     </resultMap>
     <select id="getUser" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
-            u.*
+            u.*,
+            (SELECT count(0) FROM `user_attention` WHERE u.userId = `user_attention`.to_user_id) fansCount
         FROM
             (
                  SELECT
@@ -67,6 +68,7 @@
         SELECT
             u.*,
             p.permission_name                               permissionName
+
         FROM
             (
                  SELECT
@@ -91,7 +93,7 @@
         UPDATE user_permission
         SET delete_status = '2'
         WHERE user_uuid = #{uuId}
-        AND permission_id in (
+        AND permission_id not in (
         <foreach collection="epermissions" item="item" index="index" separator=",">
             #{item}
         </foreach>
@@ -106,7 +108,7 @@
         </foreach>
     </insert>
 
-    <update id="updatePermissionStatus" parameterType="java.lang.Integer">
+    <update id="refreshPermissionStatus" parameterType="java.lang.Integer">
         UPDATE user_permission
         SET delete_status = '1'
         WHERE delete_status = '2'
@@ -123,6 +125,32 @@
         FROM user
         WHERE uuid=#{uuId}
     </select>
-
+    <select id="getPermIdByName" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT id
+        FROM permission
+        WHERE permission_name in (
+        <foreach collection="epermissionList" item="item" index="index" separator=",">
+            #{item}
+        </foreach>
+        )
+    </select>
+    <select id="findUserById" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT u.*
+        FROM
+        (
+        SELECT
+        id                                      userId,
+        uuid                                    uuId,
+        username                                username,
+        iconurl                                 iconUrl,
+        sex                                     sex,
+        mobile                                  mobile,
+        fans_offset                             fansOffset,
+        DATE_FORMAT(login_time, '%Y.%m.%d %T')  loginTime,
+        DATE_FORMAT(modify_time, '%Y.%m.%d %T') modifyTime
+        FROM example.user
+        WHERE uuid = #{uuId}
+        ) u
+    </select>
 
 </mapper>

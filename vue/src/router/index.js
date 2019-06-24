@@ -3,7 +3,6 @@ import Router from 'vue-router'
 // in development env not use Lazy Loading,because Lazy Loading too many pages will cause webpack hot update too slow.so only in production use Lazy Loading
 /* layout */
 import Layout from '../views/layout/Layout'
-import Euser from '../views/euser/euser'
 
 const _import = require('./_import_' + process.env.NODE_ENV)
 Vue.use(Router)
@@ -88,37 +87,16 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '/post',
-    component: Layout,
-    redirect: '/post/',
-    name: '',
-    meta: {title: '帖子管理', icon: 'table'},
-    children: [
-      {
-        path: '', name: '帖子列表',
-        component: _import('post/post'),
-        meta: {title: '帖子列表', icon: 'post'},
-        menu: 'post'
-      },
-      {
-        path: '', name: '帖子列表',
-        component: _import('post/post'),
-        meta: {title: '帖子列表', icon: 'post'},
-        menu: 'post'
-      }
-    ]
-  },
-  {
     path: '/comment',
     component: Layout,
-    redirect: '/user/',
+    redirect: '/comment/',
     name: '',
     meta: {title: '评论管理', icon: 'table'},
     children: [
       {
         path: '',
         name: '评论列表',
-        component: _import('user/user'),
+        component: _import('comment/comments'),
         meta: {title: '评论列表', icon: 'user'},
         menu: 'user'
       }
@@ -179,5 +157,40 @@ export const asyncRouterMap = [
       },
     ]
   },
+
+  {
+    path: '/comment',
+    component: Layout,
+    redirect: '/comment/',
+    name: '',
+    meta: {title: '评论管理', icon: 'post'},
+    children: [
+      {
+        path: '',
+        name: '评论列表',
+        component: _import('comment/comments'),
+        meta: {title: '评论管理', icon: 'post'},
+        menu: 'post'
+      }
+    ]
+  },
+
+  {
+    path: '/advertisement',
+    component: Layout,
+    redirect: '/advertisement/',
+    name: '',
+    meta: {title: '广告管理', icon: 'post'},
+    children: [
+      {
+        path: '',
+        name: '广告列表',
+        component: _import('advertisement/upload'),
+        meta: {title: '广告管理', icon: 'post'},
+        menu: 'post'
+      }
+    ]
+  },
+
   {path: '*', redirect: '/404', hidden: true}
 ]

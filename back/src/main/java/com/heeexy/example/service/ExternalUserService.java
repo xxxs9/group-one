@@ -46,7 +46,7 @@ public interface ExternalUserService {
      * @param uuId
      * @return
      */
-    JSONObject updatePermissionStatus(JSONObject jsonObject);
+    JSONObject refreshPermissionStatus(JSONObject jsonObject);
 
     /**
      * 给用户添加权限
@@ -54,7 +54,6 @@ public interface ExternalUserService {
      * @return
      */
     JSONObject addPermission(JSONObject jsonObject);
-
 
 }
 

@@ -7,6 +7,17 @@
             <el-form-item>
               <el-input type="text" v-model="tempComment.commentText" placeholder="输入评论内容搜索"/>
             </el-form-item>
+            <el-date-picker
+              v-model="tempComment.commentTime"
+              type="daterange"
+              align="right"
+              unlink-panels validate-event
+              @change="getList"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              :default-time="['00:00:00', '23:59:59']">
+            </el-date-picker>
             <el-form-item>
               <el-button type="primary" class="el-icon-search" @click="getList">搜索</el-button>
             </el-form-item>
@@ -32,7 +43,7 @@
       <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" v-if="scope.row.commentState==0" @click="removeComment(scope.$index)">显示</el-button>
-          <el-button type="primary" icon="edit" v-if="scope.row.commentState==1" @click="removeComment(scope.$index)">隐藏</el-button>
+          <el-button type="info" icon="edit" v-if="scope.row.commentState==1" @click="removeComment(scope.$index)">隐藏</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -94,6 +105,8 @@
         listLoading: false,//数据加载等待动画
         listQuery: {
           commentText: '',
+          beforeDate:'',
+          afterDate:'',
           pageNum: 1,//页码
           pageRow: 50,//每页条数
         },
@@ -113,6 +126,33 @@
           commentText: '',
           commentTime: '',
           commentState: ''
+        },
+        pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
         }
       }
     },
@@ -127,11 +167,15 @@
         'commentId'
       ])
     },
+
     methods: {
       getList() {
         //查询列表
         this.listLoading = true;
-        this.listQuery.commentText = this.tempComment.commentText
+        this.listQuery.commentText = this.tempComment.commentText;
+        console.log(this.tempComment.commentTime[0]);
+        this.listQuery.beforeDate = this.tempComment.commentTime[0];
+        this.listQuery.afterDate = this.tempComment.commentTime[1];
         this.api({
           url: "/comment/list",
           method: "get",

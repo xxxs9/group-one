@@ -12,17 +12,10 @@ import java.util.List;
  */
 public interface AdvertisementService {
     /**
-     * 查询广告列表(当广告id和广告名为空时查询全部广告列表，反之根据广告id查询广告列表或广告名模糊查询)
+     * 查询广告列表(当广告类型为空时查询全部广告列表，反之根据广告类型模糊查询)
      * @return JSONObject
      */
     JSONObject listAllAdvertisement(JSONObject jsonObject);
-
-    /**
-     * 统计广告总数（当广告名为空时查询广告总数，反之根据广告名模糊查询广告总数）
-     * @param jsonObject
-     * @return JSONObject
-     */
-    JSONObject countAdvertisement(JSONObject jsonObject);
 
     /**
      * 添加广告
@@ -37,4 +30,11 @@ public interface AdvertisementService {
      * @return JSONObject
      */
     JSONObject updateAdvertisement(JSONObject jsonObject);
+
+    /**
+     * 修改广告状态，决定播放与否
+     * @param jsonObject
+     * @return int
+     */
+    JSONObject removeAdvertisement (JSONObject jsonObject);
 }
