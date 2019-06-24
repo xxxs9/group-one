@@ -46,7 +46,7 @@ public interface PostService {
 
     /**
      * 修改帖子内容
-     * @param jsonObject 帖子ID，帖子类型，帖子内容，帖子图片
+     * @param jsonObject 帖子id,内容
      * @return
      */
     JSONObject updatePost(JSONObject jsonObject);

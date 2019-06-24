@@ -99,8 +99,7 @@
     <update id="updatePost">
         UPDATE post_table
         SET
-          post_text = #{postText}, post_type_id = #{postTypeId};
-        FROM post_table
+          post_text = #{postText}, post_type_id = #{postTypeId}
         WHERE post_id = #{postId}
     </update>
 
@@ -124,12 +123,18 @@
         <result column="postPhone" property="postPhone"></result>
         <result column="postAddress" property="postAddress"></result>
         <result column="priceFloor" property="priceFloor"></result>
+        <result column="postText" property="postText"></result>
+        <result column="postType" property="postType" />
+        <result column="postOwnerId" property="postOwnerId"></result>
         <result column="priceTop" property="priceTop"></result>
         <collection property="postImgList" ofType="String">
             <id column="postImageSrc" property="postImageSrc"></id>
         </collection>
         <collection property="comments" ofType="String">
             <id column="commentText" property="commentText"></id>
+        </collection>
+        <collection property="postTagList" ofType="String">
+            <id column="postTagName" property="postTagName"/>
         </collection>
     </resultMap>
 
@@ -138,12 +143,16 @@
         SELECT
           p.*,
           pi.post_image_src             postImageSrc,
-          c.comment_text                commentText
+          c.comment_text                commentText,
+          (SELECT categories_name FROM post_categories pc WHERE pc.categories_id = p.postTypeId) postType,
+          (SELECT tag_name FROM tag t WHERE t.tag_no = pt2.tag_id)                               postTagName
           FROM (
             SELECT
                 post_id                 postId,
                 post_text               postText,
+                post_owner_id           postOwnerId,
                 post_phone              postPhone,
+                post_type_id            postTypeId,
                 post_address            postAddress,
                 price_floor             priceFloor,
                 price_top               priceTop
@@ -153,6 +162,7 @@
           ) p
           LEFT JOIN post_image pi ON pi.post_id = p.postId
           LEFT JOIN comment c ON c.post_id = p.postId
+          LEFT JOIN post_tag pt2 ON pt2.post_id = p.postId
     </select>
 
 

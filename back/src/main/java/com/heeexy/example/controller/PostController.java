@@ -59,4 +59,10 @@ public class PostController {
         CommonUtil.hasAllRequired(requestJson, "");
         return postService.queryPostById(requestJson);
     }
+
+    @PostMapping("/updatePost")
+    public JSONObject updatePost(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "postId");
+        return postService.updatePost(requestJson);
+    }
 }
