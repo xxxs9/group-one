@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.service.impl.AdvertisementServiceImpl;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -58,6 +55,7 @@ public class AdvertisementController {
         file.transferTo(localFile);
         map.put("code", 0);
         map.put("msg", "上传成功");
+        map.put("desFilePath", desFilePath);
         map.put("url", srcUrl);
         return map;
     }
@@ -75,6 +73,25 @@ public class AdvertisementController {
     public JSONObject removeAdvertisement(@RequestBody JSONObject requestJson) {
         System.out.println(111);
         return advertisementService.removeAdvertisement(requestJson);
+    }
+
+    @PostMapping("/update")
+    public JSONObject updateAdvertisement(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, " advertisementType,srcUrl");
+        if (list.size()!=0) {
+            for (String s : list) {
+                String srcUrl = s;
+                requestJson.put("srcUrl",srcUrl );
+            }
+        }
+        return advertisementService.updateAdvertisement(requestJson);
+    }
+
+    @PostMapping("/delete")
+    public void delete (@RequestBody JSONObject jsonObject) {
+        File file = new File(jsonObject.getString("desFilePath"));
+        file.delete();
+        list.remove(jsonObject.getString("src"));
     }
 
 }

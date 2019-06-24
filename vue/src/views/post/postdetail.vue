@@ -49,7 +49,7 @@
     <el-collapse-item title="评论" name="4">
       <div v-for="text in addDetailData.comments" style="margin-left: 25px">
         <span v-if="addDetailData.comments.indexOf(text)==0"><el-button type="text">{{text.commentUserName}}</el-button>： {{text.commentText}}</span>
-        <span v-else><el-button type="text">{{text.commentUserName}}</el-button> 回复 <el-button type="text">{{"@"+text.acceptUserName}}</el-button>： {{text.commentText}}</span>
+        <span v-else><el-button type="text">{{text.commentUserName}}</el-button> 回复<el-button type="text">{{"@"+text.acceptUserName}}</el-button>： {{text.commentText}}</span>
         <br/>
       </div>
     </el-collapse-item>

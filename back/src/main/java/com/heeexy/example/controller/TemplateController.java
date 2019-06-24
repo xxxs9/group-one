@@ -41,7 +41,11 @@ public class TemplateController {
         CommonUtil.hasAllRequired(requestJson, "tname,content");
         return templateService.addTemplate(requestJson);
     }
-
+    @PostMapping("/sendTemplate")
+    public JSONObject sendAll(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "tname,content");
+        return templateService.addChatTemplate(requestJson);
+    }
     /**
      * 修改文章
      */

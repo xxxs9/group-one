@@ -6,6 +6,7 @@
     <resultMap id="advertisementMap" type="com.heeexy.example.util.model.One2Many">
         <id column="advertisementId" property="advertisementId" />
         <result column="advertisementType" property="advertisementType" />
+        <result column="advertisementRef" property="advertisementRef" />
         <result column="srcUrl" property="srcUrl" />
         <result column="advertisementStatus" property="advertisementStatus" />
     </resultMap>
@@ -13,6 +14,7 @@
     <select id="listAllAdvertisement" resultMap="advertisementMap">
         SELECT
         advertisement_id      advertisementId
+        ,advertisement_ref     advertisementRef
         ,src_url              srcUrl
         ,advertisement_status advertisementStatus
         ,advertisement_type   advertisementType
@@ -36,12 +38,13 @@
     
     <insert id="addAdvertisement" useGeneratedKeys="true" keyProperty="advertisementId">
         INSERT INTO
-        advertisement(src_url,advertisement_type,advertisement_status)
-        VALUES (#{srcUrl},#{advertisementType},#{advertisementStatus})
+        advertisement(advertisement_ref,src_url,advertisement_type,advertisement_status)
+        VALUES (#{advertisementRef},#{srcUrl},#{advertisementType},#{advertisementStatus})
     </insert>
 
     <update id="updateAdvertisement">
-        UPDATE advertisement SET src_url = #{srcUrl},advertisement_type = #{advertisementType}
+        UPDATE advertisement SET
+         advertisement_ref = #{advertisementRef},src_url = #{srcUrl},advertisement_type = #{advertisementType}
         WHERE advertisement_id = #{advertisementId}
     </update>
 
