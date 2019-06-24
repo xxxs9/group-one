@@ -24,19 +24,19 @@ public interface StickDao {
      * @param jsonObject
      * @return
      */
-    List<JSONObject> listStickByPostId(JSONObject jsonObject);
+    List<JSONObject> listStickById(JSONObject jsonObject);
 
     /**
      * 置顶帖子
      * @param jsonObject
      * @return
      */
-    int addStick(JSONObject jsonObject);
+    int addPostStick(JSONObject jsonObject);
 
     /**
      * 取消置顶
      * @param
      * @return
      */
-    int updatePostStick(JSONObject jsonObject);
+    int deletePostStick(JSONObject jsonObject);
 }

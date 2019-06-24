@@ -24,4 +24,12 @@ public interface StickService {
      * @return
      */
     JSONObject listStickByPostId(JSONObject jsonObject);
+
+    /**
+     * 修改帖子状态
+     * @param jsonObject 帖子ID ，置顶板块ID
+     * @return
+     */
+    JSONObject updatePostStick(JSONObject jsonObject);
+
 }
