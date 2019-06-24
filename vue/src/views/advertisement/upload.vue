@@ -27,9 +27,10 @@
       </el-table-column>
       <el-table-column align="center" label="广告ID" prop="advertisementId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="广告类型" prop="advertisementType" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="广告链接" prop="advertisementRef" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="图片路径" style="width: 60px;">
         <template slot-scope="scope">
-          <img :src="scope.row.srcUrl" width="200" height="80" class="head_pic" style="display: block"/>
+          <img :src="scope.row.srcUrl" width="160" height="80" class="head_pic" style="display: block"/>
         </template>
       </el-table-column>
       <el-table-column align="center" label="广告状态" prop="advertisementStatus" style="width: 60px;"></el-table-column>
@@ -55,6 +56,10 @@
                style='width: 300px; margin-left:50px;'>
         <el-form-item label="类型">
           <el-input type="text" v-model="tempAdvertisement.advertisementType">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="链接">
+          <el-input type="text" v-model="tempAdvertisement.advertisementRef">
           </el-input>
         </el-form-item>
         <el-form-item label="上传" required>
@@ -109,6 +114,7 @@
         tempAdvertisement: {
           advertisementId: '',
           advertisementType: '',
+          advertisementRef: '',
           srcUrl: '',
           advertisementStatus: '',
           url: ''
@@ -168,6 +174,7 @@
         this.tempAdvertisement.advertisementType = "";
         this.tempAdvertisement.advertisementStatus = "";
         this.tempAdvertisement.advertisementId = "";
+        this.tempAdvertisement.advertisementRef = "";
         this.tempAdvertisement.srcUrl = "";
         this.dialogStatus = "create";
         this.dialogFormVisible = true
@@ -178,6 +185,7 @@
       showUpdate($index) {
         let advertisement = this.list[$index];
         this.tempAdvertisement.advertisementType = advertisement.advertisementType;
+        this.tempAdvertisement.advertisementRef = advertisement.advertisementRef;
         this.tempAdvertisement.srcUrl = advertisement.srcUrl;
         this.tempAdvertisement.advertisementStatus = advertisement.advertisementStatus;
         this.tempAdvertisement.advertisementId = advertisement.advertisementId;
