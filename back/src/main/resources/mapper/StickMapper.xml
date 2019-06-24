@@ -3,6 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.heeexy.example.dao.StickDao">
 
+
     <!--获取板块列表-->
     <select id="listStick" resultType="com.alibaba.fastjson.JSONObject">
       SELECT
@@ -11,27 +12,32 @@
     </select>
 
     <!--获取帖子置顶情况-->
-    <select id="listStickByPostId" resultType="com.alibaba.fastjson.JSONObject">
+    <select id="listStickById" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
-          stick_id stickId,post_stick_static postStickStatic,post_id postId
+          stick_id stickId,post_id postId
         FROM post_stick
-        WHERE post_id = #{postId}
+        <where>
+            post_id = #{postId}
+            <if test="stickId != null and stickId !='' " >
+                AND stick_id = #{stickId}
+            </if>
+        </where>
+
     </select>
 
     <!--置顶帖子-->
-    <insert id="addStick">
+    <insert id="addPostStick">
       INSERT INTO post_stick
         (post_id, stick_id)
       VALUES
         (#{postId},#{stickId})
     </insert>
 
-    <!--修改置顶状态-->
-    <update id="updatePostStick">
-        UPDATE post_stick
-        SET
-          post_stick_static = #{postStickStatic}
-        WHERE
-          post_id = #{postId} AND stick_id = #{stickId}
-    </update>
+    <!--取消帖子置顶-->
+    <delete id="deletePostStick">
+      DELETE
+      FROM post_stick
+      WHERE post_id = #{postId}
+    </delete>
+
 </mapper>

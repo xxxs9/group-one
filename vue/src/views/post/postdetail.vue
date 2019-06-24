@@ -1,10 +1,10 @@
 <template>
   <el-collapse>
-    <!--<el-collapse-item title="用户信息" name="1">-->
-      <!--<div style="margin-left: 20px">-->
-        <!--<span style="line-height: 30px!important;"><img :src="addDetailData.externalUser.iconUrl" width="35px" height="35px"/>{{addDetailData.externalUser.username}}</span>-->
-      <!--</div>-->
-    <!--</el-collapse-item>-->
+    <el-collapse-item title="用户信息" name="1">
+      <div style="margin-left: 20px">
+        <span style="line-height: 30px!important;"><img :src="addDetailData.externalUser.iconUrl" width="35px" height="35px"/>{{addDetailData.externalUser.username}}</span>
+      </div>
+    </el-collapse-item>
 
     <el-collapse-item title="帖子正文和图片" name="2">
       <div style="margin-left: 20px">
@@ -46,13 +46,13 @@
       </div>
     </el-collapse-item>
 
-    <!--<el-collapse-item title="评论" name="4">-->
-      <!--<div v-for="text in addDetailData.comments" style="margin-left: 25px">-->
-        <!--<span v-if="addDetailData.comments.indexOf(text)==0"><el-button type="text">{{text.commentUserName}}</el-button>： {{text.commentText}}</span>-->
-        <!--<span v-else><el-button type="text">{{text.commentUserName}}</el-button> 回复 <el-button type="text">{{"@"+text.acceptUserName}}</el-button>： {{text.commentText}}</span>-->
-        <!--<br/>-->
-      <!--</div>-->
-    <!--</el-collapse-item>-->
+    <el-collapse-item title="评论" name="4">
+      <div v-for="text in addDetailData.comments" style="margin-left: 25px">
+        <span v-if="addDetailData.comments.indexOf(text)==0"><el-button type="text">{{text.commentUserName}}</el-button>： {{text.commentText}}</span>
+        <span v-else><el-button type="text">{{text.commentUserName}}</el-button> 回复 <el-button type="text">{{"@"+text.acceptUserName}}</el-button>： {{text.commentText}}</span>
+        <br/>
+      </div>
+    </el-collapse-item>
   </el-collapse>
 </template>
 

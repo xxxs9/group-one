@@ -248,14 +248,14 @@
         </el-form-item>
 
         <!--置顶多选框-->
-        <el-form-item label="置顶板块" required v-if="dialogStatus=='postStick'">
-          <div v-for="postStick in listStick">
-            <el-checkbox :label="postStick.stickName" :key="postStick.stickId">{{postStick.stickName}}</el-checkbox>
-            <!--<el-checkbox-group>-->
-              <!--<el-checkbox v-for="stick in tempPost.postStick" checked :label="stick.stickName" v-if="postStick.stickId==stick.stickId" :key="stick.stickId"></el-checkbox>-->
-              <!--&lt;!&ndash;<el-checkbox  :label="stick.stickName" v-else :key="stick.stickId"></el-checkbox>&ndash;&gt;-->
-            <!--</el-checkbox-group>-->
-          </div>
+        <el-form-item v-if="dialogStatus=='postStick'" label-width="0">
+            <el-checkbox-group v-model="postStickValue" @change="handleCheckedCitiesChange">
+              <div v-for="postStick in listStick">
+                <el-checkbox  :label="postStick.stickId" v-if="postStick.stickState==0" :key="postStick.stickId">{{postStick.stickName}}</el-checkbox>
+                <el-checkbox  :checked="true" :label="postStick.stickId" v-if="postStick.stickState==1" :key="postStick.stickId">{{postStick.stickName}}</el-checkbox>
+              </div>
+           </el-checkbox-group>
+
         </el-form-item>
 
       </el-form>
@@ -292,8 +292,13 @@
         },
         postdetailDeta:'',
         typeOption: '',//帖子类型下拉框数据a
-        listStick:'',//置顶列表数据
+        listStick:[],//置顶列表数据
         dialogStatus: '',
+        postStickData:{
+          values:[],
+          postId:''
+        },
+        postStickValue:[],
         dialogFormVisible: false,
         dialogUpdateVisible: false,
         textMap: {
@@ -424,13 +429,11 @@
           this.postdetailDeta = data;
           this.dialogStatus = "postDetail";
           this.dialogFormVisible = true;
-          console.log(data)
         }).catch(error => {
 
         })
         this.dialogStatus = "postDetail";
         this.dialogFormVisible = true;
-        // this.refs.detail.getDetailData()
       },
       handleSizeChange(val) {
         //改变每页数量
@@ -464,17 +467,17 @@
         this.dialogFormVisible = true;
       },
       showPostStick($index){
+        this.postStickValue = []
+        this.listStick = []
         let post = this.list[$index];
         this.detailData.postId = post.postId;
         this.api({
-          url: "/stick/list",
-          method: "get",
+          url: "/stick/listStickByPostId",
+          method: "post",
           params: this.detailData
         }).then(data =>{
-          console.log(data)
           this.listLoading = false;
-          this.listStick = data.listStick;
-          this.tempPost.postStick = data.listStickByPostId;
+          this.listStick = data;
         })
         this.dialogStatus = 'postStick'
         this.dialogFormVisible = true
@@ -489,8 +492,27 @@
         this.tempPost.postImgList = post.postImgList;
         this.dialogUpdateVisible = true
       },
-      updatePostStick(){
-        console.log(this.tempPost.postStick)
+      updatePostStick($index){
+        let post = this.list[$index];
+        this.postStickData.values = this.postStickValue
+        this.postStickData.postId = this.detailData.postId
+        console.log(this.postStickData)
+        this.api({
+          url: "/stick/updatePostStick",
+          method: "post",
+          data: this.postStickData
+        }).then(() => {
+          let msg = "置顶成功";
+          this.dialogFormVisible = false;
+          this.$message({
+            message: msg,
+            type: 'success',
+            duration: 1 * 1000,
+            onClose: () => {
+              _vue.getList();
+            }
+          })
+        })
       },
       updateLikeOffset() {
         //改变点赞数请求
@@ -511,6 +533,9 @@
             }
           })
         })
+      },
+      handleCheckedCitiesChange(value) {
+        this.postStickValue = value;
       },
       updateBrowseOffset() {
         //改变浏览数请求
