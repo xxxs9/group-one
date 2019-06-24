@@ -42,7 +42,7 @@
             post_owner_id                         postOwnerId,
             post_text                             postText,
             DATE_FORMAT(post_time, '%Y.%m.%d %T') postTime,
-            like_offset                          likeOffset,
+            like_offset                           likeOffset,
             browse_offset                         browseOffset,
             post_state                            postState
         FROM post_table
@@ -145,7 +145,7 @@
           pi.post_image_src             postImageSrc,
           c.comment_text                commentText,
           (SELECT categories_name FROM post_categories pc WHERE pc.categories_id = p.postTypeId) postType,
-          (SELECT tag_name FROM tag t WHERE t.tag_no = pt2.tag_id)                               postTagName
+          (SELECT tag_name FROM tag t WHERE t.tag_id = pt2.tag_id)                               postTagName
           FROM (
             SELECT
                 post_id                 postId,

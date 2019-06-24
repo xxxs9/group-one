@@ -394,6 +394,7 @@
           method: "get",
           params: this.listQuery
         }).then(data => {
+          console.log(data)
           this.listLoading = false;
           this.list = data.list;
           this.totalCount = data.totalCount;
