@@ -16,7 +16,7 @@ public interface BrowseRecordService {
      * 查询记录列表
      * @return
      */
-    public List<JSONObject> getRecords();
+    public JSONObject getRecords(JSONObject jsonObject);
 
     /**
      * 根据用户名查询用户记录列表

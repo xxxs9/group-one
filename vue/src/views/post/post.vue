@@ -4,11 +4,6 @@
     overflow: auto !important;
     line-height: 70px !important;
   }
-
-  .el-table__header th {
-    height: 50px !important;
-    overflow: auto !important;
-  }
 </style>
 <template>
   <div class="app-container">
@@ -74,7 +69,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="帖子内容" style="line-height:10px">
+      <el-table-column align="center" label="帖子内容" width="100">
         <template slot-scope="scope">
           <div v-text="scope.row.postText" style="line-height:25px">
           </div>

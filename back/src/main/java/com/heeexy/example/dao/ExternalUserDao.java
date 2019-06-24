@@ -107,6 +107,17 @@ public interface ExternalUserDao {
      */
     public List<JSONObject> getPermIdByName(@Param("epermissionList") List<String> epermissionList);
 
-
+    /**
+     * 根据uuId查询用户
+     * @param uuId
+     * @return
+     */
     public JSONObject findUserById(@Param("uuId")Integer uuId);
+
+    /**
+     * 获取用户的粉丝用户ID
+     * @param jsonObject
+     * @return
+     */
+    public List<JSONObject> getFansUUIDByUUID(@Param("uuId")Integer uuId);
 }

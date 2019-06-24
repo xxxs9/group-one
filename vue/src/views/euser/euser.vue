@@ -27,12 +27,17 @@
       <el-table-column align="center" label="用户ID" prop="userId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="UUID" prop="uuId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="昵称" prop="username" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="头像" prop="iconUrl" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="头像"  style="width: 60px;">
+        <template slot-scope="scope">
+          <img :src="scope.row.iconUrl" width="60" height="60"
+               style="border-radius: 50%; display: block" class="head_pic"/>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="电话" prop="mobile" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="性别" prop="sex" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="粉丝数量/偏移量" prop="fansOffset" width="120">
         <template slot-scope="scope">
-          <span style="font-size: 15px" v-text="scope.row.fansCount+'/'"></span>
+          <el-button type="primary" icon="edit" v-text="scope.row.fansCount+'/'" size="mini" @click="showfansList(scope.$index)"></el-button>
           <el-button type="primary" icon="edit" v-text="scope.row.fansOffset" size="mini" @click="showfansOffset(scope.$index)"></el-button>
         </template>
       </el-table-column>
@@ -57,6 +62,7 @@
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+      <all-fans :fanslist="fanslist" v-if="dialogStatus=='fanslist'"></all-fans>
       <el-form class="small-space" :model="tempUser" label-position="left" label-width="80px"
                style='width: 300px; margin-left:50px;'>
         <el-form-item label="UUID" >
@@ -80,8 +86,9 @@
           </el-input>
         </el-form-item>
         <el-form-item label="粉丝偏移量" >
-          <el-input type="text" v-model="tempUser.fansOffset">
+          <el-input type="text" v-model="tempUser.fansOffset" @keyup.native="checkFO()">
           </el-input>
+          <span ref="text" id="text" style="display: none;color: red" >请输入有效的偏移量（1-6位数字）</span>
         </el-form-item>
         <el-form-item label="登录时间" v-if="dialogStatus=='update'">
           <el-input type="text" v-model="tempUser.loginTime" disabled="true">
@@ -103,10 +110,15 @@
 <script>
   import {mapGetters} from 'vuex'
 
+  import allFans from './fanslist'
+
   export default {
+    components:{
+      allFans
+    },
     data() {
       return {
-        queryInput: '',
+        fanslist: '',
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
@@ -121,7 +133,8 @@
         textMap: {
           update: '编辑',
           create: '新建用户',
-          fansOffset: '粉丝偏移量'
+          fansOffset: '粉丝偏移量',
+          fanslist: '粉丝列表'
         },
         tempUser: {
           userId: '',
@@ -193,10 +206,7 @@
         this.listQuery.pageNum = 1
         this.getList()
       },
-      // getIndex($index) {
-      //   //表格序号
-      //   return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
-      // },
+
       showfansOffset($index){
         let user = this.list[$index];
         this.tempUser.fansOffset = user.fansOffset;
@@ -205,15 +215,18 @@
         this.dialogStatus = "fansOffset";
         this.dialogFormVisible = true;
       },
-      showCreate() {
-        //显示新增对话框
-        this.tempUser.username = "";
-        this.tempUser.password = "";
-        this.tempUser.nickname = "";
-        this.tempUser.roleId = "";
-        this.tempUser.userId = "";
-        this.dialogStatus = "create"
-        this.dialogFormVisible = true
+      showfansList($index){
+        let user = this.list[$index];
+        this.tempUser.uuId = user.uuId;
+        this.api({
+          url: "/euser/fanslist",
+          method: "get",
+          params: this.tempUser.uuId
+        }).then(data => {
+          // this.listLoading = false;
+          this.list = data.list;
+          this.totalCount = data.totalCount;
+        })
       },
       showUpdate($index) {
         let user = this.list[$index];
@@ -228,17 +241,6 @@
         this.tempUser.modifyTime = user.modifyTime;
         this.dialogStatus = "update";
         this.dialogFormVisible = true;
-      },
-      createUser() {
-        //添加新用户
-        this.api({
-          url: "/user/addUser",
-          method: "post",
-          data: this.tempUser
-        }).then(() => {
-          this.getList();
-          this.dialogFormVisible = false
-        })
       },
       updateUser() {
         //修改用户信息
@@ -282,6 +284,20 @@
             _vue.$message.error("删除失败")
           })
         })
+      },
+      checkFO(){
+        // console.log(typeof this.tempUser.fansOffset);
+        // document.getElementById("text").style.display="block";
+        // let user = this.list[$index];
+        // this.tempUser.fansOffset = user.fansOffset;
+        let reg = /^\d{1,6}$/;
+        let string1=String(this.tempUser.fansOffset).match(reg)
+        if(!string1){
+          document.getElementById("text").style.display="block";
+        }else {
+          document.getElementById("text").style.display="none";
+
+        }
       },
     }
   }

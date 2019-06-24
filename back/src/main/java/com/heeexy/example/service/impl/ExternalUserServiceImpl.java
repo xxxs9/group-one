@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.heeexy.example.util.constants.ErrorEnum.E_400;
+import static com.heeexy.example.util.constants.ErrorEnum.E_503;
+
 /**
  * @author: liminhao
  * @date: 2019-06-18 13:06
@@ -46,8 +49,18 @@ public class ExternalUserServiceImpl implements ExternalUserService {
 
     @Override
     public JSONObject updateFansOffset(JSONObject jsonObject) {
-        userDao.updateFansOffset(jsonObject);
-        return CommonUtil.successJson();
+//        System.out.println(jsonObject.getString("fansOffset"));
+//        System.out.println(jsonObject.getString("uuId"));
+        String reg = "^\\d{1,6}$";
+        if(jsonObject.getString("fansOffset").matches(reg)){
+            userDao.updateFansOffset(jsonObject);
+            return CommonUtil.successJson();
+        }else {
+            return CommonUtil.errorJson(E_503);
+        }
+
+
+
     }
 
 
@@ -62,7 +75,6 @@ public class ExternalUserServiceImpl implements ExternalUserService {
     }
 
     @Override
-
     public JSONObject removePermission(JSONObject jsonObject) {
 //        JSONObject jsonObject1 = new JSONObject();
 //        jsonObject1.put("epermissionList",jsonObject.getJSONArray("epermissionList"));
@@ -94,7 +106,19 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         return CommonUtil.successJson();
     }
 
+    @Override
+    public JSONObject getFans(JSONObject jsonObject) {
+        Integer uuId = jsonObject.getInteger("uuId");
+        List<JSONObject> fansUUIDByUUID = userDao.getFansUUIDByUUID(uuId);
+        List<JSONObject> list = new ArrayList<>();
+        for(JSONObject object:fansUUIDByUUID){
+            Integer fansuuId = object.getInteger("uuId");
+            JSONObject userById = userDao.findUserById(fansuuId);
+            list.add(userById);
+        }
 
+        return CommonUtil.successPage(list);
+    }
 
 
 }
