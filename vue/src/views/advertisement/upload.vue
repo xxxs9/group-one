@@ -18,8 +18,6 @@
         </el-form-item>
       </el-form>
     </div>
-    <img v-for="src in tempAdvertisement.srcUrl" :src="src" hidden/>
-    <!--<img src="../../assets/upload/2b1d502e-8e28-4639-97e1-5940a4c9db2620150822214445_ERtxY.thumb.700_0.jpeg"/>-->
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
       <el-table-column align="center" label="序号" style="width: 60px;">
@@ -64,8 +62,10 @@
             action="/api/src/upload"
             list-type="picture-card"
             :on-preview="handlePictureCardPreview"
+            :on-success="handleAvatarSuccess"
             :on-remove="handleRemove">
-            <img :src="tempAdvertisement.srcUrl" style="width: 100%;height:100%"/>
+            <img v-if="dialogStatus=='update'" :src="tempAdvertisement.srcUrl" style="width: 100%;height:100%"/>
+            <i v-if="dialogStatus=='create'" class="el-icon-plus"></i>
           </el-upload>
           <el-dialog :visible.sync="dialogVisible">
             <img width="100%" :src="dialogImageUrl" alt="" ref="imgs">
@@ -86,11 +86,16 @@
   export default {
     data() {
       return {
+        imgData: {
+          src:'',
+          desFilePath: ''
+        },
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
         listQuery: {
           name: '',
+          src: '',
           pageNum: 1,//页码
           pageRow: 50,//每页条数
         },
@@ -105,7 +110,8 @@
           advertisementId: '',
           advertisementType: '',
           srcUrl: '',
-          advertisementStatus: ''
+          advertisementStatus: '',
+          url: ''
         },
         dialogImageUrl: '',
         dialogVisible: false
@@ -238,7 +244,20 @@
         })
       },
       handleRemove(file, fileList) {
-        console.log(file, fileList);
+        console.log("传入的地址："+this.imgData.src);
+        console.log("传入的地址："+this.imgData);
+        this.api({
+          url:"/src/delete",
+          method:'post',
+          data: this.imgData
+        })
+
+      },
+      handleAvatarSuccess(response, file, fileList) {
+        //response这个
+        this.imgData.src = response.url;
+        this.imgData.desFilePath = response.desFilePath;
+        console.log("传回的地址："+response.desFilePath)
       },
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url;
