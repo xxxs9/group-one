@@ -8,7 +8,7 @@ public interface TagDao {
     /**
      * 新增文章
      */
-    JSONObject addTag(JSONObject jsonObject);
+    int addTag(JSONObject jsonObject);
 
 
     int countTag(JSONObject jsonObject);
@@ -20,7 +20,7 @@ public interface TagDao {
     /**
      * 更新文章
      */
-    JSONObject updateTag(JSONObject jsonObject);
+    int updateTag(JSONObject jsonObject);
 
-    JSONObject updateByStatus(JSONObject jsonObject);
+    int updateByStatus(JSONObject jsonObject);
 }

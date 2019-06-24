@@ -17,11 +17,13 @@
 
     <select id="listTag" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
-            t.tag_id                                          tid,
-            t.tag_name                                        tname,
-            t.parent_id                                       pid
+            t.tag_id                                          id,
+            t.tag_name                                        name,
+            t.parent_id                                       parentId,
+            t.rank                                            rank
         FROM tag t
-        ORDER BY t.tag_id DESC
+        where   t.status = '1'
+        ORDER BY t.tag_id ASC
         LIMIT #{offSet}, #{pageRow}
     </select>
 
@@ -33,9 +35,13 @@
         WHERE template_id = #{id}
     </update>
     <update id="updateByStatus" parameterType="com.alibaba.fastjson.JSONObject">
-        UPDATE Message_Template
+        UPDATE tag
         SET
             status = '2'
-        WHERE template_id = #{id}
+        WHERE tag_id in
+        (<foreach collection="id" item="item" separator=",">
+             #{item}
+          </foreach>)
+
     </update>
 </mapper>

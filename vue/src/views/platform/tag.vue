@@ -1,35 +1,32 @@
+
+<style>
+  .el-tree-node__label{
+    font-size: 25px;
+    font-weight: bolder;
+  }
+
+</style>
 <template>
-  <div class="app-container">
-    <div class="filter-container">
-      <el-form>
-        <el-form-item>
-          <el-button type="primary" icon="plus" @click="showCreate" v-if="hasPerm('article:add')">添加
-          </el-button>
-        </el-form-item>
-      </el-form>
-    </div>
-    <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
-              highlight-current-row>
-      <el-table-column align="center" prop="tid" label="文章" style="width: 60px;"></el-table-column>
-
-      <el-table-column align="center" prop="tname" label="文章" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" prop="pid" label="文章" style="width: 60px;"></el-table-column>
-
-      <el-table-column align="center" label="管理" width="200" v-if="hasPerm('article:update')">
-        <template slot-scope="scope">
-          <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="listQuery.pageNum"
-      :page-size="listQuery.pageRow"
-      :total="totalCount"
-      :page-sizes="[10, 20, 50, 100]"
-      layout="total, sizes, prev, pager, next, jumper">
-    </el-pagination>
+  <div >
+    <el-tree
+      ref="tree"
+      :data="treeData"
+      :props="defaultProps"
+      accordion
+      show-checkbox
+      node-key="id"
+      check-strictly="true"
+      @node-click="handleNodeClick" >
+    </el-tree>
+    <el-form>
+      <el-form-item>
+        <el-button type="primary" icon="plus" @click="showCreate" v-if="hasPerm('article:add')">添加
+        </el-button>
+        <el-button @click="getData">获取数据</el-button>
+        <el-button type="danger" icon="delete" @click="removeUser()">删除
+        </el-button>
+      </el-form-item>
+    </el-form>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="tempArticle" label-position="left" label-width="60px"
                style='width: 300px; margin-left:50px;'>
@@ -45,11 +42,22 @@
       </div>
     </el-dialog>
   </div>
+
+
+
+
 </template>
+
 <script>
   export default {
-    data() {
+    name: "Test",
+    data(){
       return {
+        data : [],
+        defaultProps: {
+          children: 'children',
+          label: 'name'
+        },
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
@@ -64,6 +72,9 @@
           update: '编辑',
           create: '创建文章'
         },
+        tempID:{
+          id:""
+        },
         tempArticle: {
           tid: "",
           tname: "",
@@ -74,7 +85,17 @@
     created() {
       this.getList();
     },
-    methods: {
+    computed:{
+      treeData(){
+        let cloneData = JSON.parse(JSON.stringify(this.data))    // 对源数据深度克隆
+        return cloneData.filter(father=>{
+          let branchArr = cloneData.filter(child=>father.id == child.parentId)    //返回每一项的子级数组
+          branchArr.length>0 ? father.children = branchArr : ''   //如果存在子级，则给父级添加一个children属性，并赋值
+          return father.parentId==0;      //返回第一层
+        });
+      }
+    },
+    methods:{
       getList() {
         //查询列表
         if (!this.hasPerm('article:list')) {
@@ -87,23 +108,17 @@
           params: this.listQuery
         }).then(data => {
           this.listLoading = false;
+          this.data = data.list;
           this.list = data.list;
-          this.totalCount = data.totalCount;
         })
       },
-      handleSizeChange(val) {
-        //改变每页数量
-        this.listQuery.pageRow = val
-        this.handleFilter();
+      getData(){
+        alert(this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys()));
+
       },
-      handleCurrentChange(val) {
-        //改变页码
-        this.listQuery.pageNum = val
-        this.getList();
-      },
-      getIndex($index) {
-        //表格序号
-        return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
+      handleNodeClick(data){
+        // console.log(data)
+        console.log(this.treeData)
       },
       showCreate() {
         //显示新增对话框
@@ -118,28 +133,31 @@
         this.dialogStatus = "update"
         this.dialogFormVisible = true
       },
-      createArticle() {
-        //保存新文章
-        this.api({
-          url: "/article/addArticle",
-          method: "post",
-          data: this.tempArticle
+      removeUser() {
+        this.$confirm('确定删除此用户?', '提示', {
+          confirmButtonText: '确定',
+          showCancelButton: false,
+          type: 'warning'
         }).then(() => {
-          this.getList();
-          this.dialogFormVisible = false
+          let temp = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys());
+          alert(temp);
+
+          this.tempID.id = temp;
+
+
+          this.api({
+            url: "/tag/deleteTag",
+            method: "post",
+            data: this.tempID,
+          }).then(() => {
+            this.getList()
+          }).catch(() => {
+            this.$message.error("删除失败")
+          })
         })
       },
-      updateArticle() {
-        //修改文章
-        this.api({
-          url: "/article/updateArticle",
-          method: "post",
-          data: this.tempArticle
-        }).then(() => {
-          this.getList();
-          this.dialogFormVisible = false
-        })
-      },
-    }
+    },
+
+
   }
 </script>

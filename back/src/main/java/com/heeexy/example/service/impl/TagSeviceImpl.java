@@ -40,6 +40,10 @@ public class TagSeviceImpl implements TagSevice {
 
     @Override
     public JSONObject deleteTag(JSONObject jsonObject) {
-        return null;
+/*
+        System.out.println(jsonObject);
+*/
+        tagDao.updateByStatus(jsonObject);
+        return CommonUtil.successJson();
     }
 }
