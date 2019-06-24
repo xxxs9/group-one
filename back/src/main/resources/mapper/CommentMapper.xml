@@ -32,7 +32,7 @@
                 AND DATE(comment_time) BETWEEN #{beforeDate} AND #{afterDate}
             </if>
         </where>
-        ORDER BY postuser_id LIMIT #{offSet}, #{pageRow}
+        ORDER BY post_id LIMIT #{offSet}, #{pageRow}
     </select>
 
     <select id="countComment" resultType="Integer">
