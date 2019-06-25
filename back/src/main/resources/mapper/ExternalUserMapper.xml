@@ -53,7 +53,10 @@
                         </if>
                     </where>
                  ORDER BY id
-                 LIMIT #{offSet}, #{pageRow}
+                 <if test="offSet != null and offSet != '' and pageRow != null and pageRow != '' ">
+                     LIMIT #{offSet}, #{pageRow}
+                 </if>
+
              ) u
     </select>
     <!--
