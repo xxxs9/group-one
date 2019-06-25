@@ -69,7 +69,7 @@
             :on-preview="handlePictureCardPreview"
             :on-success="handleAvatarSuccess"
             :on-remove="handleRemove">
-            <img v-if="dialogStatus=='update'" :src="tempAdvertisement.srcUrl" style="width: 100%;height:100%"/>
+            <img v-if="dialogStatus=='update'" :src="tempAdvertisement.srcUrl" style="width: 100%;height:100%;float: left!important;"/>
             <i v-if="dialogStatus=='create'" class="el-icon-plus"></i>
           </el-upload>
           <el-dialog :visible.sync="dialogVisible">

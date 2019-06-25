@@ -39,17 +39,11 @@ public class AdvertisementController {
         String originalFilename = file.getOriginalFilename();
         String temp = UUID.randomUUID().toString();
         String desFilePath =
-                "F:" + File.separator+"ideaIU"
-                        + File.separator+"workspace"
-                        + File.separator+"group-one"
-                        + File.separator+"vue"
-                        + File.separator+"src"
-                        + File.separator+"assets"
-                        + File.separator+"upload"
+                "D:" + File.separator+"static"
                         + "/" + temp
                         +originalFilename;
         File localFile  = new File(desFilePath);
-        String srcUrl = "http://localhost:9520/static/img/"+temp+originalFilename;
+        String srcUrl = desFilePath.replaceFirst("D:\\\\", "http://localhost:8080/");
         list.add(srcUrl);
         localFile.createNewFile();
         file.transferTo(localFile);
