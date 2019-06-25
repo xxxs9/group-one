@@ -24,10 +24,13 @@
             <id column="permissionName" property="permissionName"/>
         </collection>
     </resultMap>
+    <!--
+        获取用户列表
+    -->
     <select id="getUser" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
             u.*,
-            (SELECT count(0) FROM `user_attention` WHERE u.userId = `user_attention`.to_user_id) fansCount
+            (SELECT count(0) FROM `user_attention` WHERE u.uuId = `user_attention`.to_user_uuid AND `user_attention`.delete_status='1') fansCount
         FROM
             (
                  SELECT
@@ -45,25 +48,38 @@
                         <if test="querykey != null and querykey != '' ">
                             username LIKE concat('%',#{querykey},'%')
                         </if>
+                        <if test="beforeDate != null and beforeDate != '' and afterDate !=null and afterDate !=''">
+                            AND DATE(login_time) between #{beforeDate} and #{afterDate}
+                        </if>
                     </where>
                  ORDER BY id
-                 LIMIT #{offSet}, #{pageRow}
+                 <if test="offSet != null and offSet != '' and pageRow != null and pageRow != '' ">
+                     LIMIT #{offSet}, #{pageRow}
+                 </if>
+
              ) u
     </select>
+    <!--
+        添加用户
+    -->
     <insert id="addUser" useGeneratedKeys="true" keyProperty="uuId">
         INSERT INTO
             user(uuid,unionid,username,iconurl,mobile,sex)
             VALUES
             (#{uuId},#{unionId},#{username},#{iconUrl},#{mobile},#{sex})
     </insert>
-
+    <!--
+        修改粉丝偏移量
+    -->
     <update id="updateFansOffset">
         UPDATE user
         SET fans_offset = #{fansOffset}
-        WHERE id = #{userId}
+        WHERE uuid = #{uuId}
     </update>
 
-
+    <!--
+        获取用户信息和对应的权限
+    -->
     <select id="getUserPermission" resultMap="euserMap">
         SELECT
             u.*,
@@ -80,6 +96,7 @@
                         <if test="querykey != null and querykey != '' ">
                             username LIKE concat('%',#{querykey},'%')
                         </if>
+
                         AND unionid IS NOT NULL
                     </where>
                  ORDER BY id
@@ -89,6 +106,8 @@
              LEFT JOIN permission p ON p.id = up.permission_id
 
     </select>
+
+    <!--移除用户当前的权限-->
     <update id="removePermission">
         UPDATE user_permission
         SET delete_status = '2'
@@ -100,6 +119,7 @@
         )
     </update>
 
+    <!--添加权限-->
     <insert id="addPermission">
         INSERT INTO user_permission(user_uuid, permission_id)
         VALUES
@@ -114,17 +134,22 @@
         WHERE delete_status = '2'
         AND user_uuid = #{uuId}
     </update>
+    <!--移除用户所有权限-->
     <update id="removeUserAllPermission">
         UPDATE user_permission
         SET delete_status = '2'
         WHERE user_uuid = #{uuId}
         AND delete_status = '1'
     </update>
+
+    <!--查询该用户是否存在-->
     <select id="queryExistUUID" resultType="int">
         SELECT count(0)
         FROM user
         WHERE uuid=#{uuId}
     </select>
+
+    <!--通过权限名获取权限id-->
     <select id="getPermIdByName" resultType="com.alibaba.fastjson.JSONObject">
         SELECT id
         FROM permission
@@ -134,6 +159,8 @@
         </foreach>
         )
     </select>
+
+    <!--根据uuId查询用户-->
     <select id="findUserById" resultType="com.alibaba.fastjson.JSONObject">
         SELECT u.*
         FROM
@@ -152,5 +179,18 @@
         WHERE uuid = #{uuId}
         ) u
     </select>
+
+    <!--获取用户的粉丝用户ID-->
+    <select id="getFansUUIDByUUID" resultType="com.alibaba.fastjson.JSONObject">
+            SELECT
+            from_user_uuid
+            FROM example.user u,user_attention ua
+            WHERE u.uuid = ua.to_user_uuid AND u.uuid = #{uuId}
+    </select>
+    <select id="countByUnionId" resultType="java.lang.Integer">
+        SELECT count(0) from user where unionid is not null;
+
+    </select>
+
 
 </mapper>

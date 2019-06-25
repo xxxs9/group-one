@@ -16,7 +16,7 @@ public interface BrowseRecordDao {
      * 查询记录列表
      * @return
      */
-    public List<JSONObject> getRecords();
+    List<JSONObject> getRecords(JSONObject jsonObject);
 
     /**
      * 根据用户名查询用户记录列表
@@ -31,4 +31,11 @@ public interface BrowseRecordDao {
      * @return
      */
     public int removeRecord(JSONObject jsonObject);
+
+    /**
+     * 统计数量
+     * @param jsonObject
+     * @return
+     */
+    int countRecord(JSONObject jsonObject);
 }

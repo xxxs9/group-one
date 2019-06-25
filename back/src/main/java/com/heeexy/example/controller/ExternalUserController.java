@@ -1,6 +1,7 @@
 package com.heeexy.example.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.heeexy.example.service.BrowseRecordService;
 import com.heeexy.example.service.ExternalUserService;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,23 @@ public class ExternalUserController {
     public JSONObject refreshPermission(@RequestBody JSONObject requestJson){
         CommonUtil.hasAllRequired(requestJson,"uuId");
         return service.refreshPermissionStatus(requestJson);
+    }
+
+    @GetMapping("/fanslist")
+    public JSONObject getFans(HttpServletRequest request){
+        return service.getFans(CommonUtil.request2Json(request));
+    }
+
+
+    @Autowired
+    BrowseRecordService recordService;
+
+    @GetMapping("/recordlist")
+    public JSONObject getRecord(HttpServletRequest request){
+        JSONObject records = recordService.getRecords(CommonUtil.request2Json(request));
+//        System.out.println(records.get("list"));
+        return recordService.getRecords(CommonUtil.request2Json(request));
+
     }
 }
 

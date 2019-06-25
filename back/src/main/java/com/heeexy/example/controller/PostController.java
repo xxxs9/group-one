@@ -7,8 +7,13 @@ import com.heeexy.example.util.CommonUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author ：Hooon
@@ -21,6 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/post")
 public class PostController {
+
+    List<String> list = new ArrayList<>();
 
     @Autowired
     private PostServiceImpl postService;
@@ -60,9 +67,33 @@ public class PostController {
         return postService.queryPostById(requestJson);
     }
 
+    @RequestMapping(value = "/upload")
+    public Map imgUpload(HttpServletRequest req, MultipartHttpServletRequest multiReq) throws IOException {
+        Map<String,Object> map = new HashMap<>();
+        MultipartFile file = multiReq.getFile("file");
+        String originalFilename = file.getOriginalFilename();
+        String temp = UUID.randomUUID().toString();
+        String desFilePath =
+                "D:" + File.separator+"static"
+                        + "/" + temp
+                        +originalFilename;
+        File localFile  = new File(desFilePath);
+        String srcUrl = desFilePath.replaceFirst("D:\\\\", "http://localhost:8080/");
+        list.add(srcUrl);
+        localFile.createNewFile();
+        file.transferTo(localFile);
+        map.put("code", 0);
+        map.put("msg", "上传成功");
+        map.put("desFilePath", desFilePath);
+        map.put("url", srcUrl);
+        return map;
+    }
+
     @PostMapping("/updatePost")
     public JSONObject updatePost(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "postId");
         return postService.updatePost(requestJson);
     }
+
+
 }
