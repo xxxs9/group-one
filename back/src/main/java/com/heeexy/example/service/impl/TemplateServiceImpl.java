@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.TemplateDao;
 import com.heeexy.example.service.TemplateService;
 import com.heeexy.example.util.CommonUtil;
+import com.heeexy.example.util.constants.ErrorEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,10 +25,14 @@ public class TemplateServiceImpl implements TemplateService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject addTemplate(JSONObject jsonObject) {
-        templateDao.addTemplate(jsonObject);
 
-        return CommonUtil.successJson();
-
+        List<JSONObject> list = templateDao.getTemplateByName(jsonObject);
+        if(list.size()>0){
+            return CommonUtil.errorJson(ErrorEnum.E_10012);
+        }else{
+            templateDao.addTemplate(jsonObject);
+            return CommonUtil.successJson();
+        }
     }
 
     @Override
@@ -50,8 +55,14 @@ public class TemplateServiceImpl implements TemplateService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject updateTemplate(JSONObject jsonObject) {
-        templateDao.updateTemplate(jsonObject);
-        return CommonUtil.successJson();
+        List<JSONObject> list = templateDao.getTemplateById(jsonObject);
+        if(list.size()>0){
+            return CommonUtil.errorJson(ErrorEnum.E_10012);
+        }else{
+            templateDao.updateTemplate(jsonObject);
+            return CommonUtil.successJson();
+        }
+
     }
 
     @Override

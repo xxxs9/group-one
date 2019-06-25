@@ -10,6 +10,15 @@
           </el-button>
         </el-form-item>
       </el-form>
+      <el-form-item>
+        <el-select v-model="tempTemplate.id" filterable clearable placeholder="选择帖子类型" @change="getList">
+          <el-option v-for="item in typeOption" :key="item.id" :label="'# '+item.sortname+' #'" :value="item.id">
+          </el-option>
+        </el-select>
+        <el-form-item>
+          <el-button type="primary" class="el-icon-close" @click="refashList"></el-button>
+        </el-form-item>
+      </el-form-item>
     </div>
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
@@ -20,7 +29,8 @@
       </el-table-column>
       <el-table-column align="center" prop="tname" label="名字" style="width: 60px;"></el-table-column>
       <el-table-column align="center" prop="content" label="内容" style="width: 60px;"></el-table-column>
-
+      <el-table-column align="center" label="创建时间" prop="createTime" width="170"></el-table-column>
+      <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170"></el-table-column>
       <el-table-column align="center" label="管理" >
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
@@ -41,14 +51,14 @@
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form class="small-space" :model="tempArticle" label-position="left" label-width="60px"
+      <el-form class="small-space" :model="tempTemplate" label-position="left" label-width="60px"
                style='width: 300px; margin-left:50px;'>
-        <el-form-item label="名字">
-          <el-input type="text" v-model="tempArticle.tname">
+        <el-form-item  v-if="dialogStatus=='create'" label="名字">
+          <el-input type="text" v-model="tempTemplate.tname">
           </el-input>
         </el-form-item>
         <el-form-item label="内容">
-          <el-input type="text" v-model="tempArticle.content">
+          <el-input type="text" v-model="tempTemplate.content">
           </el-input>
         </el-form-item>
       </el-form>
@@ -75,6 +85,7 @@
             pageRow: 50,//每页条数
             name: ''
           },
+          typeOption: '',
           dialogStatus: 'create',
           dialogFormVisible: false,
           textMap: {
@@ -82,7 +93,7 @@
             create: '创建文章',
             send: '发送'
           },
-          tempArticle: {
+          tempTemplate: {
             id: "",
             tname: "",
             content: ""
@@ -107,6 +118,13 @@
             this.totalCount = data.totalCount;
           })
         },
+        refashList() {
+/*          this.tempTemplate.queryText = '';
+          this.tempTemplate.dataValue = '';
+          this.tempTemplate.queryOwnewName = '';
+          this.tempTemplate.queryPostTypeId = '';*/
+          this.getList();
+        },
         handleSizeChange(val) {
           //改变每页数量
           this.listQuery.pageRow = val
@@ -123,24 +141,24 @@
         },
         showCreate() {
           //显示新增对话框
-          this.tempArticle.tname = "";
-          this.tempArticle.content = "";
+          this.tempTemplate.tname = "";
+          this.tempTemplate.content = "";
           this.dialogStatus = "create"
           this.dialogFormVisible = true
         },
         showUpdate($index) {
           //显示修改对话框
-          this.tempArticle.id = this.list[$index].id;
-          this.tempArticle.tname = this.list[$index].tname;
-          this.tempArticle.content = this.list[$index].content;
+          this.tempTemplate.id = this.list[$index].id;
+          this.tempTemplate.tname = this.list[$index].tname;
+          this.tempTemplate.content = this.list[$index].content;
           this.dialogStatus = "update"
           this.dialogFormVisible = true
         },
         sendAlltest($index) {
           //显示修改对话框
-          this.tempArticle.id = this.list[$index].id;
-          this.tempArticle.tname = this.list[$index].tname;
-          this.tempArticle.content = this.list[$index].content;
+          this.tempTemplate.id = this.list[$index].id;
+          this.tempTemplate.tname = this.list[$index].tname;
+          this.tempTemplate.content = this.list[$index].content;
           this.dialogStatus = "send"
           this.dialogFormVisible = true
         },
@@ -149,7 +167,7 @@
           this.api({
             url: "/template/addTemplate",
             method: "post",
-            data: this.tempArticle
+            data: this.tempTemplate
           }).then(() => {
             this.getList();
             this.dialogFormVisible = false
@@ -160,7 +178,7 @@
           this.api({
             url: "/template/updateTemplate",
             method: "post",
-            data: this.tempArticle
+            data: this.tempTemplate
           }).then(() => {
             this.getList();
             this.dialogFormVisible = false
@@ -171,7 +189,7 @@
           this.api({
             url: "/template/sendTemplate",
             method: "post",
-            data: this.tempArticle
+            data: this.tempTemplate
           }).then(() => {
             this.getList();
             this.dialogFormVisible = false

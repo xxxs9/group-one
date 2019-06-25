@@ -21,9 +21,12 @@ public class TagController {
     private TagSevice tagSevice;
 
     @GetMapping("/listTag")
-    public JSONObject listArticle(HttpServletRequest request) {
-        System.out.println(tagSevice.listTag(CommonUtil.request2Json(request)));
+    public JSONObject listTag(HttpServletRequest request) {
         return tagSevice.listTag(CommonUtil.request2Json(request));
+    }
+    @GetMapping("/listAllTag")
+    public JSONObject listAllTag(HttpServletRequest request) {
+        return tagSevice.listAllTag(CommonUtil.request2Json(request));
     }
     @PostMapping("/deleteTag")
     public JSONObject deleteSort(@RequestBody JSONObject requestJson) {

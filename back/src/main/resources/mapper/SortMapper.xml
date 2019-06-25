@@ -35,15 +35,22 @@
             date_format(w.create_time, '%Y.%m.%d %T')   createTime,
             date_format(w.update_time, '%Y.%m.%d %T')   updateTime
         FROM post_categories w
-        WHERE w.status = '1'
+        <where>
+            <if test="selectId != null and selectId != '' ">
+                  w.categories_id = #{selectId}
+            </if>
+        </where>
         ORDER BY w.categories_id DESC
         LIMIT #{offSet}, #{pageRow}
     </select>
-    <select id="listSortName" resultType="com.alibaba.fastjson.JSONObject">
-        SELECT
-            w.categories_name                                 sortname
+    <select id="listAllSort" resultType="com.alibaba.fastjson.JSONObject">
+          SELECT
+            w.categories_id                                     id,
+            w.categories_name                                 sortname,
+            w.categories_img                                 imageUrl,
+            w.status                                          status,
         FROM post_categories w
-        WHERE w.status = '1'
+        where w.status = '1'
 
     </select>
     <!--帖子详情Map-->

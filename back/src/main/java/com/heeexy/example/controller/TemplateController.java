@@ -29,7 +29,6 @@ public class TemplateController {
 
     @GetMapping("/listTemplate")
     public JSONObject listArticle(HttpServletRequest request) {
-        System.out.println(templateService.listTemplate(CommonUtil.request2Json(request)));
         return templateService.listTemplate(CommonUtil.request2Json(request));
     }
 

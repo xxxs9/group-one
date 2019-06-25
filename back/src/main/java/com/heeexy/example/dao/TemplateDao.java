@@ -27,4 +27,9 @@ public interface TemplateDao {
     int updateTemplate(JSONObject jsonObject);
 
     int updateByStatus(JSONObject jsonObject);
+
+    List<JSONObject> getTemplateByName(JSONObject jsonObject);
+    List<JSONObject> getTemplateById(JSONObject jsonObject);
+
+
 }

@@ -27,10 +27,11 @@
 
     <select id="listTemplate" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
-            w.template_id                                      id,
+            w.template_id                                     id,
             w.template_name                                   tname,
-            w.template_content                                content
-
+            w.template_content                                content,
+            date_format(w.create_time, '%Y.%m.%d %T')        createTime,
+            date_format(w.update_time, '%Y.%m.%d %T')        updateTime
         FROM message_template w
         where w.status = '1'
         ORDER BY w.template_id DESC
@@ -46,7 +47,6 @@
     <update id="updateTemplate" parameterType="com.alibaba.fastjson.JSONObject">
         UPDATE message_template
         SET
-            template_name = #{tname},
             template_content = #{content}
         WHERE template_id = #{id}
     </update>
@@ -56,4 +56,19 @@
             status = '2'
         WHERE template_id = #{id}
     </update>
+
+    <select id="getTemplateByName" resultType="com.alibaba.fastjson.JSONObject">
+        select
+            w.template_id                                     id,
+            w.template_name                                   tname
+        from message_template w
+        where w.template_name = #{tname} and  w.status = '1'
+    </select>
+    <select id="getTemplateById" resultType="com.alibaba.fastjson.JSONObject">
+        select
+            w.template_id                                     id,
+            w.template_name                                   tname
+        from message_template w
+        where w.template_name = #{tname} and  w.template_id != #{id} and  w.status = '1'
+    </select>
 </mapper>

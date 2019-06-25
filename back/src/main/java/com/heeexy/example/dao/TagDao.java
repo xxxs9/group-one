@@ -15,7 +15,10 @@ public interface TagDao {
     /**
      * 文章列表
      */
+
     List<JSONObject> listTag(JSONObject jsonObject);
+
+    List<JSONObject> listAllTag(JSONObject jsonObject);
 
     /**
      * 更新文章

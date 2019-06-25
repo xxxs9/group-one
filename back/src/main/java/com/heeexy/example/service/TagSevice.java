@@ -11,6 +11,8 @@ public interface TagSevice {
      */
     JSONObject listTag(JSONObject jsonObject);
 
+    JSONObject listAllTag(JSONObject jsonObject);
+
 
     /**
      * 更新文章

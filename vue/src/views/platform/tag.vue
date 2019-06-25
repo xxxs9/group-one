@@ -4,7 +4,6 @@
     font-size: 25px;
     font-weight: bolder;
   }
-
 </style>
 <template>
   <div >
@@ -15,7 +14,6 @@
       accordion
       show-checkbox
       node-key="id"
-      check-strictly="true"
       @node-click="handleNodeClick" >
     </el-tree>
     <el-form>
@@ -27,23 +25,31 @@
         </el-button>
       </el-form-item>
     </el-form>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form class="small-space" :model="tempArticle" label-position="left" label-width="60px"
-               style='width: 300px; margin-left:50px;'>
-        <el-form-item label="文章">
-          <el-input type="text" v-model="tempArticle.content">
-          </el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button v-if="dialogStatus=='create'" type="success" @click="createArticle">创 建</el-button>
-        <el-button type="primary" v-else @click="updateArticle">修 改</el-button>
-      </div>
-    </el-dialog>
+    <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
+              highlight-current-row>
+      <el-table-column align="center" label="序号" width="80">
+        <template slot-scope="scope">
+          <span v-text="getIndex(scope.$index)"> </span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="类别名称" prop="name" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="上级名称"  prop="parentId" width="100">
+        <template slot-scope="scope">
+          <el-tag  v-if="scope.row.rank==1" style="margin-right: 3px;" type="success">无</el-tag>
+          <div v-if="scope.row.rank!=1" v-for="tags in list" style="text-align: center">
+            <el-tag  v-if="scope.row.parentId == tags.id" style="margin-right: 3px;" type="danger" v-text="tags.name"></el-tag>
+
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="等级" prop="rank" width="170"></el-table-column>
+      <el-table-column align="center" label="管理" width="220">
+        <template slot-scope="scope">
+          <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
-
-
 
 
 </template>
@@ -84,6 +90,7 @@
     },
     created() {
       this.getList();
+      this.getAllList();
     },
     computed:{
       treeData(){
@@ -96,6 +103,21 @@
       }
     },
     methods:{
+      getAllList() {
+        //查询列表
+        if (!this.hasPerm('article:list')) {
+          return
+        }
+        this.listLoading = true;
+        this.api({
+          url: "/tag/listAllTag",
+          method: "get",
+          params: this.listQuery
+        }).then(data => {
+          this.listLoading = false;
+          this.data = data.list;
+        })
+      },
       getList() {
         //查询列表
         if (!this.hasPerm('article:list')) {
@@ -108,13 +130,26 @@
           params: this.listQuery
         }).then(data => {
           this.listLoading = false;
-          this.data = data.list;
           this.list = data.list;
         })
       },
+      getIndex($index) {
+        //表格序号
+        return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
+      },
+      showUpdate($index) {
+        let sort = this.list[$index];
+        alert(sort.imageUrl);
+        this.tempUser.id = sort.id;
+        this.tempUser.sortname = sort.sortname;
+        this.tempUser.imageUrl = sort.imageUrl;
+        this.dialogStatus = "update"
+        this.dialogFormVisible = true
+      },
       getData(){
-        alert(this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys()));
-
+        // alert(this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys()));
+        // console.log(this.$refs.tree.getCheckedKeys());
+        alert(this.$refs.tree.getCheckedKeys())
       },
       handleNodeClick(data){
         // console.log(data)
@@ -139,8 +174,8 @@
           showCancelButton: false,
           type: 'warning'
         }).then(() => {
-          let temp = this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys());
-          alert(temp);
+          let temp = this.$refs.tree.getCheckedKeys();
+
 
           this.tempID.id = temp;
 
