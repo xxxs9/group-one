@@ -240,6 +240,7 @@
         console.log("--------------")
         let comment = this.list[$index];
         this.tempComment.postId = comment.postId;   //帖子Id
+        this.tempComment.commentTime = '';
         this.api({
           url: "/post/queryPostById",
           method: "post",
