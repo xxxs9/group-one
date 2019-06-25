@@ -13,6 +13,8 @@
         <result column="postTime" property="postTime" />
         <result column="likeCount" property="likeCount"/>
         <result column="likeOffset" property="likeOffset"/>
+        <result column="postAddress" property="postAddress"/>
+        <result column="postPhone" property="postPhone"/>
         <result column="browseCount" property="browseCount"/>
         <result column="browseOffset" property="browseOffset"/>
         <result column="postState" property="postState" />
@@ -41,8 +43,10 @@
             post_type_id                          postTypeId,
             post_owner_id                         postOwnerId,
             post_text                             postText,
+            post_phone                            postPhone,
+            post_address                          postAddress,
             DATE_FORMAT(post_time, '%Y.%m.%d %T') postTime,
-            like_offset                          likeOffset,
+            like_offset                           likeOffset,
             browse_offset                         browseOffset,
             post_state                            postState
         FROM post_table
@@ -99,7 +103,7 @@
     <update id="updatePost">
         UPDATE post_table
         SET
-          post_text = #{postText}, post_type_id = #{postTypeId}
+          post_text = #{postText}, post_type_id = #{postTypeId}, post_phone = #{postPhone}, post_adress = #{postAddress}
         WHERE post_id = #{postId}
     </update>
 
@@ -145,7 +149,7 @@
           pi.post_image_src             postImageSrc,
           c.comment_text                commentText,
           (SELECT categories_name FROM post_categories pc WHERE pc.categories_id = p.postTypeId) postType,
-          (SELECT tag_name FROM tag t WHERE t.tag_id= pt2.tag_id)                               postTagName
+          (SELECT tag_name FROM tag t WHERE t.tag_id = pt2.tag_id)                               postTagName
           FROM (
             SELECT
                 post_id                 postId,
