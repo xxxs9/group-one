@@ -64,16 +64,17 @@
         </el-form-item>
         <el-form-item label="上传" required>
           <el-upload
+            ref="upload"
             action="/api/src/upload"
             list-type="picture-card"
             :on-preview="handlePictureCardPreview"
             :on-success="handleAvatarSuccess"
             :on-remove="handleRemove">
-            <img v-if="dialogStatus=='update'" :src="tempAdvertisement.srcUrl" style="width: 100%;height:100%"/>
+            <img v-if="dialogStatus=='update'" :src="tempAdvertisement.srcUrl" style="width: 100%;height:100%;float: left!important;"/>
             <i v-if="dialogStatus=='create'" class="el-icon-plus"></i>
           </el-upload>
-          <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt="" ref="imgs">
+          <el-dialog :visible.sync="dialogVisible" >
+            <img width="100%" :src="dialogImageUrl" alt="">
           </el-dialog>
         </el-form-item>
       </el-form>
@@ -92,7 +93,7 @@
     data() {
       return {
         imgData: {
-          src:'',
+          src: '',
           desFilePath: ''
         },
         totalCount: 0, //分页组件--数据总条数
@@ -178,7 +179,6 @@
         this.tempAdvertisement.srcUrl = "";
         this.dialogStatus = "create";
         this.dialogFormVisible = true
-        this.$ref.imgs.src='';
 
 
       },
@@ -200,8 +200,8 @@
           data: this.tempAdvertisement
         }).then(() => {
           this.getList();
-          this.dialogFormVisible = false
-          this.$ref.imgs.src='';
+          this.dialogFormVisible = false;
+          this.$router.go(0)
         })
       },
       updateAdvertisement() {
@@ -235,7 +235,7 @@
           type: 'warning'
         }).then(() => {
           let advertisement = _vue.list[$index];
-          if (advertisement.advertisementStatus==0) {
+          if (advertisement.advertisementStatus == 0) {
             advertisement.advertisementStatus = '1';
           } else {
             advertisement.advertisementStatus = '0';
@@ -252,26 +252,23 @@
         })
       },
       handleRemove(file, fileList) {
-        console.log("传入的地址："+this.imgData.src);
-        console.log("传入的地址："+this.imgData);
         this.api({
-          url:"/src/delete",
-          method:'post',
+          url: "/src/delete",
+          method: 'post',
           data: this.imgData
         })
-
       },
       handleAvatarSuccess(response, file, fileList) {
         //response这个
         this.imgData.src = response.url;
         this.imgData.desFilePath = response.desFilePath;
-        console.log("传回的地址："+response.desFilePath)
+        console.log("传回的地址：" + response.desFilePath)
+        this.$ref.upload.clearFiles();
       },
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
       }
     }
-
   }
 </script>
