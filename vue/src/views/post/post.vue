@@ -139,7 +139,7 @@
       <el-form class="small-space" :model="updateData" label-position="left" label-width="120px"
                style='width: 100%; margin-left:50px;'>
         <el-form-item label="帖子类型">
-          <el-select v-model="updateData.postTypeId" filterable clearable :placeholder="'# '+tempPost.postType+' #'" :value="tempPost.postTypeId">
+          <el-select v-model="tempPost.postTypeId" filterable clearable :placeholder="'# '+tempPost.postType+' #'" :value="tempPost.postTypeId">
             <el-option :key="tempPost.postTypeId" :label="'# '+tempPost.postType+' #'" :value="tempPost.postTypeId" >{{'# '+tempPost.postType+' #'}}</el-option>
             <el-option-group>
               <el-option v-for="item in typeOption" :key="item.id" :label="'# '+item.sortname+' #'" :value="item.id">
@@ -148,69 +148,113 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="帖子内容" style="width: 80%" v-model="updateData.postText">
+        <!--电话修改框-->
+        <el-form-item label="修改电话：" style="width: 45%">
+          <el-input type="text" v-model="tempPost.postPhone" />
+        </el-form-item>
+
+        <!--地址修改框-->
+        <el-form-item label="修改地址：" style="width: 80%">
+          <el-input type="text" v-model="tempPost.postAddress" />
+        </el-form-item>
+
+        <!--修改价格-->
+        <!--<el-form-item label="修改价格：">-->
+          <!--<el-input type="text" v-model="updateData.priceFloor" />-->
+          <!--<el-input type="text" v-model="updateData.priceTop" />-->
+        <!--</el-form-item>-->
+
+        <el-form-item label="帖子内容：" style="width: 80%" v-model="updateData.postText">
           <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" size="medium" v-model="tempPost.postText">{{tempPost.postText}}</el-input>
         </el-form-item>
 
-        <el-form-item label="修改图片" size="medium" :inline="true">
+        <!--图片修改列表-->
+        <el-form-item label="修改图片：" size="medium" :inline="true">
           <div>
-            <el-row style="margin-right: 280px">
+            <el-row style="margin-right: 20%">
               <el-col :span="8">
-                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                <el-upload action="/api/post/upload"
+                           :on-preview="handlePictureCardPreview"
+                           :on-success="handleAvatarSuccess"
+                           :on-remove="handleRemove" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
                   <i v-if="tempPost.postImgList[0]==null" class="el-icon-plus avatar-uploader-icon"></i>
-                  <img v-else :src="tempPost.postImgList[0]" style="height: 100%;width: 100%" />
+                  <img :src="tempPost.postImgList[0]" style="height: 100%;width: 100%" />
                 </el-upload>
               </el-col>
               <el-col :span="8">
-                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                <el-upload action="/api/post/upload"
+                           :on-preview="handlePictureCardPreview"
+                           :on-success="handleAvatarSuccess"
+                           :on-remove="handleRemove" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
                   <i v-if="tempPost.postImgList[3]==null" class="el-icon-plus avatar-uploader-icon"></i>
                   <img v-else :src="tempPost.postImgList[3]" style="height: 100%;width: 100%" />
                 </el-upload>
               </el-col>
               <el-col :span="8">
-                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                <el-upload action="/api/post/upload"
+                           :on-preview="handlePictureCardPreview"
+                           :on-success="handleAvatarSuccess"
+                           :on-remove="handleRemove" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
                   <i v-if="tempPost.postImgList[6]==null" class="el-icon-plus avatar-uploader-icon"></i>
                   <img v-else :src="tempPost.postImgList[6]" style="height: 100%;width: 100%" />
                 </el-upload>
               </el-col>
             </el-row>
 
-            <el-row style="margin-right: 280px">
+            <el-row style="margin-right: 20%">
               <el-col :span="8">
-                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                <el-upload action="/api/post/upload"
+                           :on-preview="handlePictureCardPreview"
+                           :on-success="handleAvatarSuccess"
+                           :on-remove="handleRemove" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
                   <i v-if="tempPost.postImgList[1]==null" class="el-icon-plus avatar-uploader-icon"></i>
                   <img v-else :src="tempPost.postImgList[1]" style="height: 100%;width: 100%" />
                 </el-upload>
               </el-col>
               <el-col :span="8">
-                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                <el-upload action="/api/post/upload"
+                           :on-preview="handlePictureCardPreview"
+                           :on-success="handleAvatarSuccess"
+                           :on-remove="handleRemove" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
                   <i v-if="tempPost.postImgList[4]==null" class="el-icon-plus avatar-uploader-icon"></i>
                   <img v-else :src="tempPost.postImgList[4]" style="height: 100%;width: 100%" />
                 </el-upload>
               </el-col>
               <el-col :span="8">
-                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                <el-upload action="/api/post/upload"
+                           :on-preview="handlePictureCardPreview"
+                           :on-success="handleAvatarSuccess"
+                           :on-remove="handleRemove" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
                   <i v-if="tempPost.postImgList[7]==null" class="el-icon-plus avatar-uploader-icon"></i>
                   <img v-else :src="tempPost.postImgList[7]" style="height: 100%;width: 100%" />
                 </el-upload>
               </el-col>
             </el-row>
 
-            <el-row style="margin-right: 280px">
+            <el-row style="margin-right: 20%">
               <el-col :span="8">
-                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                <el-upload action="/api/post/upload"
+                           :on-preview="handlePictureCardPreview"
+                           :on-success="handleAvatarSuccess"
+                           :on-remove="handleRemove" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
                   <i v-if="tempPost.postImgList[2]==null" class="el-icon-plus avatar-uploader-icon"></i>
                   <img v-else :src="tempPost.postImgList[2]" style="height: 100%;width: 100%" />
                 </el-upload>
               </el-col>
               <el-col :span="8">
-                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                <el-upload action="/api/post/upload"
+                           :on-preview="handlePictureCardPreview"
+                           :on-success="handleAvatarSuccess"
+                           :on-remove="handleRemove" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
                   <i v-if="tempPost.postImgList[5]==null" class="el-icon-plus avatar-uploader-icon"></i>
                   <img v-else :src="tempPost.postImgList[5]" style="height: 100%;width: 100%" />
                 </el-upload>
               </el-col>
               <el-col :span="8">
-                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                <el-upload action="/api/post/upload"
+                           :on-preview="handlePictureCardPreview"
+                           :on-success="handleAvatarSuccess"
+                           :on-remove="handleRemove" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
                   <i v-if="tempPost.postImgList[8]==null" class="el-icon-plus avatar-uploader-icon"></i>
                   <img v-else :src="tempPost.postImgList[8]" style="height: 100%;width: 100%" />
                 </el-upload>
@@ -218,6 +262,11 @@
             </el-row>
 
           </div>
+        </el-form-item>
+
+        <!--标签修改-->
+        <el-form-item label="修改标签：">
+
         </el-form-item>
 
       </el-form>
@@ -254,9 +303,10 @@
                 <el-checkbox  :label="postStick.stickId" v-if="postStick.stickState==0" :key="postStick.stickId">{{postStick.stickName}}</el-checkbox>
                 <el-checkbox  :checked="true" :label="postStick.stickId" v-if="postStick.stickState==1" :key="postStick.stickId">{{postStick.stickName}}</el-checkbox>
               </div>
-           </el-checkbox-group>
-
+            </el-checkbox-group>
         </el-form-item>
+
+
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -315,7 +365,9 @@
           postId:'',
           postTypeId:'',
           postText:'',
-          postImgList:''
+          postImgList:'',
+          postPhone:'',
+          postAddress: ''
         },
         tempPost: {
           postId: '',//帖子ID
@@ -489,6 +541,8 @@
         this.tempPost.postText = post.postText;
         this.updateData.postId = post.postId;
         this.tempPost.postType = post.postType;
+        this.tempPost.postPhone = post.postPhone;
+        this.tempPost.postAddress = post.postAddress;
         this.tempPost.postTypeId = post.postTypeId;
         this.tempPost.postImgList = post.postImgList;
         this.dialogUpdateVisible = true
@@ -562,6 +616,8 @@
         let _vue = this;
         this.updateData.postText = this.tempPost.postText;
         this.updateData.postTypeId = this.tempPost.postTypeId;
+        this.updateData.postPhone = this.tempPost.postPhone;
+        this.updateData.postAddress = this.tempPost.postAddress;
         console.log(this.updateData)
         this.api({
           url: "/post/updatePost",
