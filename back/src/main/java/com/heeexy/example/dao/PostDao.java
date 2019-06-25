@@ -63,4 +63,25 @@ public interface PostDao {
      * @return
      */
     int updatePost(JSONObject jsonObject);
+
+    /**
+     * 返回对应帖子的图片列表
+     * @param jsonObject 帖子ID
+     * @return
+     */
+    List<JSONObject> listPostImg(JSONObject jsonObject);
+
+    /**
+     * 根据图片ID删除图片
+     * @param jsonObject 图片ID
+     * @return
+     */
+    int deleteImgById(JSONObject jsonObject);
+
+    /**
+     * 添加对应帖子的图片
+     * @param jsonObject 帖子ID 图片ID
+     * @return
+     */
+    int addPostImg(JSONObject jsonObject);
 }

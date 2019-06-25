@@ -1,5 +1,6 @@
 package com.heeexy.example.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.CommentDao;
 import com.heeexy.example.dao.ExternalUserDao;
@@ -29,6 +30,7 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private CommentDao commentDao;
+
 
     @Override
     public JSONObject listPost(JSONObject jsonObject) {
@@ -83,8 +85,28 @@ public class PostServiceImpl implements PostService {
         return CommonUtil.successJson(DetailData);
     }
 
+
     @Override
     public JSONObject updatePost(JSONObject jsonObject) {
+        List<JSONObject> imgSrcList = postDao.listPostImg(jsonObject);
+        JSONArray deleteImgList = jsonObject.getJSONArray("deleteImgList");
+        for (JSONObject oldImg : imgSrcList) {
+            for (Object delImg : deleteImgList) {
+                if(oldImg.getString("postImageSrc").equals(delImg)){
+                    postDao.deleteImgById(oldImg);
+                }
+            }
+        }
+        JSONArray newImgList = jsonObject.getJSONArray("newImgList");
+        if(null != newImgList || newImgList.size() !=0){
+            for (Object src : newImgList) {
+                JSONObject addImg = new JSONObject();
+                addImg.put("postImageSrc",src);
+                addImg.put("postId",jsonObject.getString("postId"));
+                postDao.addPostImg(addImg);
+            }
+        }
+        newImgList.clear();
         postDao.updatePost(jsonObject);
         return CommonUtil.successJson();
     }

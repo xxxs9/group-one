@@ -26,7 +26,6 @@
         </collection>
     </resultMap>
 
-
     <!--帖子列表-->
     <select id="listPost" resultMap="postMap" >
         SELECT
@@ -103,14 +102,7 @@
     <update id="updatePost">
         UPDATE post_table
         SET
-          post_text = #{postText}, post_type_id = #{postTypeId}, post_phone = #{postPhone}, post_adress = #{postAddress}
-        WHERE post_id = #{postId}
-    </update>
-
-    <update id="updatePostImg">
-        UPDATE post_image
-        SET
-          post_image_src = #{postImageSrc}
+          post_text = #{postText}, post_type_id = #{postTypeId}, post_phone = #{postPhone}, post_address = #{postAddress}
         WHERE post_id = #{postId}
     </update>
 
@@ -169,5 +161,28 @@
           LEFT JOIN post_tag pt2 ON pt2.post_id = p.postId
     </select>
 
+    <!--根绝帖子查找ID-->
+    <select id="listPostImg" resultType="com.alibaba.fastjson.JSONObject">
+      SELECT
+        post_image_id postImageId,post_image_src postImageSrc
+      FROM post_image
+      WHERE
+        post_id = #{postId}
+    </select>
+
+    <!--根绝图片Id删除图片-->
+    <delete id="deleteImgById">
+      DELETE
+      FROM post_image
+      WHERE post_image_id = #{postImageId}
+    </delete>
+
+    <!--添加对应帖子的图片-->
+    <insert id="addPostImg">
+      INSERT INTO post_image
+         (post_id, post_image_src)
+      VALUES
+        (#{postId},#{postImageSrc})
+    </insert>
 
 </mapper>

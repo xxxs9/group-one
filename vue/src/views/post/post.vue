@@ -140,7 +140,6 @@
                style='width: 100%; margin-left:50px;'>
         <el-form-item label="帖子类型">
           <el-select v-model="tempPost.postTypeId" filterable clearable :placeholder="'# '+tempPost.postType+' #'" :value="tempPost.postTypeId">
-            <el-option :key="tempPost.postTypeId" :label="'# '+tempPost.postType+' #'" :value="tempPost.postTypeId" >{{'# '+tempPost.postType+' #'}}</el-option>
             <el-option-group>
               <el-option v-for="item in typeOption" :key="item.id" :label="'# '+item.sortname+' #'" :value="item.id">
               </el-option>
@@ -168,101 +167,27 @@
           <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" size="medium" v-model="tempPost.postText">{{tempPost.postText}}</el-input>
         </el-form-item>
 
-        <!--图片修改列表-->
-        <el-form-item label="修改图片：" size="medium" :inline="true">
-          <div>
-            <el-row style="margin-right: 20%">
-              <el-col :span="8">
+        <!--修改图片-->
+        <el-collapse style="width: 80%">
+          <el-collapse-item title="修改图片" name="2">
+            <el-form-item size="medium" :inline="true" style="margin-left: -7%;">
+              <div v-for="imgsrc in tempPost.postImgList" style="float: left; width: 200px;height: 200px;">
                 <el-upload action="/api/post/upload"
                            :on-preview="handlePictureCardPreview"
-                           :on-success="handleAvatarSuccess"
-                           :on-remove="handleRemove" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
-                  <i v-if="tempPost.postImgList[0]==null" class="el-icon-plus avatar-uploader-icon"></i>
-                  <img :src="tempPost.postImgList[0]" style="height: 100%;width: 100%" />
+                           :on-success="(response, file, fileList) => handleAvatarSuccess(tempPost.postImgList.indexOf(imgsrc),response, file, fileList)"
+                           :on-remove="handleRemove" list-type="picture-card" style="margin-top: 2%;float: right">
+                  <img :src="imgsrc" style="height: 100%;width: 100%" />
                 </el-upload>
-              </el-col>
-              <el-col :span="8">
-                <el-upload action="/api/post/upload"
-                           :on-preview="handlePictureCardPreview"
-                           :on-success="handleAvatarSuccess"
-                           :on-remove="handleRemove" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
-                  <i v-if="tempPost.postImgList[3]==null" class="el-icon-plus avatar-uploader-icon"></i>
-                  <img v-else :src="tempPost.postImgList[3]" style="height: 100%;width: 100%" />
-                </el-upload>
-              </el-col>
-              <el-col :span="8">
-                <el-upload action="/api/post/upload"
-                           :on-preview="handlePictureCardPreview"
-                           :on-success="handleAvatarSuccess"
-                           :on-remove="handleRemove" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
-                  <i v-if="tempPost.postImgList[6]==null" class="el-icon-plus avatar-uploader-icon"></i>
-                  <img v-else :src="tempPost.postImgList[6]" style="height: 100%;width: 100%" />
-                </el-upload>
-              </el-col>
-            </el-row>
-
-            <el-row style="margin-right: 20%">
-              <el-col :span="8">
-                <el-upload action="/api/post/upload"
-                           :on-preview="handlePictureCardPreview"
-                           :on-success="handleAvatarSuccess"
-                           :on-remove="handleRemove" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
-                  <i v-if="tempPost.postImgList[1]==null" class="el-icon-plus avatar-uploader-icon"></i>
-                  <img v-else :src="tempPost.postImgList[1]" style="height: 100%;width: 100%" />
-                </el-upload>
-              </el-col>
-              <el-col :span="8">
-                <el-upload action="/api/post/upload"
-                           :on-preview="handlePictureCardPreview"
-                           :on-success="handleAvatarSuccess"
-                           :on-remove="handleRemove" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
-                  <i v-if="tempPost.postImgList[4]==null" class="el-icon-plus avatar-uploader-icon"></i>
-                  <img v-else :src="tempPost.postImgList[4]" style="height: 100%;width: 100%" />
-                </el-upload>
-              </el-col>
-              <el-col :span="8">
-                <el-upload action="/api/post/upload"
-                           :on-preview="handlePictureCardPreview"
-                           :on-success="handleAvatarSuccess"
-                           :on-remove="handleRemove" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
-                  <i v-if="tempPost.postImgList[7]==null" class="el-icon-plus avatar-uploader-icon"></i>
-                  <img v-else :src="tempPost.postImgList[7]" style="height: 100%;width: 100%" />
-                </el-upload>
-              </el-col>
-            </el-row>
-
-            <el-row style="margin-right: 20%">
-              <el-col :span="8">
-                <el-upload action="/api/post/upload"
-                           :on-preview="handlePictureCardPreview"
-                           :on-success="handleAvatarSuccess"
-                           :on-remove="handleRemove" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
-                  <i v-if="tempPost.postImgList[2]==null" class="el-icon-plus avatar-uploader-icon"></i>
-                  <img v-else :src="tempPost.postImgList[2]" style="height: 100%;width: 100%" />
-                </el-upload>
-              </el-col>
-              <el-col :span="8">
-                <el-upload action="/api/post/upload"
-                           :on-preview="handlePictureCardPreview"
-                           :on-success="handleAvatarSuccess"
-                           :on-remove="handleRemove" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
-                  <i v-if="tempPost.postImgList[5]==null" class="el-icon-plus avatar-uploader-icon"></i>
-                  <img v-else :src="tempPost.postImgList[5]" style="height: 100%;width: 100%" />
-                </el-upload>
-              </el-col>
-              <el-col :span="8">
-                <el-upload action="/api/post/upload"
-                           :on-preview="handlePictureCardPreview"
-                           :on-success="handleAvatarSuccess"
-                           :on-remove="handleRemove" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
-                  <i v-if="tempPost.postImgList[8]==null" class="el-icon-plus avatar-uploader-icon"></i>
-                  <img v-else :src="tempPost.postImgList[8]" style="height: 100%;width: 100%" />
-                </el-upload>
-              </el-col>
-            </el-row>
-
-          </div>
-        </el-form-item>
+              </div>
+              <el-upload action="/api/post/upload"
+                         :on-preview="handlePictureCardPreview"
+                         :on-success="(response, file, fileList) => handleAvatarSuccess(tempPost.postImgList.indexOf(imgsrc),response, file, fileList)"
+                         :on-remove="handleRemove" list-type="picture-card" style="margin-top: 2%; margin-left: 30px;">
+                <i class="el-icon-plus"></i>
+              </el-upload>
+            </el-form-item>
+          </el-collapse-item>
+        </el-collapse>
 
         <!--标签修改-->
         <el-form-item label="修改标签：">
@@ -330,6 +255,7 @@
       return {
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
+        dialogImageUrl: '',
         listLoading: false,//数据加载等待动画
         listQuery: {
           beforeDate: '',//结束时间
@@ -348,6 +274,10 @@
           values:[],
           postId:''
         },
+        imgData: {
+          src: '',
+          desFilePath: ''
+        },
         postStickValue:[],
         dialogFormVisible: false,
         dialogUpdateVisible: false,
@@ -362,12 +292,14 @@
           postId: '',//帖子ID
         },
         updateData:{
+          newImgList:[],
           postId:'',
           postTypeId:'',
           postText:'',
           postImgList:'',
           postPhone:'',
-          postAddress: ''
+          postAddress: '',
+          deleteImgList:[]
         },
         tempPost: {
           postId: '',//帖子ID
@@ -618,7 +550,6 @@
         this.updateData.postTypeId = this.tempPost.postTypeId;
         this.updateData.postPhone = this.tempPost.postPhone;
         this.updateData.postAddress = this.tempPost.postAddress;
-        console.log(this.updateData)
         this.api({
           url: "/post/updatePost",
           method: "post",
@@ -631,10 +562,39 @@
             type: 'success',
             duration: 1 * 1000,
             onClose: () => {
+              this.updateData.newImgList = [];
               _vue.getList();
             }
           })
         })
+      },
+      handleRemove(file, fileList) {
+        let list = this.updateData.newImgList;
+        this.imgData.desFilePath = file.response.desFilePath
+        this.imgData.url = file.response.url;
+        this.api({
+          url: "/post/deletePostImg",
+          method: 'post',
+          data: this.imgData
+        }).then(() => {
+          for(let i =0;i<list.length;i++){
+            if(file.response.url==list[i]){
+              list.splice(i,1);
+            }
+          }
+        })
+
+      },
+      handleAvatarSuccess(index,response, file, fileList) {
+        this.updateData.newImgList.push(response.url);
+        this.updateData.deleteImgList.push(this.tempPost.postImgList[index])
+        this.updateData.src = response.url;
+        console.log(response)
+        this.imgData.desFilePath = response.desFilePath;
+        this.$ref.upload.clearFiles();
+      },
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
       },
       removePost($index) {
         //改变帖子状态请求
@@ -672,7 +632,7 @@
             _vue.$message.error(defmsg)
           })
         })
-      },
+      }
     }
   }
 </script>
