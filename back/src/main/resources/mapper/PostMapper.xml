@@ -32,7 +32,7 @@
         (SELECT count(0) FROM click_goods WHERE click_goods.post_id = p.postId)                likeCount,
         (SELECT count(0) FROM browse_records br WHERE br.post_id = p.postId)                   browseCount,
         (SELECT username FROM `user` u WHERE u.uuid = p.postOwnerId)                           postOwnerName,
-        (SELECT tag_name FROM tag t WHERE t.tag_no = pt2.tag_id)                               postTagName,
+        (SELECT tag_name FROM tag t WHERE t.tag_id = pt2.tag_id)                               postTagName,
         (SELECT categories_name FROM post_categories pc WHERE pc.categories_id = p.postTypeId) postType,
         post_image.post_image_src                                                              postImageSrc
         FROM(
@@ -145,7 +145,7 @@
           pi.post_image_src             postImageSrc,
           c.comment_text                commentText,
           (SELECT categories_name FROM post_categories pc WHERE pc.categories_id = p.postTypeId) postType,
-          (SELECT tag_name FROM tag t WHERE t.tag_no = pt2.tag_id)                               postTagName
+          (SELECT tag_name FROM tag t WHERE t.tag_id= pt2.tag_id)                               postTagName
           FROM (
             SELECT
                 post_id                 postId,

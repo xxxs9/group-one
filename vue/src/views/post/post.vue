@@ -152,73 +152,73 @@
           <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" size="medium" v-model="tempPost.postText">{{tempPost.postText}}</el-input>
         </el-form-item>
 
-        <!--<el-form-item label="修改图片" size="medium" :inline="true">-->
-          <!--<div>-->
-            <!--<el-row style="margin-right: 280px">-->
-              <!--<el-col :span="8">-->
-                <!--<el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
-                  <!--<i v-if="tempPost.postImgList[0]==null" class="el-icon-plus avatar-uploader-icon"></i>-->
-                  <!--<img v-else :src="tempPost.postImgList[0]" style="height: 100%;width: 100%" />-->
-                <!--</el-upload>-->
-              <!--</el-col>-->
-              <!--<el-col :span="8">-->
-                <!--<el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
-                  <!--<i v-if="tempPost.postImgList[3]==null" class="el-icon-plus avatar-uploader-icon"></i>-->
-                  <!--<img v-else :src="tempPost.postImgList[3]" style="height: 100%;width: 100%" />-->
-                <!--</el-upload>-->
-              <!--</el-col>-->
-              <!--<el-col :span="8">-->
-                <!--<el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
-                  <!--<i v-if="tempPost.postImgList[6]==null" class="el-icon-plus avatar-uploader-icon"></i>-->
-                  <!--<img v-else :src="tempPost.postImgList[6]" style="height: 100%;width: 100%" />-->
-                <!--</el-upload>-->
-              <!--</el-col>-->
-            <!--</el-row>-->
+        <el-form-item label="修改图片" size="medium" :inline="true">
+          <div>
+            <el-row style="margin-right: 280px">
+              <el-col :span="8">
+                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                  <i v-if="tempPost.postImgList[0]==null" class="el-icon-plus avatar-uploader-icon"></i>
+                  <img v-else :src="tempPost.postImgList[0]" style="height: 100%;width: 100%" />
+                </el-upload>
+              </el-col>
+              <el-col :span="8">
+                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                  <i v-if="tempPost.postImgList[3]==null" class="el-icon-plus avatar-uploader-icon"></i>
+                  <img v-else :src="tempPost.postImgList[3]" style="height: 100%;width: 100%" />
+                </el-upload>
+              </el-col>
+              <el-col :span="8">
+                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                  <i v-if="tempPost.postImgList[6]==null" class="el-icon-plus avatar-uploader-icon"></i>
+                  <img v-else :src="tempPost.postImgList[6]" style="height: 100%;width: 100%" />
+                </el-upload>
+              </el-col>
+            </el-row>
 
-            <!--<el-row style="margin-right: 280px">-->
-              <!--<el-col :span="8">-->
-                <!--<el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
-                  <!--<i v-if="tempPost.postImgList[1]==null" class="el-icon-plus avatar-uploader-icon"></i>-->
-                  <!--<img v-else :src="tempPost.postImgList[1]" style="height: 100%;width: 100%" />-->
-                <!--</el-upload>-->
-              <!--</el-col>-->
-              <!--<el-col :span="8">-->
-                <!--<el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
-                  <!--<i v-if="tempPost.postImgList[4]==null" class="el-icon-plus avatar-uploader-icon"></i>-->
-                  <!--<img v-else :src="tempPost.postImgList[4]" style="height: 100%;width: 100%" />-->
-                <!--</el-upload>-->
-              <!--</el-col>-->
-              <!--<el-col :span="8">-->
-                <!--<el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
-                  <!--<i v-if="tempPost.postImgList[7]==null" class="el-icon-plus avatar-uploader-icon"></i>-->
-                  <!--<img v-else :src="tempPost.postImgList[7]" style="height: 100%;width: 100%" />-->
-                <!--</el-upload>-->
-              <!--</el-col>-->
-            <!--</el-row>-->
+            <el-row style="margin-right: 280px">
+              <el-col :span="8">
+                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                  <i v-if="tempPost.postImgList[1]==null" class="el-icon-plus avatar-uploader-icon"></i>
+                  <img v-else :src="tempPost.postImgList[1]" style="height: 100%;width: 100%" />
+                </el-upload>
+              </el-col>
+              <el-col :span="8">
+                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                  <i v-if="tempPost.postImgList[4]==null" class="el-icon-plus avatar-uploader-icon"></i>
+                  <img v-else :src="tempPost.postImgList[4]" style="height: 100%;width: 100%" />
+                </el-upload>
+              </el-col>
+              <el-col :span="8">
+                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                  <i v-if="tempPost.postImgList[7]==null" class="el-icon-plus avatar-uploader-icon"></i>
+                  <img v-else :src="tempPost.postImgList[7]" style="height: 100%;width: 100%" />
+                </el-upload>
+              </el-col>
+            </el-row>
 
-            <!--<el-row style="margin-right: 280px">-->
-              <!--<el-col :span="8">-->
-                <!--<el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
-                  <!--<i v-if="tempPost.postImgList[2]==null" class="el-icon-plus avatar-uploader-icon"></i>-->
-                  <!--<img v-else :src="tempPost.postImgList[2]" style="height: 100%;width: 100%" />-->
-                <!--</el-upload>-->
-              <!--</el-col>-->
-              <!--<el-col :span="8">-->
-                <!--<el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
-                  <!--<i v-if="tempPost.postImgList[5]==null" class="el-icon-plus avatar-uploader-icon"></i>-->
-                  <!--<img v-else :src="tempPost.postImgList[5]" style="height: 100%;width: 100%" />-->
-                <!--</el-upload>-->
-              <!--</el-col>-->
-              <!--<el-col :span="8">-->
-                <!--<el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">-->
-                  <!--<i v-if="tempPost.postImgList[8]==null" class="el-icon-plus avatar-uploader-icon"></i>-->
-                  <!--<img v-else :src="tempPost.postImgList[8]" style="height: 100%;width: 100%" />-->
-                <!--</el-upload>-->
-              <!--</el-col>-->
-            <!--</el-row>-->
+            <el-row style="margin-right: 280px">
+              <el-col :span="8">
+                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                  <i v-if="tempPost.postImgList[2]==null" class="el-icon-plus avatar-uploader-icon"></i>
+                  <img v-else :src="tempPost.postImgList[2]" style="height: 100%;width: 100%" />
+                </el-upload>
+              </el-col>
+              <el-col :span="8">
+                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                  <i v-if="tempPost.postImgList[5]==null" class="el-icon-plus avatar-uploader-icon"></i>
+                  <img v-else :src="tempPost.postImgList[5]" style="height: 100%;width: 100%" />
+                </el-upload>
+              </el-col>
+              <el-col :span="8">
+                <el-upload action="/post" list-type="picture-card" style="width: 30px!important; height: 30px!important;">
+                  <i v-if="tempPost.postImgList[8]==null" class="el-icon-plus avatar-uploader-icon"></i>
+                  <img v-else :src="tempPost.postImgList[8]" style="height: 100%;width: 100%" />
+                </el-upload>
+              </el-col>
+            </el-row>
 
-          <!--</div>-->
-        <!--</el-form-item>-->
+          </div>
+        </el-form-item>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
