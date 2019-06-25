@@ -32,7 +32,7 @@
               </el-date-picker>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" class="el-icon-close" @click="refleshList"></el-button>
+              <el-button type="primary" class="el-icon-close" @click="refreshList"></el-button>
             </el-form-item>
           </el-form>
         </el-form-item>
@@ -210,7 +210,7 @@
 
         })
       },
-      refleshList(){
+      refreshList(){
         // this.queryInput = "";
         this.listLoading = true;
         this.tempRecord.querykey="";

@@ -48,6 +48,9 @@
                         <if test="querykey != null and querykey != '' ">
                             username LIKE concat('%',#{querykey},'%')
                         </if>
+                        <if test="beforeDate != null and beforeDate != '' and afterDate !=null and afterDate !=''">
+                            AND DATE(login_time) between #{beforeDate} and #{afterDate}
+                        </if>
                     </where>
                  ORDER BY id
                  LIMIT #{offSet}, #{pageRow}
@@ -90,6 +93,7 @@
                         <if test="querykey != null and querykey != '' ">
                             username LIKE concat('%',#{querykey},'%')
                         </if>
+
                         AND unionid IS NOT NULL
                     </where>
                  ORDER BY id
@@ -180,4 +184,10 @@
             FROM example.user u,user_attention ua
             WHERE u.uuid = ua.to_user_uuid AND u.uuid = #{uuId}
     </select>
+    <select id="countByUnionId" resultType="java.lang.Integer">
+        SELECT count(0) from user where unionid is not null;
+
+    </select>
+
+
 </mapper>

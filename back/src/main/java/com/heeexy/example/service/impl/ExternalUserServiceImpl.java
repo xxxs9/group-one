@@ -29,12 +29,30 @@ public class ExternalUserServiceImpl implements ExternalUserService {
     public JSONObject getUser(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
         int count = userDao.countUser(jsonObject);
+
         List<JSONObject> list = userDao.getUser(jsonObject);
         for (JSONObject object : list) {
             object.put("fansCount",Integer.parseInt(object.getString("fansCount")));
         }
-        System.out.println(jsonObject.getString("querykey"));
-        return CommonUtil.successPage(jsonObject, list, count);
+        String reg = "[a-zA-Z0-9\\u0391-\\uFFE5]+$";
+        boolean flag = false;
+        String querykey = jsonObject.getString("querykey");
+        if(!querykey.equals("")){
+            if(querykey.matches(reg)){
+                System.out.println(jsonObject.getString("querykey"));
+                flag = true;
+            }else{
+                System.out.println(jsonObject.getString("querykey"));
+            }
+        }else {
+            flag = true;
+        }
+        if(flag){
+            return CommonUtil.successPage(jsonObject, list, count);
+        }else {
+            return CommonUtil.errorJson(E_503);
+        }
+
     }
 
     @Override
@@ -67,10 +85,30 @@ public class ExternalUserServiceImpl implements ExternalUserService {
     @Override
     public JSONObject getUserPermission(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
-        int count = userDao.countUser(jsonObject);
+        int count = userDao.countByUnionId(jsonObject);
         List<JSONObject> list = userDao.getUserPermission(jsonObject);
-        System.out.println(jsonObject.getString("querykey"));
-        return CommonUtil.successPage(jsonObject, list, count);
+        String reg = "[a-zA-Z0-9\\u0391-\\uFFE5]+$";
+        String querykey = jsonObject.getString("querykey");
+        boolean flag = false;
+        if(!querykey.equals("")){
+
+            if(jsonObject.getString("querykey").matches(reg)){
+                System.out.println(jsonObject.getString("querykey"));
+                flag = true;
+            }else {
+                System.out.println(jsonObject.getString("querykey"));
+            }
+        }else {
+            flag = true;
+        }
+        if(flag){
+            return CommonUtil.successPage(jsonObject, list, count);
+        }else {
+            return CommonUtil.errorJson(E_503);
+        }
+
+
+
 
     }
 
@@ -108,12 +146,14 @@ public class ExternalUserServiceImpl implements ExternalUserService {
 
     @Override
     public JSONObject getFans(JSONObject jsonObject) {
-        Integer uuId = jsonObject.getInteger("uuId");
-        List<JSONObject> fansUUIDByUUID = userDao.getFansUUIDByUUID(uuId);
+        List<JSONObject> fansUUIDByUUID = userDao.getFansUUIDByUUID(jsonObject.getInteger("uuId"));
         List<JSONObject> list = new ArrayList<>();
         for(JSONObject object:fansUUIDByUUID){
-            Integer fansuuId = object.getInteger("uuId");
+//            System.out.println(object);
+            Integer fansuuId = object.getInteger("from_user_uuid");
+//            System.out.println(fansuuId);
             JSONObject userById = userDao.findUserById(fansuuId);
+//            System.out.println(userById);
             list.add(userById);
         }
 

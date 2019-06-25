@@ -120,4 +120,11 @@ public interface ExternalUserDao {
      * @return
      */
     public List<JSONObject> getFansUUIDByUUID(@Param("uuId")Integer uuId);
+
+    /**
+     * 查询用户数量(拥有unionid)
+     * @param jsonObject
+     * @return
+     */
+    public int countByUnionId(JSONObject jsonObject);
 }
