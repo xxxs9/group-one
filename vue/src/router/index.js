@@ -83,7 +83,14 @@ export const asyncRouterMap = [
         component: _import('euser/permission'),
         meta: {title: '权限管理', icon: 'password'},
         menu: 'euser'
-      }
+      },
+      {
+        path: 'record',
+        name: '浏览记录',
+        component: _import('euser/record'),
+        meta: {title: '浏览记录', icon: 'password'},
+        menu: 'euser'
+      },
     ]
   },
   {

@@ -2,29 +2,50 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.heeexy.example.dao.BrowseRecordDao">
+    <resultMap id="recordMap" type="com.heeexy.example.util.model.One2Many">
+        <id column="userId" property="userId"/>
+        <result column="uuId" property="uuId"/>
+        <result column="username" property="username"/>
+        <result column="sex" property="sex"/>
+        <result column="categoriesName" property="categoriesName"/>
+        <result column="postText" property="postText"/>
+        <result column="postState" property="postState"/>
+
+        <result column="browseTime" property="browseTime"/>
+
+    </resultMap>
     <update id="removeRecord">
 
     </update>
 
-    <select id="getRecords" resultType="com.alibaba.fastjson.JSONObject">
+    <select id="getRecords" resultMap="recordMap">
         SELECT
-        u.uuid                                                           uuId,
+        u.id                                                                  userId,
+        u.uuid                                                                uuId,
         u.username                                                            username,
         u.sex                                                                 sex,
         (SELECT categories_name FROM post_categories p1,post_table p2
-        WHERE p1.categories_id = p2.post_type_id AND p2.post_id = b.post_id )  categoriesName,
+        WHERE p1.categories_id = p2.post_type_id AND p2.post_id = b.post_id ) categoriesName,
         p.post_text                                                           postText,
         p.post_state                                                          postState,
-        b.last_browse_time                                                    lastTime
+        DATE_FORMAT(b.last_browse_time, '%Y.%m.%d %T')                        browseTime
         FROM
         browse_records b
         left join post_table p on p.post_id = b.post_id
         left join user u on b.user_uuid = u.uuid
         <where>
             <if test="querykey != null and querykey != '' ">
-                username LIKE concat('%',#{querykey},'%')
+                u.username LIKE concat('%',#{querykey},'%')
+            </if>
+            <if test="queryText != null and queryText != '' ">
+                and p.post_text LIKE concat('%',#{queryText},'%')
+            </if>
+            <if test="beforeDate != null and beforeDate != '' and afterDate !=null and afterDate !=''">
+                and DATE(b.last_browse_time) between #{beforeDate} and #{afterDate}
             </if>
         </where>
+        ORDER BY u.id
+        LIMIT #{offSet}, #{pageRow}
     </select>
     <select id="getRecordsByName" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
@@ -45,5 +66,11 @@
                 username LIKE concat('%',#{querykey},'%')
             </if>
         </where>
+    </select>
+    <select id="countRecord" resultType="java.lang.Integer">
+        SELECT count(0)
+        FROM browse_records
+
+
     </select>
 </mapper>

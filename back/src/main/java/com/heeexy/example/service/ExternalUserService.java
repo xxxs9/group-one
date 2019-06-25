@@ -55,5 +55,11 @@ public interface ExternalUserService {
      */
     JSONObject addPermission(JSONObject jsonObject);
 
+    /**
+     * 获取用户的粉丝列表信息
+     *@param jsonObject
+     * @return
+     */
+    JSONObject getFans(JSONObject jsonObject);
 }
 
