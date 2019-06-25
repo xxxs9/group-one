@@ -1,6 +1,7 @@
 package com.heeexy.example.dao;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonAlias;
 
 import java.util.List;
 
@@ -67,4 +68,6 @@ public interface CommentDao {
      * @return
      */
     int countByAcceptUserId(JSONObject jsonObject);
+
+    List<JSONObject> getByPostId(JSONObject jsonObject);
 }

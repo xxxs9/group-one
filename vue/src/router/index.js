@@ -96,14 +96,14 @@ export const asyncRouterMap = [
   {
     path: '/comment',
     component: Layout,
-    redirect: '/user/',
+    redirect: '/comment/',
     name: '',
     meta: {title: '评论管理', icon: 'table'},
     children: [
       {
         path: '',
         name: '评论列表',
-        component: _import('user/user'),
+        component: _import('comment/comments'),
         meta: {title: '评论列表', icon: 'user'},
         menu: 'user'
       }
@@ -150,19 +150,54 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/template/',
     name: '',
-    meta: {title: '平台管理', icon: 'table'},
+    meta: {title: '系统信息管理', icon: 'table'},
     children: [
       {
-      path: '', name: '帖子类别管理', component: _import('template/msgtemplate'), meta: {title: '帖子类别管理', icon: 'user'}, menu: 'msgtemplate'
+      path: '', name: '消息模块管理', component: _import('template/msgtemplate'), meta: {title: '消息模块管理', icon: 'user'}, menu: 'msgtemplate'
 },
       {
         path: 'chat',
-        name: '帖子标签管理',
+        name: '聊天信息管理',
         component: _import('template/chat'),
-        meta: {title: '帖子标签管理', icon: 'password'},
+        meta: {title: '聊天信息管理', icon: 'password'},
         menu: 'chat'
       },
     ]
   },
+
+  {
+    path: '/comment',
+    component: Layout,
+    redirect: '/comment/',
+    name: '',
+    meta: {title: '评论管理', icon: 'post'},
+    children: [
+      {
+        path: '',
+        name: '评论列表',
+        component: _import('comment/comments'),
+        meta: {title: '评论管理', icon: 'post'},
+        menu: 'post'
+      }
+    ]
+  },
+
+  {
+    path: '/advertisement',
+    component: Layout,
+    redirect: '/advertisement/',
+    name: '',
+    meta: {title: '广告管理', icon: 'post'},
+    children: [
+      {
+        path: '',
+        name: '广告列表',
+        component: _import('advertisement/upload'),
+        meta: {title: '广告管理', icon: 'post'},
+        menu: 'post'
+      }
+    ]
+  },
+
   {path: '*', redirect: '/404', hidden: true}
 ]

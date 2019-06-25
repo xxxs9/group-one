@@ -69,6 +69,7 @@
         <el-form-item label="昵称" required>
           <el-input type="text" v-model="tempComment.nickname">
           </el-input>
+
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

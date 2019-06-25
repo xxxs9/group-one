@@ -9,11 +9,12 @@ public interface TemplateDao {
      * 新增文章
      */
     int addTemplate(JSONObject jsonObject);
-
+    int addChatTemplate(JSONObject jsonObject);
     /**
      * 统计文章总数
      */
     int countTemplate(JSONObject jsonObject);
+    List<JSONObject> getAllUserId(JSONObject jsonObject);
 
     /**
      * 文章列表

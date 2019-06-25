@@ -1,6 +1,7 @@
 package com.heeexy.example.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.heeexy.example.dao.CommentDao;
 import com.heeexy.example.dao.ExternalUserDao;
 import com.heeexy.example.dao.PostDao;
 import com.heeexy.example.service.PostService;
@@ -25,6 +26,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private ExternalUserDao externalUserDao;
+
+    @Autowired
+    private CommentDao commentDao;
 
     @Override
     public JSONObject listPost(JSONObject jsonObject) {
@@ -72,6 +76,16 @@ public class PostServiceImpl implements PostService {
     @Override
     public JSONObject queryPostById(JSONObject jsonObject) {
         JSONObject DetailData = postDao.queryPostById(jsonObject);
+        JSONObject postUser = externalUserDao.findUserById(DetailData.getInteger("postOwnerId"));
+        List<JSONObject> comment = commentDao.getByPostId(jsonObject);
+        DetailData.put("externalUser",postUser);
+        DetailData.put("comments",comment);
         return CommonUtil.successJson(DetailData);
+    }
+
+    @Override
+    public JSONObject updatePost(JSONObject jsonObject) {
+        postDao.updatePost(jsonObject);
+        return CommonUtil.successJson();
     }
 }

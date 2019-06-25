@@ -1,3 +1,6 @@
+<style>
+  .cell{height: 100px }
+</style>
 <template>
   <div class="app-container">
     <div class="filter-container">
@@ -18,11 +21,11 @@
       <el-table-column align="center" prop="tname" label="名字" style="width: 60px;"></el-table-column>
       <el-table-column align="center" prop="content" label="内容" style="width: 60px;"></el-table-column>
 
-      <el-table-column align="center" label="管理" width="200" >
+      <el-table-column align="center" label="管理" >
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
           <el-button type="danger" icon="delete" @click="removeTemplate(scope.$index)">删除</el-button>
-          <el-button type="danger" icon="delete" @click="sendAll(scope.$index)">发送所有人</el-button>
+          <el-button type="danger" icon="delete" @click="sendAlltest(scope.$index)">发送所有人</el-button>
 
         </template>
 
@@ -52,7 +55,9 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button v-if="dialogStatus=='create'" type="success" @click="createArticle">创 建</el-button>
-        <el-button type="primary" v-else @click="updateArticle">修 改</el-button>
+        <el-button type="primary" v-if="dialogStatus=='update'" @click="updateArticle">修 改</el-button>
+        <el-button type="primary" v-if="dialogStatus=='send'" @click="sendAll">发送</el-button>
+
       </div>
     </el-dialog>
   </div>
@@ -74,7 +79,8 @@
           dialogFormVisible: false,
           textMap: {
             update: '编辑',
-            create: '创建文章'
+            create: '创建文章',
+            send: '发送'
           },
           tempArticle: {
             id: "",
@@ -117,6 +123,7 @@
         },
         showCreate() {
           //显示新增对话框
+          this.tempArticle.tname = "";
           this.tempArticle.content = "";
           this.dialogStatus = "create"
           this.dialogFormVisible = true
@@ -124,8 +131,17 @@
         showUpdate($index) {
           //显示修改对话框
           this.tempArticle.id = this.list[$index].id;
+          this.tempArticle.tname = this.list[$index].tname;
           this.tempArticle.content = this.list[$index].content;
           this.dialogStatus = "update"
+          this.dialogFormVisible = true
+        },
+        sendAlltest($index) {
+          //显示修改对话框
+          this.tempArticle.id = this.list[$index].id;
+          this.tempArticle.tname = this.list[$index].tname;
+          this.tempArticle.content = this.list[$index].content;
+          this.dialogStatus = "send"
           this.dialogFormVisible = true
         },
         createArticle() {
@@ -143,6 +159,17 @@
           //修改文章
           this.api({
             url: "/template/updateTemplate",
+            method: "post",
+            data: this.tempArticle
+          }).then(() => {
+            this.getList();
+            this.dialogFormVisible = false
+          })
+        },
+        sendAll() {
+          //修改文章
+          this.api({
+            url: "/template/sendTemplate",
             method: "post",
             data: this.tempArticle
           }).then(() => {

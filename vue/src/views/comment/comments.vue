@@ -7,6 +7,17 @@
             <el-form-item>
               <el-input type="text" v-model="tempComment.commentText" placeholder="输入评论内容搜索"/>
             </el-form-item>
+            <el-date-picker
+              v-model="tempComment.commentTime"
+              type="daterange"
+              align="right"
+              unlink-panels validate-event
+              @change="getList"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              :default-time="['00:00:00', '23:59:59']">
+            </el-date-picker>
             <el-form-item>
               <el-button type="primary" class="el-icon-search" @click="getList">搜索</el-button>
             </el-form-item>
@@ -29,10 +40,17 @@
       <el-table-column align="center" label="评论内容" prop="commentText" width="140"></el-table-column>
       <el-table-column align="center" label="评论时间" prop="commentTime" width="170"></el-table-column>
       <el-table-column align="center" label="评论状态" prop="commentState" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="评论详情" width="120">
+        <template slot-scope="scope">
+          <el-button type="primary" icon="edit" @click="showDetail(scope.$index)"
+                     size="medium" class="el-icon-document">查看
+          </el-button>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" v-if="scope.row.commentState==0" @click="removeComment(scope.$index)">显示</el-button>
-          <el-button type="primary" icon="edit" v-if="scope.row.commentState==1" @click="removeComment(scope.$index)">隐藏</el-button>
+          <el-button type="info" icon="edit" v-if="scope.row.commentState==1" @click="removeComment(scope.$index)">隐藏</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -45,48 +63,21 @@
       :page-sizes="[10, 20, 50, 100]"
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form class="small-space" :model="tempComment" label-position="left" label-width="80px"
-               style='width: 300px; margin-left:50px;'>
-        <el-form-item label="用户名" required v-if="dialogStatus=='create'">
-          <el-input type="text" v-model="tempComment.username">
-          </el-input>
-        </el-form-item>
-        <el-form-item label="密码" v-if="dialogStatus=='create'" required>
-          <el-input type="password" v-model="tempComment.password">
-          </el-input>
-        </el-form-item>
-        <el-form-item label="新密码" v-else>
-          <el-input type="password" v-model="tempComment.password" placeholder="不填则表示不修改">
-          </el-input>
-        </el-form-item>
-        <el-form-item label="角色" required>
-          <el-select v-model="tempComment.roleId" placeholder="请选择">
-            <el-option
-              v-for="item in roles"
-              :key="item.roleId"
-              :label="item.roleName"
-              :value="item.roleId">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="昵称" required>
-          <el-input type="text" v-model="tempComment.nickname">
-          </el-input>
-        </el-form-item>
-      </el-form>
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="35%">
+      <detail :addDetailData="detailData" v-if="dialogStatus=='postDetail'" ref="detail"></detail>
+
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button v-if="dialogStatus=='create'" type="success" @click="createUser">创 建</el-button>
-        <el-button type="primary" v-else @click="updateUser">修 改</el-button>
+        <el-button @click="dialogFormVisible = false">确 认</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
   import {mapGetters} from 'vuex'
+  import Detail from "../post/postdetail";
 
   export default {
+    components: {Detail},
     data() {
       return {
         totalCount: 0, //分页组件--数据总条数
@@ -94,15 +85,19 @@
         listLoading: false,//数据加载等待动画
         listQuery: {
           commentText: '',
+          beforeDate:'',
+          afterDate:'',
           pageNum: 1,//页码
           pageRow: 50,//每页条数
         },
+        detailData:'',
         roles: [],//角色列表
-        dialogStatus: 'create',
+        dialogStatus: 'postDetail',
         dialogFormVisible: false,
         textMap: {
           update: '编辑',
-          create: '新建用户'
+          create: '新建用户',
+          postDetail: '帖子详情'
         },
         tempComment: {
           commentId: '',
@@ -113,6 +108,33 @@
           commentText: '',
           commentTime: '',
           commentState: ''
+        },
+        pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
         }
       }
     },
@@ -127,11 +149,15 @@
         'commentId'
       ])
     },
+
     methods: {
       getList() {
         //查询列表
         this.listLoading = true;
-        this.listQuery.commentText = this.tempComment.commentText
+        this.listQuery.commentText = this.tempComment.commentText;
+        console.log(this.tempComment.commentTime[0]);
+        this.listQuery.beforeDate = this.tempComment.commentTime[0];
+        this.listQuery.afterDate = this.tempComment.commentTime[1];
         this.api({
           url: "/comment/list",
           method: "get",
@@ -208,6 +234,31 @@
             _vue.$message.error("删除失败")
           })
         })
+      },
+
+      showDetail($index) {
+        console.log("--------------")
+        let comment = this.list[$index];
+        this.tempComment.postId = comment.postId;   //帖子Id
+        this.api({
+          url: "/post/queryPostById",
+          method: "post",
+          params: this.tempComment
+        }).then(data => {
+          this.detailData = data;
+          console.log(data)
+          // this.tempPost.postPhone = data.postPhone; //电话
+          // this.tempPost.postAddress = data.postAddress; //地址
+          // this.tempPost.priceFloor = data.priceFloor; //最低价
+          // this.tempPost.priceTop = data.priceTop; //最高价
+          // this.tempPost.postImgList = data.postImgList;//图片数组
+          // this.tempPost.commentText = data.comments; //评论
+        }).catch(error => {
+
+        })
+        this.dialogStatus = "postDetail"
+        this.dialogFormVisible = true
+        // this.refs.detail.getDetailData()
       },
     }
   }

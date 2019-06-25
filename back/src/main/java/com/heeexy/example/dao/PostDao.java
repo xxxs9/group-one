@@ -57,4 +57,10 @@ public interface PostDao {
      */
     int updatePostState(JSONObject jsonObject);
 
+    /**
+     * 修改帖子内容
+     * @param jsonObject 帖子id 帖子内容
+     * @return
+     */
+    int updatePost(JSONObject jsonObject);
 }

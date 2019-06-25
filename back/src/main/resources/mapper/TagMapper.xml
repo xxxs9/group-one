@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.TagDao">
+
+    <insert id="addTag" parameterType="com.alibaba.fastjson.JSONObject">
+        INSERT INTO message_template
+            (template_name,template_content)
+        VALUES
+            (#{tname},#{content})
+    </insert>
+
+    <select id="countTag" resultType="Integer">
+        SELECT count(*)
+        FROM message_template
+    </select>
+
+    <select id="listTag" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+            t.tag_id                                          id,
+            t.tag_name                                        name,
+            t.parent_id                                       parentId,
+            t.rank                                            rank
+        FROM tag t
+        where   t.status = '1'
+        ORDER BY t.tag_id ASC
+        LIMIT #{offSet}, #{pageRow}
+    </select>
+
+    <update id="updateTag" parameterType="com.alibaba.fastjson.JSONObject">
+        UPDATE message_template
+        SET
+            template_name = #{tname},
+            template_content = #{content}
+        WHERE template_id = #{id}
+    </update>
+    <update id="updateByStatus" parameterType="com.alibaba.fastjson.JSONObject">
+        UPDATE tag
+        SET
+            status = '2'
+        WHERE tag_id in
+        (<foreach collection="id" item="item" separator=",">
+             #{item}
+          </foreach>)
+
+    </update>
+</mapper>

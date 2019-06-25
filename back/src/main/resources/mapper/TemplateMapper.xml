@@ -4,15 +4,25 @@
 <mapper namespace="com.heeexy.example.dao.TemplateDao">
 
     <insert id="addTemplate" parameterType="com.alibaba.fastjson.JSONObject">
-        INSERT INTO Message_Template
+        INSERT INTO message_template
             (template_name,template_content)
         VALUES
             (#{tname},#{content})
     </insert>
+    <insert id="addChatTemplate" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into chat_message (chat_content,first_user_id,second_user_id)
+        values
+
+        <foreach collection="ulist" item="item" index="index" separator=",">
+            (#{content},'1',#{item.id})
+        </foreach>
+
+    </insert>
+
 
     <select id="countTemplate" resultType="Integer">
         SELECT count(*)
-        FROM Message_Template
+        FROM message_template
     </select>
 
     <select id="listTemplate" resultType="com.alibaba.fastjson.JSONObject">
@@ -21,21 +31,27 @@
             w.template_name                                   tname,
             w.template_content                                content
 
-        FROM Message_Template w
+        FROM message_template w
         where w.status = '1'
         ORDER BY w.template_id DESC
         LIMIT #{offSet}, #{pageRow}
     </select>
 
+    <select id="getAllUserId" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+           id
+        FROM test
+    </select>
+
     <update id="updateTemplate" parameterType="com.alibaba.fastjson.JSONObject">
-        UPDATE Message_Template
+        UPDATE message_template
         SET
             template_name = #{tname},
             template_content = #{content}
         WHERE template_id = #{id}
     </update>
     <update id="updateByStatus" parameterType="com.alibaba.fastjson.JSONObject">
-        UPDATE Message_Template
+        UPDATE message_template
         SET
             status = '2'
         WHERE template_id = #{id}
