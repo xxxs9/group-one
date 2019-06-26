@@ -8,6 +8,7 @@
         <result column="username" property="username"/>
         <result column="sex" property="sex"/>
         <result column="categoriesName" property="categoriesName"/>
+        <result column="postId" property="postId"/>
         <result column="postText" property="postText"/>
         <result column="postState" property="postState"/>
 
@@ -26,6 +27,7 @@
         u.sex                                                                 sex,
         (SELECT categories_name FROM post_categories p1,post_table p2
         WHERE p1.categories_id = p2.post_type_id AND p2.post_id = b.post_id ) categoriesName,
+        p.post_id                                                             postId,
         p.post_text                                                           postText,
         p.post_state                                                          postState,
         DATE_FORMAT(b.last_browse_time, '%Y.%m.%d %T')                        browseTime
@@ -54,6 +56,7 @@
         u.sex                                                                 sex,
         (SELECT categories_name FROM post_categories p1,post_table p2
         WHERE p1.categories_id = p2.post_type_id AND p2.post_id = b.post_id )  categoriesName,
+        p.post_id                                                             postId,
         p.post_text                                                           postText,
         p.post_state                                                          postState,
         b.last_browse_time                                                    lastTime

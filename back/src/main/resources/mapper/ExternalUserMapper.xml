@@ -53,10 +53,9 @@
                         </if>
                     </where>
                  ORDER BY id
-                 <if test="offSet != null and offSet != '' and pageRow != null and pageRow != '' ">
-                     LIMIT #{offSet}, #{pageRow}
-                 </if>
-
+                <if test="offSet != null and offSet != '' and pageRow != null and pageRow != '' ">
+                    LIMIT #{offSet}, #{pageRow}
+                </if>
              ) u
     </select>
     <!--
@@ -107,8 +106,8 @@
 
     </select>
 
-    <!--移除用户当前的权限-->
-    <update id="removePermission">
+    <!--修改用户当前的权限-->
+    <update id="updatePermission">
         UPDATE user_permission
         SET delete_status = '2'
         WHERE user_uuid = #{uuId}
@@ -118,6 +117,19 @@
         </foreach>
         )
     </update>
+    <update id="updatePermission2">
+        UPDATE user_permission
+        SET delete_status = '1'
+        WHERE user_uuid = #{uuId}
+        AND permission_id in (
+        <foreach collection="epermissions" item="item" index="index" separator=",">
+            #{item}
+        </foreach>
+        )
+
+    </update>
+
+
 
     <!--添加权限-->
     <insert id="addPermission">
@@ -127,6 +139,10 @@
             (#{uuId}, #{item})
         </foreach>
     </insert>
+    <!--<insert id="addAllPermission" >-->
+        <!--INSERT INTO user_permission(user_uuid, permission_id)-->
+        <!--VALUES (#{userId},)-->
+    <!--</insert>-->
 
     <update id="refreshPermissionStatus" parameterType="java.lang.Integer">
         UPDATE user_permission
@@ -190,6 +206,20 @@
     <select id="countByUnionId" resultType="java.lang.Integer">
         SELECT count(0) from user where unionid is not null;
 
+    </select>
+    <select id="getPerm" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        p.id                        permId,
+        p.permission_code           permCode,
+        p.permission_name           permName
+        FROM permission p
+
+    </select>
+    <select id="getPermByUUID" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        permission_id            permId
+        FROM user_permission
+        WHERE delete_status = '1' and user_uuid = #{uuId}
     </select>
 
 

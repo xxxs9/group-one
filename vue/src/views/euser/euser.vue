@@ -44,16 +44,18 @@
       <el-table-column align="center" label="性别" prop="sex" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="粉丝数量/偏移量" prop="fansOffset" width="150">
         <template slot-scope="scope">
-          <el-button type="primary"  v-text="scope.row.fansCount" size="mini" @click="showfansList(scope.$index)"></el-button>
+          <el-button v-if="hasPerm('euser:update')" type="primary"  v-text="scope.row.fansCount" size="mini" @click="showfansList(scope.$index)"></el-button>
+          <span v-else v-text="scope.row.fansCount"></span>
           <span>/</span>
-          <el-button type="primary"  v-text="scope.row.fansOffset" size="mini" @click="showfansOffset(scope.$index)"></el-button>
+          <el-button v-if="hasPerm('euser:update')" type="primary"  v-text="scope.row.fansOffset" size="mini" @click="showfansOffset(scope.$index)"></el-button>
+          <span v-else v-text="scope.row.fansOffset"></span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="登录时间" prop="loginTime" width="170"></el-table-column>
       <el-table-column align="center" label="修改时间" prop="modifyTime" width="170"></el-table-column>
-      <el-table-column align="center" label="管理" width="100" v-if="hasPerm('user:update')">
+      <el-table-column align="center" label="管理" width="100" v-if="hasPerm('euser:update')">
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
+          <el-button type="primary" icon="el-icon-edit" @click="showUpdate(scope.$index)">修改</el-button>
           <!--<el-button type="danger" icon="delete" v-if="scope.row.userId!=userId "-->
                      <!--@click="removeUser(scope.$index)">删除-->
           <!--</el-button>-->

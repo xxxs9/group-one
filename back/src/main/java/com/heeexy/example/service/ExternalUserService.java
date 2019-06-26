@@ -39,7 +39,7 @@ public interface ExternalUserService {
      * @param permissions
      * @return
      */
-    JSONObject removePermission(JSONObject jsonObject);
+    JSONObject updatePermission(JSONObject jsonObject);
 
     /**
      * 修改用户被禁用的权限状态 delete_status改为'1'
@@ -61,5 +61,13 @@ public interface ExternalUserService {
      * @return
      */
     JSONObject getFans(JSONObject jsonObject);
+
+    /**
+     * 查询权限列表
+     * @param jsonObject
+     * @return
+     */
+    JSONObject getPerm(JSONObject jsonObject);
+
 }
 
