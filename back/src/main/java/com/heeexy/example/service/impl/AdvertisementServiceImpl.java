@@ -32,7 +32,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Override
     public JSONObject addAdvertisement(JSONObject jsonObject) {
-        JSONArray src = jsonObject.getJSONArray("src");
+        JSONArray src = jsonObject.getJSONArray("imgList");
         for (Object o : src) {
             jsonObject.put("advertisementStatus",1 );
             jsonObject.put("srcUrl",o );
@@ -43,6 +43,12 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Override
     public JSONObject updateAdvertisement(JSONObject jsonObject) {
+        JSONArray src = jsonObject.getJSONArray("imgList");
+        if (src.size()!=0){
+            for (Object o : src) {
+                jsonObject.put("srcUrl",o );
+            }
+        }
         advertisementDao.updateAdvertisement(jsonObject);
         return CommonUtil.successJson();
     }
