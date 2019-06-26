@@ -50,4 +50,6 @@ public interface PostService {
      * @return
      */
     JSONObject updatePost(JSONObject jsonObject);
+
+
 }

@@ -27,7 +27,6 @@ import java.util.*;
 @RequestMapping("/post")
 public class PostController {
 
-    List<String> list = new ArrayList<>();
 
     @Autowired
     private PostServiceImpl postService;
@@ -79,7 +78,6 @@ public class PostController {
                         +originalFilename;
         File localFile  = new File(desFilePath);
         String srcUrl = desFilePath.replaceFirst("D:\\\\", "http://localhost:8080/");
-        list.add(srcUrl);
         localFile.createNewFile();
         file.transferTo(localFile);
         map.put("code", 0);
@@ -95,5 +93,12 @@ public class PostController {
         return postService.updatePost(requestJson);
     }
 
+
+    @PostMapping("/deletePostImg")
+    public JSONObject deletePostImg (@RequestBody JSONObject jsonObject) {
+        File file = new File(jsonObject.getString("desFilePath"));
+        file.delete();
+        return CommonUtil.successJson();
+    }
 
 }
