@@ -20,10 +20,10 @@
     </el-tree>
     <el-form>
       <el-form-item>
-        <el-button type="primary" icon="plus" @click="showCreate" v-if="hasPerm('article:add')">添加
+        <el-button type="primary" icon="plus" @click="showCreate" v-if="hasPerm('post:add')">添加
         </el-button>
         <el-button @click="getData">获取数据</el-button>
-        <el-button type="danger" icon="delete" @click="removeUser()">删除
+        <el-button type="danger" icon="delete" @click="removeUser()" v-if="hasPerm('post:delete')">删除
         </el-button>
       </el-form-item>
     </el-form>

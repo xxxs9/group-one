@@ -7,7 +7,7 @@
 
       <el-form>
         <el-form-item>
-          <el-button type="primary" icon="plus"  @click="showCreate">添加
+          <el-button type="primary" icon="plus"  @click="showCreate" v-if="hasPerm('post:add')">添加
           </el-button>
         </el-form-item>
           <el-select v-model="testname" placeholder="请选择">
@@ -38,8 +38,8 @@
       <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170"></el-table-column>
       <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
-          <el-button type="danger" icon="delete" @click="removeUser(scope.$index)">删除
+          <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)" v-if="hasPerm('post:update')">修改</el-button>
+          <el-button type="danger" icon="delete" @click="removeUser(scope.$index)" v-if="hasPerm('post:delete')">删除
           </el-button>
         </template>
       </el-table-column>

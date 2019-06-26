@@ -6,7 +6,7 @@
     <div class="filter-container">
       <el-form>
         <el-form-item>
-          <el-button type="primary" icon="plus" @click="showCreate" >添加
+          <el-button type="primary" icon="plus" @click="showCreate" v-if="hasPerm('message:add')">添加
           </el-button>
         </el-form-item>
       </el-form>
@@ -23,8 +23,8 @@
 
       <el-table-column align="center" label="管理" >
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
-          <el-button type="danger" icon="delete" @click="removeTemplate(scope.$index)">删除</el-button>
+          <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)" v-if="hasPerm('message:update')">修改</el-button>
+          <el-button type="danger" icon="delete" @click="removeTemplate(scope.$index)" v-if="hasPerm('message:delete')">删除</el-button>
           <el-button type="danger" icon="delete" @click="sendAlltest(scope.$index)">发送所有人</el-button>
 
         </template>
