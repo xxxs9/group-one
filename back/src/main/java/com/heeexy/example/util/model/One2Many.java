@@ -34,7 +34,12 @@ public class One2Many extends JSONObject {
      */
     private Set<Integer> postImgList;
 
+	/**
+	 * 评论，广告和收藏
+	 */
 	private List<JSONObject> comments;
+	private List<JSONObject> advertisements;
+	private List<JSONObject> collections;
 
 	private List<JSONObject> eusers;
 	private List<JSONObject> epermissions;

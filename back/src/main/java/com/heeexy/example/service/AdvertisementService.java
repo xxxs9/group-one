@@ -37,4 +37,11 @@ public interface AdvertisementService {
      * @return int
      */
     JSONObject removeAdvertisement (JSONObject jsonObject);
+
+    /**
+     * 根据广告状态查询显示广告
+     * @param jsonObject
+     * @return JSONObject
+     */
+    JSONObject advertisementList(JSONObject jsonObject);
 }

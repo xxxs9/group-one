@@ -23,7 +23,7 @@ public interface CommentDao {
     /**
      * 当没有条件的时候查询全部评论的总数，反之根据条件查询评论的总数
      * @param jsonObject
-     * @return
+     * @return int
      */
     int countComment(JSONObject jsonObject);
 
@@ -32,7 +32,7 @@ public interface CommentDao {
      * @param
      * @return int
      */
-    int updateComment(JSONObject jsonObject);
+    int removeComment(JSONObject jsonObject);
 
     /**
      * 添加评论
@@ -69,5 +69,24 @@ public interface CommentDao {
      */
     int countByAcceptUserId(JSONObject jsonObject);
 
+    /**
+     * 根据帖子id查询评论
+     * @param jsonObject
+     * @return List<JSONObject>
+     */
     List<JSONObject> getByPostId(JSONObject jsonObject);
+
+    /**
+     * 根据评论id查帖子id
+     * @param jsonObject
+     * @return int
+     */
+    int getByCommentId(JSONObject jsonObject);
+
+    /**
+     * 根据帖子id查询评论总数
+     * @param jsonObject
+     * @return int
+     */
+    int getByPostIdCount(JSONObject jsonObject);
 }

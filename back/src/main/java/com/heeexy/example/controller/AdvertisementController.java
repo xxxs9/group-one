@@ -8,11 +8,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.imageio.ImageIO;
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * @author L-YX
@@ -25,13 +28,18 @@ import java.util.*;
 public class AdvertisementController {
     @Autowired
     AdvertisementServiceImpl advertisementService;
-    List<String> list = new ArrayList<>();
 
+    /**
+     * 后台广告列表接口
+     */
     @RequestMapping("/list")
     public JSONObject listAdvertisement(HttpServletRequest request){
         return advertisementService.listAllAdvertisement(CommonUtil.request2Json(request));
     }
 
+    /**
+     * 上传广告图片接口
+     */
     @RequestMapping(value = "/upload")
     public Map imgUpload(HttpServletRequest req, MultipartHttpServletRequest multiReq) throws IOException {
         Map<String,Object> map = new HashMap<>();
@@ -44,9 +52,17 @@ public class AdvertisementController {
                         +originalFilename;
         File localFile  = new File(desFilePath);
         String srcUrl = desFilePath.replaceFirst("D:\\\\", "http://localhost:8080/");
-        list.add(srcUrl);
         localFile.createNewFile();
         file.transferTo(localFile);
+        BufferedInputStream in = new BufferedInputStream(new FileInputStream(desFilePath));
+        Image bi = ImageIO.read(in);
+        BufferedImage tag = new BufferedImage(414, 82, BufferedImage.TYPE_INT_RGB);
+        tag.getGraphics().drawImage(bi, 0, 0,414, 82, null);
+        localFile.delete();
+        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(desFilePath));
+        ImageIO.write(tag, "PNG",out);
+        in.close();
+        out.close();
         map.put("code", 0);
         map.put("msg", "上传成功");
         map.put("desFilePath", desFilePath);
@@ -54,38 +70,49 @@ public class AdvertisementController {
         return map;
     }
 
+    /**
+     * 增加广告接口
+     */
     @RequestMapping("/add")
     public JSONObject addAdvertisement (@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "advertisementType");
-        requestJson.put("src",list);
         JSONObject jsonObject = advertisementService.addAdvertisement(requestJson);
-        list.clear();
         return CommonUtil.successJson();
     }
 
+    /**
+     * 移除广告接口
+     */
     @PostMapping("/remove")
     public JSONObject removeAdvertisement(@RequestBody JSONObject requestJson) {
-        System.out.println(111);
         return advertisementService.removeAdvertisement(requestJson);
     }
 
+    /**
+     * 修改广告接口
+     */
     @PostMapping("/update")
     public JSONObject updateAdvertisement(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, " advertisementType,srcUrl");
-        if (list.size()!=0) {
-            for (String s : list) {
-                String srcUrl = s;
-                requestJson.put("srcUrl",srcUrl );
-            }
-        }
+        CommonUtil.hasAllRequired(requestJson, " advertisementType");
         return advertisementService.updateAdvertisement(requestJson);
     }
 
+    /**
+     * 删除广告接口
+     */
     @PostMapping("/delete")
-    public void delete (@RequestBody JSONObject jsonObject) {
+    public JSONObject delete (@RequestBody JSONObject jsonObject) {
         File file = new File(jsonObject.getString("desFilePath"));
         file.delete();
-        list.remove(jsonObject.getString("src"));
+        return CommonUtil.successJson();
+    }
+
+    /**
+     * 前台广告轮播接口
+     */
+    @RequestMapping("/advertisementList")
+    public JSONObject advertisementList(HttpServletRequest request){
+        return advertisementService.advertisementList(CommonUtil.request2Json(request));
     }
 
 }

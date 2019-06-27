@@ -24,7 +24,7 @@ public interface CommentService {
      * @param jsonObject
      * @return JSONObject
      */
-    JSONObject updateComment(JSONObject jsonObject);
+    JSONObject removeComment(JSONObject jsonObject);
 
     /**
      * 添加评论
@@ -46,4 +46,11 @@ public interface CommentService {
      * @return JSONObject
      */
     JSONObject getByAcceptUserId(JSONObject jsonObject);
+
+    /**
+     * 根据帖子id查询评论
+     * @param jsonObject
+     * @return JSONObject
+     */
+    JSONObject getByPostId(JSONObject jsonObject);
 }

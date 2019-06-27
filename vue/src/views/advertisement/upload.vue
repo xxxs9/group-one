@@ -70,11 +70,11 @@
             :on-preview="handlePictureCardPreview"
             :on-success="handleAvatarSuccess"
             :on-remove="handleRemove">
-            <img v-if="dialogStatus=='update'" :src="tempAdvertisement.srcUrl" style="width: 100%;height:100%;float: left!important;"/>
+            <img v-if="dialogStatus=='update'" :src="tempAdvertisement.srcUrl" style="width: 100%;height:100%;" ref="updateImg"/>
             <i v-if="dialogStatus=='create'" class="el-icon-plus"></i>
           </el-upload>
           <el-dialog :visible.sync="dialogVisible" >
-            <img width="100%" :src="dialogImageUrl" alt="">
+            <img width="100%" :src="dialogImageUrl" alt="" ref="dialogImage">
           </el-dialog>
         </el-form-item>
       </el-form>
@@ -93,8 +93,8 @@
     data() {
       return {
         imgData: {
-          src: '',
-          desFilePath: ''
+          desFilePath: '',
+          url:''
         },
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
@@ -118,7 +118,8 @@
           advertisementRef: '',
           srcUrl: '',
           advertisementStatus: '',
-          url: ''
+          url: '',
+          imgList:[]
         },
         dialogImageUrl: '',
         dialogVisible: false
@@ -179,7 +180,7 @@
         this.tempAdvertisement.srcUrl = "";
         this.dialogStatus = "create";
         this.dialogFormVisible = true
-
+        this.$refs.upload.clearFiles();
 
       },
       showUpdate($index) {
@@ -201,7 +202,8 @@
         }).then(() => {
           this.getList();
           this.dialogFormVisible = false;
-          this.$router.go(0)
+          this.$refs.upload.clearFiles();
+          this.tempAdvertisement.imgList = [];
         })
       },
       updateAdvertisement() {
@@ -214,6 +216,7 @@
         }).then(() => {
           let msg = "修改成功";
           this.dialogFormVisible = false
+          this.tempAdvertisement.imgList = [];
           if (this.advertisementId === this.tempAdvertisement.advertisementId) {
             msg = '修改成功,部分信息重新登录后生效'
           }
@@ -251,19 +254,33 @@
           })
         })
       },
+
       handleRemove(file, fileList) {
+        let list = this.tempAdvertisement.imgList;
+        this.imgData.desFilePath = file.response.desFilePath;
+        this.imgData.url = file.response.url;
         this.api({
           url: "/src/delete",
           method: 'post',
           data: this.imgData
+        }).then(() => {
+          for(let i =0;i<list.length;i++){
+            if(file.response.url==list[i]){
+              list.splice(i,1);
+            }
+          }
         })
       },
+
       handleAvatarSuccess(response, file, fileList) {
         //response这个
-        this.imgData.src = response.url;
         this.imgData.desFilePath = response.desFilePath;
+        this.tempAdvertisement.imgList.push(response.url);
+        console.log(response.url);
         console.log("传回的地址：" + response.desFilePath)
-        this.$ref.upload.clearFiles();
+        // this.$ref.upload.clearFiles();
+        this.$refs.updateImg.style.display = 'none';
+        this.$refs.upload.clearFiles();
       },
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url;

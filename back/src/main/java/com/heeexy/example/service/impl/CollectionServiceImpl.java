@@ -20,6 +20,9 @@ public class CollectionServiceImpl implements CollectionService {
     @Autowired
     private CollectionDao collectionDao;
 
+    /**
+     * 用户收藏帖子列表
+     */
     @Override
     public JSONObject getByUserId(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
@@ -28,6 +31,9 @@ public class CollectionServiceImpl implements CollectionService {
         return CommonUtil.successPage(jsonObject, list, count);
     }
 
+    /**
+     * 用户添加帖子到收藏
+     */
     @Override
     public JSONObject addCollection(JSONObject jsonObject) {
         //根据帖子id判断此贴是否已被收藏
@@ -49,6 +55,9 @@ public class CollectionServiceImpl implements CollectionService {
         return CommonUtil.successJson();
     }
 
+    /**
+     * 用户移除收藏中的帖子
+     */
     @Override
     public JSONObject removeCollection(JSONObject jsonObject) {
         //根据用户id去查总数
@@ -56,15 +65,5 @@ public class CollectionServiceImpl implements CollectionService {
         jsonObject.put("collectionCount",count-1 );
         collectionDao.removeCollection(jsonObject);
         return CommonUtil.successJson();
-    }
-
-    @Override
-    public JSONObject getByPostId(JSONObject jsonObject) {
-        return null;
-    }
-
-    @Override
-    public JSONObject getByCollectionCount(JSONObject jsonObject) {
-        return null;
     }
 }

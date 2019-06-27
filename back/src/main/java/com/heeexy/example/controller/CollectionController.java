@@ -24,13 +24,27 @@ public class CollectionController {
     @Autowired
     CollectionServiceImpl collectionService;
 
-    @RequestMapping("/list")
-    public JSONObject listCollection(HttpServletRequest request) {
+    /**
+     * 用户收藏列表
+     */
+    @RequestMapping("/collectionList")
+    public JSONObject collectionList(HttpServletRequest request) {
         return collectionService.getByUserId(CommonUtil.request2Json(request));
     }
 
-    @RequestMapping("/updateComment")
-    public JSONObject updateComment(@RequestBody JSONObject requestJson){
+    /**
+     * 移除收藏中的帖子
+     */
+    @RequestMapping("/removeCollection")
+    public JSONObject removeCollection(@RequestBody JSONObject requestJson){
         return collectionService.removeCollection(requestJson);
+    }
+
+    /**
+     * 添加收藏
+     */
+    @RequestMapping("/addComment")
+    public JSONObject addComment(@RequestBody JSONObject requestJson){
+        return collectionService.addCollection(requestJson);
     }
 }

@@ -52,4 +52,13 @@
         UPDATE advertisement SET advertisement_status = #{advertisementStatus}
         WHERE advertisement_id = #{advertisementId}
     </update>
+
+    <select id="advertisementList" resultMap="advertisementMap">
+        SELECT
+        advertisement_id         advertisementId
+        ,advertisement_type      advertisementType
+        ,advertisement_ref       advertisementRef
+        ,src_url                 srcUrl
+        FROM advertisement WHERE advertisement_status = 1
+    </select>
 </mapper>
