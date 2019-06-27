@@ -41,7 +41,7 @@
         <span>帖子类型：{{"#"+addDetailData.postType+"#"}}</span>
         <br/>
         <span style="margin-top: 10px">
-            <el-tag v-for="tag in addDetailData.postTagList" v-text="tag" />
+            <el-tag v-for="tag in addDetailData.postTagList" v-text="tag" :key="tag" />
         </span>
       </div>
     </el-collapse-item>

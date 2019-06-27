@@ -7,64 +7,94 @@
   .el-row {
     margin-bottom: 130px;
   }
+  .el-tag + .el-tag {
+    margin-left: 10px;
+  }
+  .button-new-tag {
+    margin-left: 10px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .input-new-tag {
+    width: 90px;
+    margin-left: 10px;
+    vertical-align: bottom;
+  }
 </style>
 <template>
   <div class="app-container">
     <div class="filter-container">
+
+      <!--搜索表单-->
       <el-form class="small-space" inline :model="tempPost">
+
+        <!--内容输入框-->
         <el-form-item>
           <el-input type="text" v-model="tempPost.queryText" placeholder="输入帖子内容搜索"/>
         </el-form-item>
+
+        <!--昵称输入框-->
         <el-form-item>
           <el-input type="text" v-model="tempPost.queryOwnewName" placeholder="输入发帖人昵称搜索"/>
         </el-form-item>
+
+        <!--搜索按钮-->
         <el-form-item>
           <el-button type="primary" class="el-icon-search" @click="getList"></el-button>
         </el-form-item>
+
+        <!--日期选择框-->
         <el-form-item>
-          <el-date-picker v-model="tempPost.dataValue" type="daterange" align="right" unlink-panels validate-event
-                          @change="getList"
-                          start-placeholder="开始日期"
-                          range-separator="-"
-                          end-placeholder="结束日期"
-                          value-format="yyyy-MM-dd HH:mm:ss"
-                          :picker-options="pickerOptions"
-                          :default-time="['00:00:00', '23:59:59']">
+          <el-date-picker v-model="tempPost.dataValue" type="daterange" align="right" unlink-panels validate-event @change="getList"
+                          start-placeholder="开始日期" range-separator="-" end-placeholder="结束日期" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptions" :default-time="['00:00:00', '23:59:59']">
           </el-date-picker>
         </el-form-item>
+
+        <!--帖子类型选择框-->
         <el-form-item>
           <el-select v-model="tempPost.queryPostTypeId" filterable clearable placeholder="选择帖子类型" @change="getList">
-            <el-option v-for="item in typeOption" :key="item.id" :label="'# '+item.sortname+' #'" :value="item.id">
-            </el-option>
+            <el-option v-for="item in typeOption" :key="item.id" :label="'# '+item.sortname+' #'" :value="item.id"></el-option>
           </el-select>
-          <el-form-item>
-            <el-button type="primary" class="el-icon-close" @click="refashList"></el-button>
-          </el-form-item>
+        </el-form-item>
+
+        <!--帖子标签选择框-->
+        <el-form-item>
+          <el-select v-model="tempPost.queryPostTagId" multiple collapse-tags style="margin-left: 10px;" @change="getList" placeholder="选择标签">
+              <el-option v-for="item in tagOption" :key="item.id" :label="item.name" v-if="item.rank >=2" :value="item.id">{{item.name}}</el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" class="el-icon-close" @click="refashList"></el-button>
         </el-form-item>
       </el-form>
     </div>
+
+    <!--表格数据-->
     <el-table :data="list" stripe default-sor v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row max-height = "100% ">
       <el-table-column align="center" label="序号" fixed="left" sortable width="100" prop="postId">
       </el-table-column>
       <el-table-column align="center" label="帖子类型" width="130">
         <template slot-scope="scope">
-          <el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==1"
+          <el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium"
                    color="#85D469"></el-tag>
-          <el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==2"
-                   color="#0ACCCE"></el-tag>
-          <el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==3"
-                   color="#FF90A3"></el-tag>
-          <el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==4"
-                  color="#A29EDB"></el-tag>
-          <el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==5"
-                   color="#0067C5"></el-tag>
-          <el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==6"
-                   color="#F78700"></el-tag>
-          <el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==7"
-                   color="#B4A294"></el-tag>
-          <el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==8"
-                   color="#798EA3"></el-tag>
+          <!--<el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==2"-->
+                   <!--color="#0ACCCE"></el-tag>-->
+          <!--<el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==3"-->
+                   <!--color="#FF90A3"></el-tag>-->
+          <!--<el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==4"-->
+                  <!--color="#A29EDB"></el-tag>-->
+          <!--<el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==5"-->
+                   <!--color="#0067C5"></el-tag>-->
+          <!--<el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==6"-->
+                   <!--color="#F78700"></el-tag>-->
+          <!--<el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==7"-->
+                   <!--color="#B4A294"></el-tag>-->
+          <!--<el-tag style="color:#fff;" v-text="'#'+scope.row.postType+'#'" size="medium" v-if="scope.row.postTypeId==8"-->
+                   <!--color="#798EA3"></el-tag>-->
         </template>
       </el-table-column>
 
@@ -99,7 +129,7 @@
         <template slot-scope="scope">
           <div v-for="posts in list" style="text-align: center">
             <el-tag v-for="tag in posts.postTagList" v-if="scope.row.postId==posts.postId" v-text="tag"
-                    style="margin-right: 3px;" type="primary"/>
+                    style="margin-right: 3px;" :key="tag" type="primary"/>
           </div>
         </template>
       </el-table-column>
@@ -135,6 +165,8 @@
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
 
+
+    <!--修改帖子信息的Dialog-->
     <el-dialog title="修改帖子内容" width="50%" :visible.sync="dialogUpdateVisible">
       <el-form class="small-space" :model="updateData" label-position="left" label-width="120px"
                style='width: 100%; margin-left:50px;'>
@@ -157,14 +189,23 @@
           <el-input type="text" v-model="tempPost.postAddress" />
         </el-form-item>
 
-        <!--修改价格-->
-        <!--<el-form-item label="修改价格：">-->
-          <!--<el-input type="text" v-model="updateData.priceFloor" />-->
-          <!--<el-input type="text" v-model="updateData.priceTop" />-->
-        <!--</el-form-item>-->
-
+        <!--帖子内容输入框-->
         <el-form-item label="帖子内容：" style="width: 80%" v-model="updateData.postText">
           <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" size="medium" v-model="tempPost.postText">{{tempPost.postText}}</el-input>
+        </el-form-item>
+
+        <!--标签修改-->
+        <el-form-item label="修改标签：">
+          <el-tag :key="tag" v-for="tag in tempPost.postTagList" closable
+          :disable-transitions="false"
+          @close="deleteTag(tag)">
+            {{tag}}
+          </el-tag>
+          <el-button class="button-new-tag" size="small" @click="showAddTag">+ 添加标签</el-button><br/>
+          <el-select v-model="updateData.addPostTagId" v-if="addTagSelect" multiple collapse-tags style="margin-left: 10px;" placeholder="选择标签">
+            <el-option v-for="item in tagOption" :key="item.id" :label="item.name" v-if="item.rank >=2" :value="item.id">{{item.name}}</el-option>
+          </el-select>
+          <el-button type="primary" @click="addPostTag" v-if="addTagSelect">确认添加</el-button>
         </el-form-item>
 
         <!--修改图片-->
@@ -189,11 +230,6 @@
           </el-collapse-item>
         </el-collapse>
 
-        <!--标签修改-->
-        <el-form-item label="修改标签：">
-
-        </el-form-item>
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogUpdateVisible = false">取 消</el-button>
@@ -201,6 +237,7 @@
       </div>
     </el-dialog>
 
+    <!--包括点赞、浏览量、详情、置顶窗口的Dialog-->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="600px" lock-scroll>
 
       <!--详情页面组件-->
@@ -211,14 +248,14 @@
 
         <!--点赞输入框-->
         <el-form-item label="输入数量" required v-if="dialogStatus=='likeOffset'">
-          <el-input type="text" v-model="tempPost.likeOffset">
-          </el-input>
+          <el-input-number :min="1" :step="10" :max="999999" v-model="tempPost.likeOffset">
+          </el-input-number>
         </el-form-item>
 
         <!--浏览量输入框-->
         <el-form-item label="输入数量" required v-if="dialogStatus=='browseOffset'">
-          <el-input type="text" v-model="tempPost.browseOffset">
-          </el-input>
+          <el-input-number :min="1" :step="10" :max="999999" v-model="tempPost.browseOffset">
+          </el-input-number>
         </el-form-item>
 
         <!--置顶多选框-->
@@ -230,8 +267,6 @@
               </div>
             </el-checkbox-group>
         </el-form-item>
-
-
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -260,14 +295,16 @@
         listQuery: {
           beforeDate: '',//结束时间
           afterDate: '',//开始时间
-          queryText: '',//返回内容搜索数据
-          queryOwnewName: '',//返回昵称搜索数据
-          queryPostTypeId: '',//返回类型搜索数据
+          queryText: '',//内容搜索数据
+          queryOwnewName: '',//昵称搜索数据
+          queryPostTypeId: '',//类型搜索数据
+          queryPostTagId: '',//标签搜索数据
           pageNum: 1,//页码
           pageRow: 10,//每页条数
         },
         postdetailDeta:'',
         typeOption: '',//帖子类型下拉框数据a
+        tagOption:'',
         listStick:[],//置顶列表数据
         dialogStatus: '',
         postStickData:{
@@ -280,6 +317,7 @@
         },
         postStickValue:[],
         dialogFormVisible: false,
+        addTagSelect:false,
         dialogUpdateVisible: false,
         textMap: {
           likeOffset: '增加点赞数量',
@@ -299,7 +337,10 @@
           postImgList:'',
           postPhone:'',
           postAddress: '',
-          deleteImgList:[]
+          deleteImgList:[],
+          postTagList:[],
+          tagName:'',
+          addPostTagId:''
         },
         tempPost: {
           postId: '',//帖子ID
@@ -313,6 +354,7 @@
           postTypeId: '',//帖子类型ID
           queryText: '',//搜索输入框数据
           queryPostTypeId: '',//帖子类型下拉框选中的ID
+          queryPostTagId: [],//帖子标签 下拉框选中的ID
           dataValue: '', //日期选择初始化
           postState: '',//帖子状态数据
           queryOwnewName: '',//搜索昵称输入框数据
@@ -324,7 +366,8 @@
           priceFloor: '',//最低价
           priceTop: '',//最高价
           commentText: '',//评论
-          postStick: ''
+          postStick: '',
+          postIndex:''
         },
         pickerOptions: {
           shortcuts: [{
@@ -358,6 +401,7 @@
     created() {
       this.getList();
       this.getCategoriesList();
+      this.getTagList();
     },
     computed: {
       ...mapGetters([
@@ -372,18 +416,26 @@
         this.listQuery.afterDate = this.tempPost.dataValue[1];
         this.listQuery.queryOwnewName = this.tempPost.queryOwnewName;
         this.listQuery.queryPostTypeId = this.tempPost.queryPostTypeId;
+        let tagList = this.tempPost.queryPostTagId;
+        let queryTag = "";
+        for(let i = 0;i<tagList.length;i++){
+          queryTag = queryTag + "-"+tagList[i]
+        }
+        this.listQuery.queryPostTagId = queryTag;
         this.listLoading = true;
         this.api({
           url: "/post/list",
           method: "get",
           params: this.listQuery
         }).then(data => {
-          console.log(data)
           this.listLoading = false;
           this.list = data.list;
           this.totalCount = data.totalCount;
+          this.listQuery.queryPostTagId = ''
+        }).catch(error => {
+          console.log("请求失败")
         })
-      },
+      },            //获取列表（包括搜索）
       getCategoriesList(){
         this.api({
           url: "/sort/listSort",
@@ -391,21 +443,29 @@
         }).then(data => {
           this.listLoading = false;
           this.typeOption = data.list;
-
         })
-      },
+      },   //获取帖子类型数据
+      getTagList(){
+        this.api({
+          url: "/tag/listAllTag",
+          method: "get"
+        }).then(data => {
+          this.listLoading = false;
+          this.tagOption = data.list;
+        })
+      },          //获取标签数据
       refashList() {
         this.tempPost.queryText = '';
         this.tempPost.dataValue = '';
         this.tempPost.queryOwnewName = '';
         this.tempPost.queryPostTypeId = '';
+        this.tempPost.queryPostTagId = '';
         this.getList();
-      },
+      },         //刷新表格（清空搜索条件）
       showDetail($index) {
         //显示帖子详情窗口
         let post = this.list[$index];
         this.detailData.postId = post.postId;   //帖子Id
-        console.log(this.detailData.postId)
         this.api({
           url: "/post/queryPostById",
           method: "post",
@@ -419,7 +479,7 @@
         })
         this.dialogStatus = "postDetail";
         this.dialogFormVisible = true;
-      },
+      },   //显示帖子详情页面
       handleSizeChange(val) {
         //改变每页数量
         this.listQuery.pageRow = val
@@ -442,7 +502,7 @@
         this.tempPost.postId = post.postId;
         this.dialogStatus = "likeOffset";
         this.dialogFormVisible = true;
-      },
+      },    //显示点赞修改框
       showBrowseOffset($index) {
         //显示浏览修改框
         let post = this.list[$index];
@@ -450,7 +510,7 @@
         this.tempPost.postId = post.postId;
         this.dialogStatus = "browseOffset";
         this.dialogFormVisible = true;
-      },
+      },  //显示浏览修改框
       showPostStick($index){
         this.postStickValue = []
         this.listStick = []
@@ -466,7 +526,7 @@
         })
         this.dialogStatus = 'postStick'
         this.dialogFormVisible = true
-      },
+      },      //显示置顶修改框
       showUpdate($index) {
         //显示修改框
         let post = this.list[$index];
@@ -477,13 +537,19 @@
         this.tempPost.postAddress = post.postAddress;
         this.tempPost.postTypeId = post.postTypeId;
         this.tempPost.postImgList = post.postImgList;
+        this.tempPost.postTagList = post.postTagList;
+        this.tempPost.postIndex = $index;
         this.dialogUpdateVisible = true
-      },
+      },        //显示帖子修改框
+      showAddTag(){
+        this.updateData.addPostTagId = '';
+        this.addTagSelect = true;
+      },               //显示添加标签的多选框和添加按钮
       updatePostStick($index){
+        let _vue = this;
         let post = this.list[$index];
         this.postStickData.values = this.postStickValue
         this.postStickData.postId = this.detailData.postId
-        console.log(this.postStickData)
         this.api({
           url: "/stick/updatePostStick",
           method: "post",
@@ -500,7 +566,28 @@
             }
           })
         })
-      },
+      },    //修改置顶请求
+      addPostTag(){
+        let _vue = this;
+        this.api({
+          url: "/post/addPostTag",
+          method: "post",
+          data: this.updateData
+        }).then(data => {
+          this.tempPost.postTagList = data;
+          this.addTagSelect = false;
+          let msg = "添加成功";
+          this.$message({
+            message: msg,
+            type: 'success',
+            duration: 1 * 1000,
+            onClose: () => {
+            }
+          })
+        }).catch(errors =>{
+          this.addTagSelect = false;
+        })
+      },               //添加标签请求
       updateLikeOffset() {
         //改变点赞数请求
         let _vue = this;
@@ -510,7 +597,7 @@
           data: this.tempPost
         }).then(() => {
           let msg = "修改成功";
-          this.dialogUpdateVisible = false;
+          this.dialogFormVisible = false;
           this.$message({
             message: msg,
             type: 'success',
@@ -520,7 +607,7 @@
             }
           })
         })
-      },
+      },        //修改点赞请求
       handleCheckedCitiesChange(value) {
         this.postStickValue = value;
       },
@@ -543,7 +630,7 @@
             }
           })
         })
-      },
+      },      //修改浏览数请求
       updatePost($index){
         let _vue = this;
         this.updateData.postText = this.tempPost.postText;
@@ -563,11 +650,11 @@
             duration: 1 * 1000,
             onClose: () => {
               this.updateData.newImgList = [];
-              _vue.getList();
+              location.reload();
             }
           })
         })
-      },
+      },         //修改帖子请求
       handleRemove(file, fileList) {
         let list = this.updateData.newImgList;
         this.imgData.desFilePath = file.response.desFilePath
@@ -584,18 +671,39 @@
           }
         })
 
-      },
+      }, //删除上传成功的图片的回调函数
       handleAvatarSuccess(index,response, file, fileList) {
         this.updateData.newImgList.push(response.url);
         this.updateData.deleteImgList.push(this.tempPost.postImgList[index])
         this.updateData.src = response.url;
-        console.log(response)
         this.imgData.desFilePath = response.desFilePath;
         this.$ref.upload.clearFiles();
-      },
+      },  //上传图片成功的回调函数
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url;
       },
+      deleteTag(tag){
+        this.updateData.tagName = tag;
+        let _vue = this;
+        this.$confirm("删除此标签？","提示",{
+          confirmButtonText: '确定',
+          showCancelButton: false,
+          type: 'warning'
+        }).then(() => {
+          this.api({
+            url: "/post/deletePostTag",
+            method: "post",
+            data: this.updateData
+          }).then(data => {
+            this.tempPost.postTagList = data;
+            this.$message({
+              message: "删除成功",
+              type: 'success',
+              duration: 0.5 * 1000
+            })
+          })
+        })
+      },            //删除标签请求
       removePost($index) {
         //改变帖子状态请求
         let _vue = this;
@@ -632,7 +740,7 @@
             _vue.$message.error(defmsg)
           })
         })
-      }
+      }        //删除帖子请求
     }
   }
 </script>

@@ -10,7 +10,7 @@ import com.alibaba.fastjson.JSONObject;
  */
 public interface PostService {
     /**
-     * @description: 帖子列表
+     * 帖子列表
      * @param jsonObject 页码
      * @return 返回帖子列表
      */
@@ -51,5 +51,18 @@ public interface PostService {
      */
     JSONObject updatePost(JSONObject jsonObject);
 
+    /**
+     * 删除帖子对应标签
+     * @param jsonObject 帖子ID 标签ID
+     * @return
+     */
+    JSONObject deletePostTag(JSONObject jsonObject);
+    
+    /**
+     * 添加帖子标签
+     * @param jsonObject 帖子ID ，标签ID
+     * @return
+     */
+    JSONObject addPostTag(JSONObject jsonObject);
 
 }
