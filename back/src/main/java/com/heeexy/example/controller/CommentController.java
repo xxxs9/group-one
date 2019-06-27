@@ -27,13 +27,44 @@ public class CommentController {
         return commentService.listAllComment(CommonUtil.request2Json(request));
     }
 
-    @PostMapping("/updateComment")
-    public JSONObject updateComment(@RequestBody JSONObject requestJson){
-        return commentService.updateComment(requestJson);
+    /**
+     * 移除评论
+     */
+    @PostMapping("/removeComment")
+    public JSONObject removeComment(@RequestBody JSONObject requestJson){
+        return commentService.removeComment(requestJson);
     }
 
-    @GetMapping("/list1")
-    public JSONObject listcomment(HttpServletRequest request) {
+    /**
+     * 谁评论过我
+     */
+    @GetMapping("/AcceptUser")
+    public JSONObject AcceptUser(HttpServletRequest request) {
         return commentService.getByAcceptUserId(CommonUtil.request2Json(request));
+    }
+
+    /**
+     * 我评论过谁
+     */
+    @GetMapping("/CommentUser")
+    public JSONObject CommentUser(HttpServletRequest request) {
+        return commentService.getByCommentUserId(CommonUtil.request2Json(request));
+    }
+
+    /**
+     * 评论详情
+     */
+    @GetMapping("/commentDetails")
+    public JSONObject commentDetails(HttpServletRequest request){
+        return commentService.getByPostId(CommonUtil.request2Json(request));
+    }
+
+    /**
+     * 添加评论
+     */
+    @PostMapping("/addComment")
+    public JSONObject addComment(@RequestBody JSONObject requestJson){
+        CommonUtil.hasAllRequired(requestJson, "commentText");
+        return commentService.addComment(requestJson);
     }
 }

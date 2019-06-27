@@ -22,6 +22,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     @Autowired
     private AdvertisementDao advertisementDao;
 
+    /**
+     * 后台广告列表
+     */
     @Override
     public JSONObject listAllAdvertisement(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
@@ -30,6 +33,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         return CommonUtil.successPage(jsonObject, list, count);
     }
 
+    /**
+     * 增加广告
+     */
     @Override
     public JSONObject addAdvertisement(JSONObject jsonObject) {
         JSONArray src = jsonObject.getJSONArray("imgList");
@@ -41,6 +47,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         return CommonUtil.successJson();
     }
 
+    /**
+     * 修改广告
+     */
     @Override
     public JSONObject updateAdvertisement(JSONObject jsonObject) {
         JSONArray src = jsonObject.getJSONArray("imgList");
@@ -53,9 +62,23 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         return CommonUtil.successJson();
     }
 
+    /**
+     * 删除广告
+     */
     @Override
     public JSONObject removeAdvertisement(JSONObject jsonObject) {
         advertisementDao.removeAdvertisement(jsonObject);
         return CommonUtil.successJson();
+    }
+
+    /**
+     * 前台广告轮播
+     */
+    @Override
+    public JSONObject advertisementList(JSONObject jsonObject) {
+        CommonUtil.fillPageParam(jsonObject);
+        List<JSONObject> list = advertisementDao.advertisementList();
+        int count = 6;
+        return CommonUtil.successPage(jsonObject, list, count);
     }
 }

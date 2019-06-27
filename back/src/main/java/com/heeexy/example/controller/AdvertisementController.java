@@ -29,11 +29,17 @@ public class AdvertisementController {
     @Autowired
     AdvertisementServiceImpl advertisementService;
 
+    /**
+     * 后台广告列表接口
+     */
     @RequestMapping("/list")
     public JSONObject listAdvertisement(HttpServletRequest request){
         return advertisementService.listAllAdvertisement(CommonUtil.request2Json(request));
     }
 
+    /**
+     * 上传广告图片接口
+     */
     @RequestMapping(value = "/upload")
     public Map imgUpload(HttpServletRequest req, MultipartHttpServletRequest multiReq) throws IOException {
         Map<String,Object> map = new HashMap<>();
@@ -64,6 +70,9 @@ public class AdvertisementController {
         return map;
     }
 
+    /**
+     * 增加广告接口
+     */
     @RequestMapping("/add")
     public JSONObject addAdvertisement (@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "advertisementType");
@@ -71,22 +80,39 @@ public class AdvertisementController {
         return CommonUtil.successJson();
     }
 
+    /**
+     * 移除广告接口
+     */
     @PostMapping("/remove")
     public JSONObject removeAdvertisement(@RequestBody JSONObject requestJson) {
         return advertisementService.removeAdvertisement(requestJson);
     }
 
+    /**
+     * 修改广告接口
+     */
     @PostMapping("/update")
     public JSONObject updateAdvertisement(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, " advertisementType,srcUrl");
+        CommonUtil.hasAllRequired(requestJson, " advertisementType");
         return advertisementService.updateAdvertisement(requestJson);
     }
 
+    /**
+     * 删除广告接口
+     */
     @PostMapping("/delete")
     public JSONObject delete (@RequestBody JSONObject jsonObject) {
         File file = new File(jsonObject.getString("desFilePath"));
         file.delete();
         return CommonUtil.successJson();
+    }
+
+    /**
+     * 前台广告轮播接口
+     */
+    @RequestMapping("/advertisementList")
+    public JSONObject advertisementList(HttpServletRequest request){
+        return advertisementService.advertisementList(CommonUtil.request2Json(request));
     }
 
 }

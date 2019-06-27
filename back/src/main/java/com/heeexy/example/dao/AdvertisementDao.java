@@ -44,4 +44,10 @@ public interface AdvertisementDao {
      * @return int
      */
     int removeAdvertisement (JSONObject jsonObject);
+
+    /**
+     * 根据广告状态查询显示广告
+     * @return List<JSONObject>
+     */
+    List<JSONObject> advertisementList();
 }

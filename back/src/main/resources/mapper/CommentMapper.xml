@@ -31,6 +31,12 @@
             <if test="beforeDate != null and beforeDate != '' and afterDate !=null and afterDate !=''">
                 AND DATE(comment_time) BETWEEN #{beforeDate} AND #{afterDate}
             </if>
+            <if test="uuidList !=null and uuidList.size()>0 ">
+                AND commentuser_id in
+                <foreach collection="uuidList" item="commentUserId" open="(" close=")" separator=",">
+                  #{commentUserId}
+                </foreach>
+            </if>
         </where>
         ORDER BY post_id LIMIT #{offSet}, #{pageRow}
     </select>
@@ -44,7 +50,7 @@
         </where>
     </select>
 
-    <update id="updateComment">
+    <update id="removeComment">
         UPDATE comment
         SET
         comment_state = #{commentState}
@@ -70,12 +76,12 @@
         DATE_FORMAT(comment_time, '%Y.%m.%d %T')                       commentTime,
         comment_state                                                  commentState
         FROM comment c
-        WHERE commentuser_id = #{commentUserId}
+        WHERE commentuser_id = #{commentUserId}  AND c.comment_state = 1
         ORDER BY comment_time LIMIT #{offSet}, #{pageRow}
     </select>
 
     <select id="countByCommentUserId" resultType="java.lang.Integer">
-        SELECT COUNT(0) FROM comment WHERE commentuser_id = #{commentUserId}
+        SELECT COUNT(0) FROM comment WHERE commentuser_id = #{commentUserId}  AND comment_state = 1
     </select>
 
     <select id="getByAcceptUserId" resultMap="commentMap">
@@ -89,26 +95,33 @@
         DATE_FORMAT(comment_time, '%Y.%m.%d %T')                       commentTime,
         comment_state                                                  commentState
         FROM comment c
-        WHERE acceptuser_id = #{acceptUserId}
+        WHERE acceptuser_id = #{acceptUserId}  AND c.comment_state = 1
         ORDER BY comment_time LIMIT #{offSet}, #{pageRow}
     </select>
 
     <select id="countByAcceptUserId" resultType="java.lang.Integer">
-        SELECT COUNT(0) FROM comment WHERE acceptuser_id = #{acceptUserId}
+        SELECT COUNT(0) FROM comment WHERE acceptuser_id = #{acceptUserId}  AND comment_state = 1
     </select>
 
     <select id="getByPostId" resultMap="commentMap">
         SELECT
-        comment_id                                                     commentId,
-        post_id                                                        postId,
-        (select username from user where user.uuid = c.postuser_id)    postUserName,
-        (select username from user where user.uuid = c.commentuser_id) commentUserName,
-        (select username from user where user.uuid = c.acceptuser_id)  acceptUserName,
-        comment_text                                                   commentText,
-        DATE_FORMAT(comment_time, '%Y.%m.%d %T')                       commentTime,
-        comment_state                                                  commentState
+        comment_id                                                               commentId,
+        post_id                                                                  postId,
+        (select username from user where user.uuid = c.postuser_id)              postUserName,
+        (select username from user where user.uuid = c.commentuser_id)           commentUserName,
+        (select username from user where user.uuid = c.acceptuser_id)            acceptUserName,
+        comment_text                                                             commentText,
+        DATE_FORMAT(comment_time, '%Y.%m.%d %T')                                 commentTime
         FROM comment c
-        WHERE post_id = #{postId}
+        WHERE post_id = #{postId}  AND c.comment_state = 1
         ORDER BY comment_time DESC
+    </select>
+
+    <select id="getByPostIdCount" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM comment WHERE post_id = #{postId}  AND comment_state = 1
+    </select>
+
+    <select id="getByCommentId" resultType="java.lang.Integer">
+        SELECT post_id FROM comment WHERE comment_id = #{commentId}
     </select>
 </mapper>

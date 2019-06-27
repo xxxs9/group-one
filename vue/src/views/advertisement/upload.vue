@@ -192,7 +192,6 @@
         this.tempAdvertisement.advertisementId = advertisement.advertisementId;
         this.dialogStatus = "update"
         this.dialogFormVisible = true
-        this.$refs.dialogImage.clear();
       },
       createAdvertisement() {
         //添加新用户
@@ -281,7 +280,7 @@
         console.log("传回的地址：" + response.desFilePath)
         // this.$ref.upload.clearFiles();
         this.$refs.updateImg.style.display = 'none';
-
+        this.$refs.upload.clearFiles();
       },
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url;

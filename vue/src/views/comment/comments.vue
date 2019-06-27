@@ -7,6 +7,9 @@
             <el-form-item>
               <el-input type="text" v-model="tempComment.commentText" placeholder="输入评论内容搜索"/>
             </el-form-item>
+            <el-form-item>
+              <el-input type="text" v-model="commentUserName" placeholder="输入评论用户搜索"/>
+            </el-form-item>
             <el-date-picker
               v-model="tempComment.commentTime"
               type="daterange"
@@ -27,11 +30,6 @@
     </div>
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
-      <el-table-column align="center" label="序号" width="80">
-        <template slot-scope="scope">
-          <span v-text="getIndex(scope.$index)"> </span>
-        </template>
-      </el-table-column>
       <el-table-column align="center" label="评论ID" prop="commentId" style="width: 50px;"></el-table-column>
       <el-table-column align="center" label="帖子ID" prop="postId" style="width: 50px;"></el-table-column>
       <el-table-column align="center" label="发帖用户" prop="postUserName" style="width: 50px;"></el-table-column>
@@ -47,10 +45,10 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
+      <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" v-if="scope.row.commentState==0" @click="removeComment(scope.$index)">显示</el-button>
-          <el-button type="info" icon="edit" v-if="scope.row.commentState==1" @click="removeComment(scope.$index)">隐藏</el-button>
+          <el-button type="primary" icon="el-icon-view" v-if="scope.row.commentState==0" @click="removeComment(scope.$index)">显示</el-button>
+          <el-button type="info" icon="el-icon-delete" v-if="scope.row.commentState==1" @click="removeComment(scope.$index)">隐藏</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -85,6 +83,7 @@
         listLoading: false,//数据加载等待动画
         listQuery: {
           commentText: '',
+          commentUserName: '',
           beforeDate:'',
           afterDate:'',
           pageNum: 1,//页码
@@ -155,6 +154,8 @@
         //查询列表
         this.listLoading = true;
         this.listQuery.commentText = this.tempComment.commentText;
+        console.log(this.commentUserName);
+        this.listQuery.commentUserName = this.commentUserName;
         console.log(this.tempComment.commentTime[0]);
         this.listQuery.beforeDate = this.tempComment.commentTime[0];
         this.listQuery.afterDate = this.tempComment.commentTime[1];
@@ -166,7 +167,6 @@
           this.listLoading = false;
           this.list = data.list;
           this.totalCount = data.totalCount;
-          this.CommentText = data.CommentText;
         })
       },
       handleSizeChange(val) {
@@ -204,7 +204,7 @@
           }
 
           _vue.api({
-            url: "/comment/updateComment",
+            url: "/comment/removeComment",
             method: "post",
             data: comment
           }).then(() => {
