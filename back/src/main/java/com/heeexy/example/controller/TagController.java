@@ -37,9 +37,12 @@ public class TagController {
     @PostMapping("/importTag")
     public JSONObject exImport(@RequestParam(value = "filename") MultipartFile file) throws Exception{
         String fileName = file.getOriginalFilename();
-
-
         return tagSevice.batchImport(fileName, file);
+    }
+    @PostMapping("/importCoverTag")
+    public JSONObject exImportCover(@RequestParam(value = "filename") MultipartFile file) throws Exception{
+        String fileName = file.getOriginalFilename();
+        return tagSevice.coverImport(fileName, file);
     }
 
 }

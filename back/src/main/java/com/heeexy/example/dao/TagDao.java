@@ -1,6 +1,7 @@
 package com.heeexy.example.dao;
 
 import com.alibaba.fastjson.JSONObject;
+import com.heeexy.example.util.model.Tag;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ public interface TagDao {
 
 
     int countTag(JSONObject jsonObject);
+    int countTagByName(JSONObject jsonObject);
     /**
      * 文章列表
      */
@@ -35,4 +37,5 @@ public interface TagDao {
      * @return 标签ID
      */
     JSONObject getTagByName(JSONObject jsonObject);
+    int deleteAllTag();
 }

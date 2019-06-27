@@ -21,5 +21,7 @@ public interface TagSevice {
     JSONObject updateTag(JSONObject jsonObject);
     JSONObject deleteTag(JSONObject jsonObject);
     JSONObject batchImport(String fileName, MultipartFile file) throws Exception;
+    JSONObject coverImport(String fileName, MultipartFile file) throws Exception;
+
 
 }
