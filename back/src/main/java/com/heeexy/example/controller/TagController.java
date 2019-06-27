@@ -34,6 +34,11 @@ public class TagController {
         CommonUtil.hasAllRequired(requestJson, "id");
         return tagSevice.deleteTag(requestJson);
     }
+    @PostMapping("/updateTag")
+    public JSONObject updateSort(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "id,name");
+        return tagSevice.updateTag(requestJson);
+    }
     @PostMapping("/importTag")
     public JSONObject exImport(@RequestParam(value = "filename") MultipartFile file) throws Exception{
         String fileName = file.getOriginalFilename();

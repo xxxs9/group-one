@@ -1,6 +1,7 @@
 package com.heeexy.example.dao;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.heeexy.example.util.model.Tag;
 
 import java.util.List;
@@ -38,4 +39,5 @@ public interface TagDao {
      */
     JSONObject getTagByName(JSONObject jsonObject);
     int deleteAllTag();
+    int getTagByParentId(JSONObject jsonObject);
 }

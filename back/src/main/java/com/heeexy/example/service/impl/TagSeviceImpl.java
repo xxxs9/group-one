@@ -55,7 +55,21 @@ public class TagSeviceImpl implements TagSevice {
 
     @Override
     public JSONObject updateTag(JSONObject jsonObject) {
-        return null;
+        JSONObject tagByName = tagDao.getTagByName(jsonObject);
+        Integer parentId = (Integer) jsonObject.get("parentId");
+        int rank;
+        if(parentId == 0){
+            rank =1;
+        }else {
+            rank = tagDao.getTagByParentId(jsonObject)+1;
+        }
+        if(tagByName != null){
+            return CommonUtil.errorJson(ErrorEnum.E_10012);
+        }else{
+            jsonObject.put("rank",rank);
+            tagDao.updateTag(jsonObject);
+            return CommonUtil.successJson();
+        }
     }
 
     @Override
@@ -101,7 +115,7 @@ public class TagSeviceImpl implements TagSevice {
 
             Tag tag = new Tag();
 
-            if( row.getCell(1).getCellType() !=1){//循环时，得到每一行的单元格进行判断
+            if( row.getCell(0).getCellType() !=1){//循环时，得到每一行的单元格进行判断
 //                return CommonUtil.errorJson();
                 return CommonUtil.errorJson(ErrorEnum.E_500);
 
@@ -121,17 +135,26 @@ public class TagSeviceImpl implements TagSevice {
             jsonObject.put("tagName",pName);
             JSONObject tagByName = tagDao.getTagByName(jsonObject);
             Integer tagId;
+            Integer rank;
             if(tagByName == null){
                 Tag tag1 = new Tag();
                 tag1.setTagName(pName);
                 tag1.setParentId(0);
+                tag1.setRank(1);
                 tagDao.addListTag(tag1);
                 JSONObject tagByName1 = tagDao.getTagByName(jsonObject);
                 tagId = (Integer) tagByName1.get("tagId");
+                rank = (Integer) tagByName1.get("rank")+1;
             }else{
                 tagId = (Integer) tagByName.get("tagId");
+                rank = (Integer) tagByName.get("rank")+1;
             }
+            if( row.getCell(1).getCellType() !=1){//循环时，得到每一行的单元格进行判断
+//                return CommonUtil.errorJson();
+                return CommonUtil.errorJson(ErrorEnum.E_500);
 
+//                throw new MyException("导入失败(第"+(r+1)+"行,标签名称请设为文本格式)");
+            }
             row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
             String tagName = row.getCell(1).getStringCellValue();//得到每一行第一个单元格的值
 
@@ -150,14 +173,16 @@ public class TagSeviceImpl implements TagSevice {
 
                 tag.setTagName(tagName);
                 tag.setParentId(tagId);
-                tagList.add(tag);
+                tag.setRank(rank);
+//                tagList.add(tag);
+                tagDao.addListTag(tag);
             }
             //完整的循环一次 就组成了一个对象
         }
-        for (Tag tagone : tagList) {
-            tagDao.addListTag(tagone);
-
-        }
+//        for (Tag tagone : tagList) {
+//            tagDao.addListTag(tagone);
+//
+//        }
         return CommonUtil.successJson();
     }
 
@@ -216,17 +241,29 @@ public class TagSeviceImpl implements TagSevice {
             jsonObject.put("tagName",pName);
             JSONObject tagByName = tagDao.getTagByName(jsonObject);
             Integer tagId;
+            Integer rank;
+
             if(tagByName == null){
                 Tag tag1 = new Tag();
                 tag1.setTagName(pName);
                 tag1.setParentId(0);
+                tag1.setRank(1);
                 tagDao.addListTag(tag1);
                 JSONObject tagByName1 = tagDao.getTagByName(jsonObject);
                 tagId = (Integer) tagByName1.get("tagId");
+                rank = (Integer) tagByName1.get("rank")+1;
+
             }else{
                 tagId = (Integer) tagByName.get("tagId");
-            }
+                rank = (Integer) tagByName.get("rank")+1;
 
+            }
+            if( row.getCell(1).getCellType() !=1){//循环时，得到每一行的单元格进行判断
+//                return CommonUtil.errorJson();
+                return CommonUtil.errorJson(ErrorEnum.E_500);
+
+//                throw new MyException("导入失败(第"+(r+1)+"行,标签名称请设为文本格式)");
+            }
             row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
             String tagName = row.getCell(1).getStringCellValue();//得到每一行第一个单元格的值
 
@@ -245,14 +282,16 @@ public class TagSeviceImpl implements TagSevice {
 
                 tag.setTagName(tagName);
                 tag.setParentId(tagId);
-                tagList.add(tag);
+                tag.setRank(rank);
+
+                tagDao.addListTag(tag);
             }
             //完整的循环一次 就组成了一个对象
         }
-        for (Tag tagone : tagList) {
-            tagDao.addListTag(tagone);
-
-        }
+//        for (Tag tagone : tagList) {
+//            tagDao.addListTag(tagone);
+//
+//        }
         return CommonUtil.successJson();
     }
 }

@@ -51,9 +51,9 @@
       <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)" v-if="hasPerm('post:update')">修改</el-button>
-          <el-button type="danger" v-if="scope.row.status=='1'" icon="delete" @click="removeUser(scope.$index)">删除
+          <el-button type="danger" v-if="scope.row.status=='1'" icon="delete" @click="removeSort(scope.$index)">删除
           </el-button>
-          <el-button type="success" v-if="scope.row.status=='2'" icon="edit" @click="showUpdate(scope.$index)">恢复</el-button>
+          <el-button type="success" v-if="scope.row.status=='2'" icon="edit" @click="recoverySort(scope.$index)">恢复</el-button>
 
         </template>
       </el-table-column>
@@ -251,7 +251,7 @@
           })
         })
       },
-      removeUser($index) {
+      removeSort($index) {
         let _vue = this;
         this.$confirm('确定删除此用户?', '提示', {
           confirmButtonText: '确定',
@@ -269,6 +269,18 @@
           }).catch(() => {
             _vue.$message.error("删除失败")
           })
+        })
+      },
+      recoverySort($index) {
+        //修改用户信息
+        let _vue = this;
+        let sort = _vue.list[$index];
+        this.api({
+          url: "/sort/recoverySort",
+          method: "post",
+          data: sort
+        }).then(() => {
+          _vue.getList();
         })
       },
     }

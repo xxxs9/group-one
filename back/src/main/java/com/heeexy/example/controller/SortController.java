@@ -9,11 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author: linchen
@@ -48,28 +51,40 @@ public class SortController {
         CommonUtil.hasAllRequired(requestJson, "id");
         return sortService.deleteSort(requestJson);
     }
+    @PostMapping("/recoverySort")
+    public JSONObject recoverySort(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "id");
+        return sortService.recoverySort(requestJson);
+    }
+
     @RequestMapping("/upload")
     public Map imgUpload(HttpServletRequest request, MultipartHttpServletRequest multiReq) throws IOException {
         Map<String,Object> map = new HashMap<>();
         MultipartFile file = multiReq.getFile("file");
         String originalFilename = file.getOriginalFilename();
-        String desFilePath = "G:" + File.separator + "peixuntool"
-                + File.separator + "IDE-workspace"
-                + File.separator + "group-one"
-                + File.separator + "vue"
-                + File.separator + "src"
-                + File.separator + "assets"
-                + File.separator + "/" + originalFilename;
-        File localFile = new File(desFilePath);
-        String srcUrl = "http://localhost:9520/static/img/" + originalFilename;
+        String temp = UUID.randomUUID().toString();
+        String desFilePath =
+                "D:" + File.separator+"static"
+                        + "/" + temp
+                        +originalFilename;
+        File localFile  = new File(desFilePath);
+        String srcUrl = desFilePath.replaceFirst("D:\\\\", "http://localhost:8080/");
         string = srcUrl;
-        if(!localFile.exists()){
-            localFile.createNewFile();
-            file.transferTo(localFile);
-        }
-        map.put("code",0);
-        map.getOrDefault("msg","上传成功");
-        map.put("url",srcUrl);
+        localFile.createNewFile();
+        file.transferTo(localFile);
+        BufferedInputStream in = new BufferedInputStream(new FileInputStream(desFilePath));
+        Image bi = ImageIO.read(in);
+        BufferedImage tag = new BufferedImage(414, 82, BufferedImage.TYPE_INT_RGB);
+        tag.getGraphics().drawImage(bi, 0, 0,414, 82, null);
+        localFile.delete();
+        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(desFilePath));
+        ImageIO.write(tag, "PNG",out);
+        in.close();
+        out.close();
+        map.put("code", 0);
+        map.put("msg", "上传成功");
+        map.put("desFilePath", desFilePath);
+        map.put("url", srcUrl);
         return map;
 
 

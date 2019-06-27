@@ -12,7 +12,8 @@
 
     <select id="countTag" resultType="Integer">
         SELECT count(*)
-        FROM message_template
+        FROM tag
+        where status = '1'
     </select>
 
     <select id="listTag" resultType="com.alibaba.fastjson.JSONObject">
@@ -22,7 +23,12 @@
             t.parent_id                                       parentId,
             t.rank                                            rank
         FROM tag t
-        where   t.status = '1'
+        <where>
+            t.status = '1'
+            <if test="queryText != null and queryText != '' ">
+               and t.tag_name LIKE concat('%',#{queryText},'%')
+            </if>
+        </where>
         ORDER BY t.tag_id ASC
         LIMIT #{offSet}, #{pageRow}
     </select>
@@ -41,12 +47,13 @@
     <!--根据标签名查找标签ID-->
     <select id="getTagByName" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
-          tag_id tagId
-        FROM tag
-        WHERE tag_name = #{tagName}
+          t.tag_id tagId,
+          t.rank  rank
+        FROM tag t
+        WHERE t.tag_name = #{tagName}
     </select>
 
-    <!--根据标签名查找标签ID-->
+    <!--查找是否重名-->
     <select id="countTagByName" resultType="Integer">
         SELECT
           count(0)
@@ -55,11 +62,12 @@
     </select>
 
     <update id="updateTag" parameterType="com.alibaba.fastjson.JSONObject">
-        UPDATE message_template
+        UPDATE tag
         SET
-            template_name = #{tname},
-            template_content = #{content}
-        WHERE template_id = #{id}
+            tag_name = #{name},
+            parent_id = #{parentId},
+            rank = #{rank}
+        WHERE tag_id= #{id}
     </update>
     <update id="updateByStatus" parameterType="com.alibaba.fastjson.JSONObject">
         UPDATE tag
@@ -82,4 +90,11 @@
     <delete id="deleteAllTag" >
         delete from tag
     </delete>
+
+    <select id="getTagByParentId" resultType="Integer">
+        select
+            w.rank                                   rank
+        from tag w
+        where w.status = '1' and w.tag_id = #{parentId}
+    </select>
 </mapper>
