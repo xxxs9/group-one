@@ -18,6 +18,8 @@ public enum ErrorEnum {
 	E_10010("10010", "该帖子已收藏"),
 	E_10011("10011", "已超过最大收藏数"),
 	E_10012("10012","名字已存在"),
+	E_10013("10013","上传文件格式不正确"),
+	E_100143("10014","上传文件格式不正确"),
 	E_20011("20011", "登陆已过期,请重新登陆"),
 
 	E_90003("90003", "缺少必填参数");
@@ -35,6 +37,14 @@ public enum ErrorEnum {
 
 	public String getErrorCode() {
 		return errorCode;
+	}
+
+	public void setErrorCode(String errorCode) {
+		this.errorCode = errorCode;
+	}
+
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = errorMsg;
 	}
 
 	public String getErrorMsg() {

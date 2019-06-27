@@ -4,10 +4,10 @@
 <mapper namespace="com.heeexy.example.dao.TagDao">
 
     <insert id="addTag" parameterType="com.alibaba.fastjson.JSONObject">
-        INSERT INTO message_template
-            (template_name,template_content)
+        INSERT INTO tag
+            (tag_name,parent_id,rank)
         VALUES
-            (#{tname},#{content})
+            (#{name},#{parentId},#{rank})
     </insert>
 
     <select id="countTag" resultType="Integer">
@@ -55,4 +55,23 @@
           </foreach>)
 
     </update>
+    <insert id="addListTag" parameterType="com.heeexy.example.util.model.Tag">
+        INSERT INTO tag
+            (tag_id,tag_name,parent_id,rank)
+        VALUES
+            (#{id},#{tagName},#{parentId},#{rank})
+    </insert>
+
+<!--
+    <update id="updateUserByName" parameterType="com.poi.testpoi.pojo.User">
+      update user set password=#{password} where username = #{username}
+    </update>
+
+    <insert id="addUser" parameterType="com.poi.testpoi.pojo.User">
+        INSERT INTO USER (username,password) VALUES (#{username},#{password})
+    </insert>
+
+    <select id="selectByName" resultType="Integer">
+        SELECT count(*) FROM user WHERE username=#{username}
+    </select>-->
 </mapper>

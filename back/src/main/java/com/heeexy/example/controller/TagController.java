@@ -5,6 +5,7 @@ import com.heeexy.example.service.TagSevice;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,6 +33,13 @@ public class TagController {
     public JSONObject deleteSort(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "id");
         return tagSevice.deleteTag(requestJson);
+    }
+    @PostMapping("/importTag")
+    public JSONObject exImport(@RequestParam(value = "filename") MultipartFile file) throws Exception{
+        String fileName = file.getOriginalFilename();
+
+
+        return tagSevice.batchImport(fileName, file);
     }
 
 }
