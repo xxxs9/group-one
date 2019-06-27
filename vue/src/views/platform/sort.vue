@@ -7,21 +7,17 @@
 
       <el-form>
         <el-form-item>
-          <el-button type="primary" icon="plus"  @click="showCreate">添加
+          <el-button type="primary" icon="plus"  @click="showCreate" v-if="hasPerm('post:add')">添加
           </el-button>
-
-          <el-select v-model="tempUser.selectId" placeholder="请选择"  @change="getList">
+        </el-form-item>
+          <el-select v-model="testname" placeholder="请选择">
             <el-option
-              v-for="item in typeOption"
-
+              v-for="item in list"
               :key="item.id"
               :label="item.sortname"
-              :value="item.id">
+              :value="item.sortname">
             </el-option>
           </el-select>
-          <el-button type="primary" class="el-icon-close" @click="refashList"></el-button>
-
-        </el-form-item>
       </el-form>
 
     </div>
@@ -40,21 +36,11 @@
       </el-table-column>
       <el-table-column align="center" label="创建时间" prop="createTime" width="170"></el-table-column>
       <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170"></el-table-column>
-      <el-table-column align="center" label="标签"   style="width: 90px;" width="290">
-        <template slot-scope="scope">
-          <div  style="text-align: center">
-            <el-tag  v-if="scope.row.status=='1'" style="margin-right: 3px;" type="success">显示</el-tag>
-            <el-tag  v-if="scope.row.status=='2'" style="margin-right: 3px;" type="danger">隐藏</el-tag>
-          </div>
-        </template>
-      </el-table-column>
       <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
-          <el-button type="danger" v-if="scope.row.status=='1'" icon="delete" @click="removeUser(scope.$index)">删除
+          <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)" v-if="hasPerm('post:update')">修改</el-button>
+          <el-button type="danger" icon="delete" @click="removeUser(scope.$index)" v-if="hasPerm('post:delete')">删除
           </el-button>
-          <el-button type="success" v-if="scope.row.status=='2'" icon="edit" @click="showUpdate(scope.$index)">恢复</el-button>
-
         </template>
       </el-table-column>
     </el-table>
@@ -104,11 +90,9 @@
         list: [],//表格的数据
         listLoading: false,//数据加载等待动画
         listQuery: {
-          selectId: '',
           pageNum: 1,//页码
           pageRow: 50,//每页条数
         },
-        typeOption: '',//帖子类型下拉框数据a
         roles: [],//角色列表
         dialogStatus: 'create',
         dialogFormVisible: false,
@@ -118,7 +102,6 @@
         },
         tempUser: {
           id: '',
-          selectId:'',
           sortname: '',
           imageUrl: ''
         }
@@ -126,7 +109,6 @@
     },
     created() {
       this.getList();
-      this.getCategoriesList();
       if (this.hasPerm('user:add') || this.hasPerm('user:update')) {
         this.getAllRoles();
       }
@@ -156,7 +138,6 @@
       getList() {
         //查询列表
         this.listLoading = true;
-        this.listQuery.selectId = this.tempUser.selectId;
         this.api({
           url: "/sort/listSort",
           method: "get",
@@ -166,11 +147,6 @@
           this.list = data.list;
           this.totalCount = data.totalCount;
         })
-      },
-      refashList() {
-        this.tempUser.selectId = '';
-
-        this.getList();
       },
       handleSizeChange(val) {
         //改变每页数量
@@ -190,16 +166,6 @@
       getIndex($index) {
         //表格序号
         return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
-      },
-      getCategoriesList(){
-        this.api({
-        url: "/sort/listSort",
-        method: "get"
-      }).then(data => {
-        this.listLoading = false;
-        this.typeOption = data.list;
-
-      })
       },
       showCreate() {
         //显示新增对话框

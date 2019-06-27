@@ -113,7 +113,8 @@
         <template slot-scope="scope">
           <span style="font-size: 15px" v-text="scope.row.likeCount+'/'"></span>
           <el-button type="primary" icon="edit" v-text="scope.row.likeOffset" size="mini"
-                     @click="showLikeOffset(scope.$index)"></el-button>
+                     @click="showLikeOffset(scope.$index)" v-if="hasPerm('post:update')"></el-button>
+          <span v-else v-text="scope.row.likeOffset" ></span>
         </template>
       </el-table-column>
 
@@ -121,7 +122,8 @@
         <template slot-scope="scope">
           <span v-text="scope.row.browseCount+'/'"></span>
           <el-button type="primary" icon="edit" v-text="scope.row.browseOffset" size="mini"
-                     @click="showBrowseOffset(scope.$index)"></el-button>
+                     @click="showBrowseOffset(scope.$index)" v-if="hasPerm('post:update')"></el-button>
+          <span v-else v-text="scope.row.browseOffset" ></span>
         </template>
       </el-table-column>
 
@@ -142,14 +144,14 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" fixed="right" label="管理" width="350">
+      <el-table-column align="center" fixed="right" label="管理" width="350" >
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-arrow-up" size="medium" @click="showPostStick(scope.$index)">置顶</el-button>
-          <el-button type="primary" icon="el-icon-edit" size="medium" @click="showUpdate(scope.$index)">修改</el-button>
-          <el-button type="danger" icon="el-icon-delete" size="medium" v-if="scope.row.postState==0"
+          <el-button type="primary" icon="el-icon-arrow-up" size="medium" @click="showPostStick(scope.$index)" v-if="hasPerm('post:update')">置顶</el-button>
+          <el-button type="primary" icon="el-icon-edit" size="medium" @click="showUpdate(scope.$index)" v-if="hasPerm('post:update')">修改</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="medium" v-if="scope.row.postState==0 && hasPerm('post:delete')"
                      @click="removePost(scope.$index)">删除
           </el-button>
-          <el-button type="success" icon="el-icon-refresh" size="medium" v-if="scope.row.postState==1"
+          <el-button type="success" icon="el-icon-refresh" size="medium" v-if="scope.row.postState==1 && hasPerm('post:delete')"
                      @click="removePost(scope.$index)">恢复
           </el-button>
         </template>

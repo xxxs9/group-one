@@ -64,8 +64,16 @@ public interface ExternalUserDao {
      * @return
      * @description 将用户曾经拥有而修改为不再拥有的权限 delete_status改为'2'
     */
-    public int removePermission(@Param("uuId")Integer uuId,@Param("epermissions")List<Integer> epermissions);
+    public int updatePermission(@Param("uuId")Integer uuId,@Param("epermissions")List<Integer> epermissions);
 
+    /**
+     * @author liminhao
+     * @date 2019-06-18 09:30
+     * @param null
+     * @return
+     * @description 将用户被禁用的权限恢复为拥有的权限 delete_status改为'1'
+     */
+    public int updatePermission2(@Param("uuId")Integer uuId,@Param("epermissions")List<Integer> epermissions);
     /**
      * @author liminhao
      * @date 2019-06-18 09:33
@@ -73,14 +81,14 @@ public interface ExternalUserDao {
      * @return
      * @description 给用户添加权限
     */
-    public int addPermission(JSONObject jsonObject);
+    public int addPermission(@Param("uuId")Integer uuId,@Param("epermissions")List<Integer> epermissions);
 
     /**
      * @author liminhao
      * @date 2019-06-18 09:50
      * @param null
      * @return
-     * @description 恢复用户被禁用的权限状态 delete_status改为'1'
+     * @description 恢复用户正常的权限状态 delete_status改为'1'
     */
     public int refreshPermissionStatus(JSONObject object);
 
@@ -127,4 +135,18 @@ public interface ExternalUserDao {
      * @return
      */
     public int countByUnionId(JSONObject jsonObject);
+
+    /**
+     * 查询权限列表
+     * @param jsonObject
+     * @return
+     */
+    public List<JSONObject> getPerm(JSONObject jsonObject);
+
+    /**
+     * 根据uuid查询该用户拥有的权限id
+     * @param jsonObject
+     * @return
+     */
+    public List<JSONObject> getPermByUUID(JSONObject jsonObject);
 }

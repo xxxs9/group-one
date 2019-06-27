@@ -47,10 +47,10 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
+      <el-table-column align="center" label="管理" width="220" >
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" v-if="scope.row.commentState==0" @click="removeComment(scope.$index)">显示</el-button>
-          <el-button type="info" icon="edit" v-if="scope.row.commentState==1" @click="removeComment(scope.$index)">隐藏</el-button>
+          <el-button type="primary" icon="edit" v-if="scope.row.commentState==0 && hasPerm('comment:delete')" @click="removeComment(scope.$index)" >显示</el-button>
+          <el-button type="info" icon="edit" v-if="scope.row.commentState==1 && hasPerm('comment:delete')" @click="removeComment(scope.$index)" >隐藏</el-button>
         </template>
       </el-table-column>
     </el-table>

@@ -30,14 +30,14 @@
       <el-table-column align="center" label="用户权限" width="420">
         <template slot-scope="scope">
           <div v-for="eperms in list">
-            <el-tag v-for="eperm in eperms.epermissionList" v-if="scope.row.uuId==eperms.uuId" :key="index" v-text="eperm"
+            <el-tag v-for="eperm in eperms.epermissionList" v-if="scope.row.uuId==eperms.uuId" v-text="eperm" :key="eperm.uuId"
                     style="margin-right: 3px;"
                     type="primary">
             </el-tag>
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="管理" width="220" >
+      <el-table-column align="center" label="管理" width="220" v-if="hasPerm('euser:update')" >
         <template slot-scope="scope">
           <el-button type="primary" size="medium" icon="el-icon-edit" @click="showUpdate(scope.$index)" >修改
           </el-button>
@@ -67,17 +67,30 @@
           </el-input>
         </el-form-item>
         <el-form-item label="用户权限" required>
-          <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-          <div v-for="eperms in list">
-              <el-checkbox-group v-model="tempPerm.epermissionList" @change="handleCheckedCitiesChange">
+          <!--<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>-->
+          <!--<div v-for="eperms in list">-->
+              <!--<el-checkbox-group v-model="tempPerm.epermissionList" @change="handleCheckedPermChange">-->
 
-                <el-checkbox v-for="eperm in eperms.epermissionList" v-if="tempPerm.uuId==eperms.uuId"
-                             :label="eperm" :key="eperm"
-                >{{eperm}}
+                <!--<el-checkbox v-for="eperm in eperms.epermissionList" v-if="tempPerm.uuId==eperms.uuId"-->
+                             <!--:label="eperm" :key="eperm"-->
+                <!--&gt;{{eperm}}-->
+                <!--</el-checkbox>-->
+              <!--</el-checkbox-group>-->
+
+          <!--</div>-->
+
+
+            <el-checkbox-group v-model="permlist" @change="handleCheckedPermChange">
+              <div v-for="eperms in perms">
+                <el-checkbox :checked="true" v-if="eperms.state==1" :label="eperms.permId" :key="eperms.permId">{{eperms.permName}}
                 </el-checkbox>
-              </el-checkbox-group>
+                <el-checkbox :checked="false" v-if="eperms.state==0" :label="eperms.permId" :key="eperms.permId">{{eperms.permName}}
+                </el-checkbox>
+              </div>
+            </el-checkbox-group>
 
-          </div>
+
+
 
         </el-form-item>
       </el-form>
@@ -94,7 +107,6 @@
     data() {
       return {
         list: [],//表格的数据
-        queryInput: '',
         totalCount: 0, //分页组件--数据总条数
         listQuery: {
           querykey:'',
@@ -103,6 +115,7 @@
         },
         checkAll: false,
         permlist : [],
+        perms: [],
         isIndeterminate: true,
         listLoading: false,//数据加载等待动画
         dialogStatus: 'update',
@@ -115,20 +128,28 @@
           uuId: '',
           username: '',
           querykey: '',
-          epermissionList: []
+          epermissionList: [],
+
+        },
+        tempUUId: {
+          uuId: '',
         }
       }
     },
     created() {
       this.getList();
+      // this.getPerm();
     },
     methods: {
+      getPerm(){
+
+      },
       getList() {
         //查询列表
         this.listQuery.querykey = this.tempPerm.querykey;
         this.listLoading = true;
         this.api({
-          url: "/euser/permlist",
+          url: "/euser/userPerm",
           method: "get",
           params: this.listQuery,
         }).then(data => {
@@ -142,6 +163,7 @@
         this.tempPerm.querykey="";
         this.getList();
       },
+
       handleSizeChange(val) {
         //改变每页数量
         this.listQuery.pageRow = val
@@ -158,13 +180,26 @@
         this.getList()
       },
       showUpdate($index) {
-
         let perms = this.list[$index];
         this.tempPerm.uuId = perms.uuId;
+        this.tempUUId.uuId = perms.uuId;
+        this.perms = [];
+        this.permlist = [];
+        console.log(perms.uuId);
         this.tempPerm.username = perms.username;
-        this.tempPerm.epermissionList = perms.epermissionList;
-        this.permlist = perms.epermissionList;
+        // this.tempPerm.epermissionList = perms.epermissionList;
+        // this.permlist = perms.epermissionList;
+        this.api({
+          url: "/euser/perms",
+          method: "get",
+          params: this.tempUUId,
+        }).then(data => {
+          this.listLoading = false;
+          this.perms = data.list;
+          console.log(this.perms);
+        })
         // console.log(this.tempPerm.epermissionList);
+
         this.dialogStatus = "update";
         this.dialogFormVisible = true;
 
@@ -176,12 +211,13 @@
 
         this.isIndeterminate = false;
       },
-      handleCheckedCitiesChange(value) {
+      handleCheckedPermChange(value) {
         let checkedCount = value.length;
         // console.log(value===this.permlist);
-        console.log(value);
+
         // console.log(this.permlist);
         this.tempPerm.epermissionList = value;
+        console.log(this.tempPerm.epermissionList);
         this.checkAll = checkedCount === this.permlist.length;
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.permlist.length;
       },

@@ -24,7 +24,7 @@ public class BrowseRecordServiceImpl implements BrowseRecordService {
         CommonUtil.fillPageParam(jsonObject);
         int count = browseRecordDao.countRecord(jsonObject);
         List<JSONObject> list = browseRecordDao.getRecords(jsonObject);
-        System.out.println(jsonObject.getString("querykey"));
+//        System.out.println(jsonObject.getString("querykey"));
         return CommonUtil.successPage(jsonObject, list, count);
 
     }
