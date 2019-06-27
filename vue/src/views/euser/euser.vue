@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-form>
         <el-form-item>
-          <el-form class="small-space" inline="true" :model="tempUser">
+          <el-form class="small-space" :inline="true" :model="tempUser">
             <el-form-item>
               <el-input id="inputkey" type="text" v-model="tempUser.querykey" placeholder="输入用户昵称关键字搜索" @keyup.native="checkKey()"/>
             </el-form-item>
@@ -44,8 +44,8 @@
       <el-table-column align="center" label="性别" prop="sex" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="粉丝数量/偏移量" prop="fansOffset" width="150">
         <template slot-scope="scope">
-          <el-button v-if="hasPerm('euser:update')" type="primary"  v-text="scope.row.fansCount" size="mini" @click="showfansList(scope.$index)"></el-button>
-          <span v-else v-text="scope.row.fansCount"></span>
+          <el-button type="primary"  v-text="scope.row.fansCount" size="mini" @click="showfansList(scope.$index)"></el-button>
+
           <span>/</span>
           <el-button v-if="hasPerm('euser:update')" type="primary"  v-text="scope.row.fansOffset" size="mini" @click="showfansOffset(scope.$index)"></el-button>
           <span v-else v-text="scope.row.fansOffset"></span>

@@ -149,4 +149,16 @@ public interface ExternalUserDao {
      * @return
      */
     public List<JSONObject> getPermByUUID(JSONObject jsonObject);
+
+
+    List<JSONObject> getPostByUUID(@Param("uuId") Integer uuId);
+
+
+    List<JSONObject> getMyIdolId(@Param("uuId") Integer uuId);
+
+
+    int countPostByUUID(@Param("uuId") Integer uuId);
+
+    List<JSONObject> getPostByLike(@Param("uuId") Integer uuId);
+
 }

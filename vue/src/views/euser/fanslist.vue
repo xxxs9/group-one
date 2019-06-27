@@ -35,7 +35,7 @@
     props: ['fanslist'],
     data(){
       return {
-
+        listLoading: false,
       }
     }
 
