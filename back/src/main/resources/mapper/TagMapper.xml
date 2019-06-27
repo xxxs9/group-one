@@ -38,6 +38,14 @@
 
     </select>
 
+    <!--根据标签名查找标签ID-->
+    <select id="getTagByName" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+          tag_id tagId
+        FROM tag
+        WHERE tag_name = #{tagName}
+    </select>
+
     <update id="updateTag" parameterType="com.alibaba.fastjson.JSONObject">
         UPDATE message_template
         SET

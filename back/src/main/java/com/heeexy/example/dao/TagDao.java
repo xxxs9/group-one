@@ -1,6 +1,7 @@
 package com.heeexy.example.dao;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.List;
 
@@ -26,4 +27,11 @@ public interface TagDao {
     int updateTag(JSONObject jsonObject);
 
     int updateByStatus(JSONObject jsonObject);
+
+    /**
+     * 根据标签名查找标签ID
+     * @param jsonObject 标签名
+     * @return 标签ID
+     */
+    JSONObject getTagByName(JSONObject jsonObject);
 }

@@ -65,6 +65,12 @@
             <if test="queryPostTypeId != null and queryPostTypeId != '' ">
                 and post_type_id = #{queryPostTypeId}
             </if>
+            <if test="postIdList != null and postIdList.size()>0 ">
+                and
+                <foreach collection="postIdList" item="id" open="post_id in(" close=")" separator=",">
+                    #{id.postId}
+                </foreach>
+            </if>
         </where>
         ORDER BY post_id
         LIMIT #{offSet}, #{pageRow}
@@ -161,7 +167,7 @@
           LEFT JOIN post_tag pt2 ON pt2.post_id = p.postId
     </select>
 
-    <!--根绝帖子查找ID-->
+    <!--根据帖子查找ID-->
     <select id="listPostImg" resultType="com.alibaba.fastjson.JSONObject">
       SELECT
         post_image_id postImageId,post_image_src postImageSrc
@@ -170,11 +176,18 @@
         post_id = #{postId}
     </select>
 
-    <!--根绝图片Id删除图片-->
+    <!--根据图片Id删除图片-->
     <delete id="deleteImgById">
       DELETE
       FROM post_image
       WHERE post_image_id = #{postImageId}
+    </delete>
+
+    <!--删除帖子对应的标签-->
+    <delete id="deletePostTag">
+      DELETE
+      FROM post_tag
+      WHERE post_id = #{postId} AND tag_id = #{tagId.tagId}
     </delete>
 
     <!--添加对应帖子的图片-->
@@ -184,5 +197,44 @@
       VALUES
         (#{postId},#{postImageSrc})
     </insert>
+
+    <!--添加帖子标签-->
+    <insert id="addPostTag">
+      INSERT INTO post_tag
+        (post_id, tag_id, parent_id)
+      VALUES
+        (#{postId},#{tagId},#{parentId})
+    </insert>
+
+    <!--返回帖子ID数组-->
+    <select id="listPostIdByTag" resultType="com.alibaba.fastjson.JSONObject">
+      SELECT
+        distinct post_id postId
+      FROM post_tag
+      <where>
+          <if test="queryPostTagId != null ">
+              <foreach collection="queryPostTagId" item="id" open="tag_id in(" close=")" separator=",">
+                  #{id}
+              </foreach>
+          </if>
+      </where>
+
+    </select>
+
+    <!--根据帖子ID查找标签-->
+    <select id="listTagByPostId" resultType="com.alibaba.fastjson.JSONObject">
+      SELECT
+        tag_name tagName
+      from tag
+      WHERE tag_id in (SELECT tag_id FROM post_tag WHERE post_id = #{postId})
+    </select>
+
+    <!--根据标签ID和帖子ID 查询帖子标签表-->
+    <select id="getTagById" resultType="com.alibaba.fastjson.JSONObject">
+      SELECT
+        post_tag_id,post_id,tag_id,parent_id
+      FROM post_tag
+      WHERE post_id = #{postId} AND tag_id = #{tagId}
+    </select>
 
 </mapper>

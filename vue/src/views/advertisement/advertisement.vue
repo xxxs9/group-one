@@ -25,10 +25,10 @@
       <el-table-column align="center" label="接收评论用户" prop="acceptUserName" style="width: 120px;"></el-table-column>
       <el-table-column align="center" label="评论内容" prop="commentText" width="140"></el-table-column>
       <el-table-column align="center" label="评论时间" prop="commentTime" width="170"></el-table-column>
-      <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
+      <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" v-if="scope.row.commentState==0" @click="removeComment(scope.$index)">显示</el-button>
-          <el-button type="primary" icon="edit" v-if="scope.row.commentState==1" @click="removeComment(scope.$index)">隐藏</el-button>
+          <el-button type="primary" icon="edit" v-if="scope.row.commentState==0" @click="removeComment(scope.$index)" v-else-if="hasPerm('advert:delete')">显示</el-button>
+          <el-button type="primary" icon="edit" v-if="scope.row.commentState==1" @click="removeComment(scope.$index)" v-else-if="hasPerm('advert:delete')">隐藏</el-button>
         </template>
       </el-table-column>
     </el-table>

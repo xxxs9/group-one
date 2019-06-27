@@ -5,7 +5,7 @@
         <el-form-item>
           <el-form class="small-space" inline="true" :model="tempAdvertisement">
             <el-form-item>
-              <el-button type="primary" icon="plus"  @click="showCreate">添加
+              <el-button type="primary" icon="plus"  @click="showCreate" v-if="hasPerm('advert:add')">添加
               </el-button>
             </el-form-item>
             <el-form-item>
@@ -36,9 +36,9 @@
       <el-table-column align="center" label="广告状态" prop="advertisementStatus" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
-          <el-button type="warning" v-if="" icon="el-icon-edit" @click="showUpdate(scope.$index)">修改</el-button>
-          <el-button type="primary" icon="el-icon-view" v-if="scope.row.advertisementStatus==0" @click="removeAdvertisement(scope.$index)">显示</el-button>
-          <el-button type="info" icon="el-icon-delete" v-if="scope.row.advertisementStatus==1" @click="removeAdvertisement(scope.$index)">隐藏</el-button>
+          <el-button type="warning" v-if="hasPerm('advert:update')" icon="el-icon-edit" @click="showUpdate(scope.$index)">修改</el-button>
+          <el-button type="primary" icon="el-icon-view" v-if="scope.row.advertisementStatus==0 && hasPerm('advert:delete')" @click="removeAdvertisement(scope.$index)" >显示</el-button>
+          <el-button type="info" icon="el-icon-delete" v-if="scope.row.advertisementStatus==1 && hasPerm('advert:delete')" @click="removeAdvertisement(scope.$index)" >隐藏</el-button>
         </template>
       </el-table-column>
     </el-table>

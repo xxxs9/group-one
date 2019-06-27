@@ -50,7 +50,11 @@ export const asyncRouterMap = [
     meta: {title: '用户权限', icon: 'table'},
     children: [
       {
-        path: '', name: '用户列表', component: _import('user/user'), meta: {title: '用户列表', icon: 'user'}, menu: 'user'
+        path: '',
+        name: '用户列表',
+        component: _import('user/user'),
+        meta: {title: '用户列表', icon: 'user'},
+        menu: 'user'
       },
       {
         path: 'role',
@@ -88,7 +92,7 @@ export const asyncRouterMap = [
         path: 'record',
         name: '浏览记录',
         component: _import('euser/record'),
-        meta: {title: '浏览记录', icon: 'password'},
+        meta: {title: '浏览记录', icon: 'record'},
         menu: 'euser'
       },
     ]
@@ -118,14 +122,14 @@ export const asyncRouterMap = [
     meta: {title: '平台管理', icon: 'table'},
     children: [
       {
-        path: '', name: '帖子类别管理', component: _import('platform/sort'), meta: {title: '帖子类别管理', icon: 'user'}, menu: 'sort'
+        path: '', name: '帖子类别管理', component: _import('platform/sort'), meta: {title: '帖子类别管理', icon: 'cate'}, menu: 'post'
       },
       {
         path: 'tag',
         name: '帖子标签管理',
         component: _import('platform/tag'),
-        meta: {title: '帖子标签管理', icon: 'password'},
-        menu: 'tag'
+        meta: {title: '帖子标签管理', icon: 'tag'},
+        menu: 'post'
       },
     ]
   },
@@ -137,14 +141,14 @@ export const asyncRouterMap = [
     meta: {title: '系统信息管理', icon: 'table'},
     children: [
       {
-      path: '', name: '消息模块管理', component: _import('template/msgtemplate'), meta: {title: '消息模块管理', icon: 'user'}, menu: 'msgtemplate'
+      path: '', name: '消息模块管理', component: _import('template/msgtemplate'), meta: {title: '消息模块管理', icon: 'message'}, menu: 'message'
 },
       {
         path: 'chat',
         name: '聊天信息管理',
         component: _import('template/chat'),
-        meta: {title: '聊天信息管理', icon: 'password'},
-        menu: 'chat'
+        meta: {title: '聊天信息管理', icon: 'message2'},
+        menu: 'message'
       },
     ]
   },
@@ -154,14 +158,14 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/comment/',
     name: '',
-    meta: {title: '评论管理', icon: 'post'},
+    meta: {title: '评论管理', icon: 'comment'},
     children: [
       {
         path: '',
         name: '评论列表',
         component: _import('comment/comments'),
-        meta: {title: '评论管理', icon: 'post'},
-        menu: 'post'
+        meta: {title: '评论管理', icon: 'comment'},
+        menu: 'comment'
       }
     ]
   },
@@ -171,14 +175,14 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/advertisement/',
     name: '',
-    meta: {title: '广告管理', icon: 'post'},
+    meta: {title: '广告管理', icon: 'advert'},
     children: [
       {
         path: '',
         name: '广告列表',
         component: _import('advertisement/upload'),
-        meta: {title: '广告管理', icon: 'post'},
-        menu: 'post'
+        meta: {title: '广告管理', icon: 'advert'},
+        menu: 'advert'
       }
     ]
   },
