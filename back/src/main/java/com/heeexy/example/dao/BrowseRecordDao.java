@@ -2,6 +2,7 @@ package com.heeexy.example.dao;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public interface BrowseRecordDao {
      * @param jsonObject
      * @return
      */
-    public int removeRecord(JSONObject jsonObject);
+    public int updateRecord(JSONObject jsonObject);
 
     /**
      * 统计数量
@@ -38,4 +39,25 @@ public interface BrowseRecordDao {
      * @return
      */
     int countRecord(JSONObject jsonObject);
+
+    /**
+     * 根据帖子id查询浏览过此帖子的用户列表
+     * @param jsonObject
+     * @return
+     */
+    List<JSONObject> getUUIDByPostId(JSONObject jsonObject);
+
+    /**
+     * 根据uuid查询用户浏览过的帖子
+     * @param jsonObject
+     * @return
+     */
+    List<JSONObject> getRecordsByUUID(JSONObject jsonObject);
+
+    /**
+     * 新增记录
+     * @param jsonObject
+     * @return
+     */
+    int addRecord(JSONObject jsonObject);
 }

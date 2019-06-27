@@ -113,7 +113,7 @@
         WHERE user_uuid = #{uuId}
         AND permission_id not in (
         <foreach collection="epermissions" item="item" index="index" separator=",">
-            #{item}
+            #{item.permId}
         </foreach>
         )
     </update>
@@ -123,7 +123,7 @@
         WHERE user_uuid = #{uuId}
         AND permission_id in (
         <foreach collection="epermissions" item="item" index="index" separator=",">
-            #{item}
+            #{item.permId}
         </foreach>
         )
 
@@ -136,7 +136,7 @@
         INSERT INTO user_permission(user_uuid, permission_id)
         VALUES
         <foreach collection="epermissions" item="item" index="index" separator=",">
-            (#{uuId}, #{item})
+            (#{uuId}, #{item.permId})
         </foreach>
     </insert>
     <!--<insert id="addAllPermission" >-->
@@ -201,12 +201,16 @@
             SELECT
             from_user_uuid
             FROM example.user u,user_attention ua
-            WHERE u.uuid = ua.to_user_uuid AND u.uuid = #{uuId}
+            WHERE u.uuid = ua.to_user_uuid AND u.uuid = #{uuId} AND ua.delete_status = '1'
     </select>
+
+    <!--统计有效用户用户数-->
     <select id="countByUnionId" resultType="java.lang.Integer">
         SELECT count(0) from user where unionid is not null;
 
     </select>
+
+    <!--获取所有权限信息-->
     <select id="getPerm" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
         p.id                        permId,
@@ -215,6 +219,8 @@
         FROM permission p
 
     </select>
+
+    <!--根据UUID获取用户的有效权限-->
     <select id="getPermByUUID" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
         permission_id            permId
@@ -222,5 +228,47 @@
         WHERE delete_status = '1' and user_uuid = #{uuId}
     </select>
 
+    <!--根据UUID获取该用户所发的帖子id-->
+    <select id="getPostByUUID" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        p.*,
+        (SELECT categories_name FROM post_categories pc WHERE p.postId = pc.categories_id) categoriesName,
+        (SELECT count(0) FROM click_goods WHERE click_goods.post_id = p.postId)            likeCount
+        FROM
+        (
+          SELECT
+          post_id                                                                 postId,
+          post_owner_id                                                           uuId,
+          post_text                                                               postText,
+          post_time                                                               postTime,
+          post_phone                                                              postPhone,
+          post_address                                                            postAddress
+          FROM post_table
+          WHERE post_owner_id = #{uuId}
+        ) p
 
+    </select>
+
+    <!--获取用户关注的用户uuid-->
+    <select id="getMyIdolId" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        to_user_uuid               idolId
+        FROM user_attention
+        WHERE from_user_uuid = #{uuId} AND ua.delete_status = '1'
+    </select>
+    <!--统计用户发的帖子数-->
+    <select id="countPostByUUID" resultType="java.lang.Integer">
+        SELECT
+        count(0)       postCount
+        FROM
+        post_table
+        WHERE post_owner_id = #{uuId}
+    </select>
+
+    <select id="getPostByLike" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        post_id        postId
+        FROM click_goods
+        WHERE user_id = #{uuId}
+    </select>
 </mapper>
