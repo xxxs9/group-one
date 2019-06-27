@@ -63,4 +63,60 @@ public interface PostDao {
      * @return
      */
     int updatePost(JSONObject jsonObject);
+
+    /**
+     * 返回对应帖子的图片列表
+     * @param jsonObject 帖子ID
+     * @return
+     */
+    List<JSONObject> listPostImg(JSONObject jsonObject);
+
+    /**
+     * 根据图片ID删除图片
+     * @param jsonObject 图片ID
+     * @return
+     */
+    int deleteImgById(JSONObject jsonObject);
+
+    /**
+     * 添加对应帖子的图片
+     * @param jsonObject 帖子ID 图片ID
+     * @return
+     */
+    int addPostImg(JSONObject jsonObject);
+
+    /**
+     * 根据标签搜索帖子ID
+     * @param jsonObject 标签ID
+     * @return 帖子ID数组
+     */
+    List<JSONObject> listPostIdByTag(JSONObject jsonObject);
+
+    /**
+     * 删除帖子标签
+     * @param jsonObject 帖子ID  标签ID
+     * @return
+     */
+    int deletePostTag(JSONObject jsonObject);
+
+    /**
+     * 根据帖子ID查找标签
+     * @param jsonObject 帖子ID
+     * @return
+     */
+    List<JSONObject> listTagByPostId(JSONObject jsonObject);
+
+    /**
+     * 添加帖子标签
+     * @param jsonObject 帖子ID 标签ID
+     * @return
+     */
+    int addPostTag(JSONObject jsonObject);
+
+    /**
+     * 根据帖子ID和标签ID查找关联表
+     * @param jsonObject 帖子ID ，标签ID
+     * @return
+     */
+    JSONObject getTagById(JSONObject jsonObject);
 }
