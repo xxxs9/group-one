@@ -27,6 +27,7 @@ public class AdvertisementController {
     AdvertisementServiceImpl advertisementService;
     List<String> list = new ArrayList<>();
 
+
     @RequestMapping("/list")
     public JSONObject listAdvertisement(HttpServletRequest request){
         return advertisementService.listAllAdvertisement(CommonUtil.request2Json(request));
