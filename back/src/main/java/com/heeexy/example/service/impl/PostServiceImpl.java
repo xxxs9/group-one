@@ -220,4 +220,20 @@ public class PostServiceImpl implements PostService {
         }
         return CommonUtil.successJson(list);
     }
+
+
+    /********************************************小程序数据****************************************************/
+
+    /**
+     * 获取帖子详情
+     * @param jsonObject 帖子ID ，当前用户ID
+     * @return 帖子详情
+     */
+    @Override
+    public JSONObject getDetailById(JSONObject jsonObject) {
+        JSONObject postDetail = queryPostById(jsonObject);
+
+
+        return null;
+    }
 }

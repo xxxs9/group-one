@@ -113,12 +113,6 @@
     </update>
 
     <!--统计数据总数-->
-    <select id="countUser" resultType="java.lang.Integer">
-        SELECT count(0)
-        FROM post_table p
-        WHERE p.post_state = '0'
-    </select>
-
     <!--帖子详情Map-->
     <resultMap id="postDetailMap" type="com.heeexy.example.util.model.One2Many">
         <id column="postId" property="postId"/>
@@ -126,6 +120,9 @@
         <result column="postAddress" property="postAddress"></result>
         <result column="priceFloor" property="priceFloor"></result>
         <result column="postText" property="postText"></result>
+        <result column="postTime" property="postTime" />
+        <result column="likeCount" property="likeCount"/>
+        <result column="likeOffset" property="likeOffset"/>
         <result column="postType" property="postType" />
         <result column="postOwnerId" property="postOwnerId"></result>
         <result column="priceTop" property="priceTop"></result>
@@ -141,6 +138,12 @@
     </resultMap>
 
     <!--根据帖子ID返回帖子详情-->
+    <select id="countUser" resultType="java.lang.Integer">
+        SELECT count(0)
+        FROM post_table p
+        WHERE p.post_state = '0'
+    </select>
+
     <select id="queryPostById" resultMap="postDetailMap">
         SELECT
           p.*,
@@ -154,6 +157,9 @@
                 post_text               postText,
                 post_owner_id           postOwnerId,
                 post_phone              postPhone,
+                post_time               postTime,
+                like_offset             likeOffset,
+                browse_offset           browseOffset,
                 post_type_id            postTypeId,
                 post_address            postAddress,
                 price_floor             priceFloor,
