@@ -7,8 +7,6 @@
         <result column="userId" property="userId" />
         <result column="postId" property="postId" />
         <result column="collectionTime" property="collectionTime" />
-        <result column="collectionState" property="collectionState" />
-        <result column="collectionCount" property="collectionCount" />
     </resultMap>
 
     <select id="getByUserId" parameterType="java.lang.Integer" resultMap="collectionMap">
@@ -22,25 +20,20 @@
         ORDER BY collection_time DESC LIMIT #{offSet}, #{pageRow}
     </select>
 
-    <select id="countByUserId" resultType="java.lang.Integer">
-        SELECT COUNT (collection_id) FROM collection WHERE user_id = #{userId}
-    </select>
-
     <insert id="addCollection" useGeneratedKeys="true" keyProperty="collectionId">
-        INSERT INTO collection(user_id,post_id,collection_state)
-        VALUES (#{userId},#{postId},#{collectionState},#{collectionCount})
+        INSERT INTO collection(user_id,post_id)
+        VALUES (#{userId},#{postId})
     </insert>
 
-    <update id="removeCollection">
-        UPDATE collection SET collection_state = #{collectionState},collection_count = #{collectionCount}
-        WHERE collection_id = #{collectionId}
-    </update>
+    <delete id="deleteCollection">
+        DELETE FROM collection WHERE post_id = #{postId} AND user_id = #{userId}
+    </delete>
 
-    <select id="getByPostId" resultType="java.lang.Integer">
-        SELECT COUNT(0) FROM collection WHERE post_id = #{postId} AND collection_state = 1
+    <select id="getByPostIdCount" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM collection WHERE post_id = #{postId} AND user_id = #{userId}
     </select>
 
-    <select id="getByCollectionCount" resultType="java.lang.Integer">
-        SELECT collection_count FROM collection WHERE user_id = #{userId}
+    <select id="getByUserIdCount" resultType="java.lang.Integer">
+        SELECT COUNT(0) FROM collection WHERE user_id = #{userId}
     </select>
 </mapper>

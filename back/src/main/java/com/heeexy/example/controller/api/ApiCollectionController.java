@@ -1,11 +1,9 @@
-package com.heeexy.example.controller;
-
+package com.heeexy.example.controller.api;
 
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.service.impl.CollectionServiceImpl;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,17 +13,18 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author L-YX
  * @version 1.0
- * @description
- * @data 2019-06-20 16:26
+ * @description 用户收藏接口
+ * @data 2019-06-28 09:50
  */
+
 @RestController
-@RequestMapping("/collection")
-public class CollectionController {
+@RequestMapping("/api/collection")
+public class ApiCollectionController {
     @Autowired
     CollectionServiceImpl collectionService;
 
     /**
-     * 用户收藏列表
+     * 前台用户收藏列表接口
      */
     @RequestMapping("/collectionList")
     public JSONObject collectionList(HttpServletRequest request) {
@@ -33,7 +32,7 @@ public class CollectionController {
     }
 
     /**
-     * 删除收藏中的帖子
+     * 前台删除收藏中的帖子接口
      */
     @RequestMapping("/deleteCollection")
     public JSONObject deleteCollection(@RequestBody JSONObject requestJson){
@@ -41,7 +40,7 @@ public class CollectionController {
     }
 
     /**
-     * 添加收藏
+     * 前台添加收藏接口
      */
     @RequestMapping("/addComment")
     public JSONObject addComment(@RequestBody JSONObject requestJson){

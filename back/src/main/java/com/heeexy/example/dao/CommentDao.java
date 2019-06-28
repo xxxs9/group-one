@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * @author: L-YX
- * @description:
+ * @description: 评论方法接口
  * @data: 2019-06-17 20:50
  * @version: 1.0
  */
@@ -29,7 +29,7 @@ public interface CommentDao {
 
     /**
      * 根据评论id去改变评论的状态来决定评论的显示/隐藏
-     * @param
+     * @param jsonObject
      * @return int
      */
     int removeComment(JSONObject jsonObject);
@@ -51,7 +51,7 @@ public interface CommentDao {
     /**
      * 根据评论用户id查询评论总数
      * @param jsonObject
-     * @return
+     * @return int
      */
     int countByCommentUserId(JSONObject jsonObject);
 
@@ -65,7 +65,7 @@ public interface CommentDao {
     /**
      * 根据接收评论用户id查询评论总数
      * @param jsonObject
-     * @return
+     * @return int
      */
     int countByAcceptUserId(JSONObject jsonObject);
 

@@ -38,7 +38,7 @@ public class AdvertisementController {
     }
 
     /**
-     * 上传广告图片接口
+     * 后台上传广告图片接口
      */
     @RequestMapping(value = "/upload")
     public Map imgUpload(HttpServletRequest req, MultipartHttpServletRequest multiReq) throws IOException {
@@ -71,7 +71,7 @@ public class AdvertisementController {
     }
 
     /**
-     * 增加广告接口
+     * 后台增加广告接口
      */
     @RequestMapping("/add")
     public JSONObject addAdvertisement (@RequestBody JSONObject requestJson) {
@@ -81,7 +81,7 @@ public class AdvertisementController {
     }
 
     /**
-     * 移除广告接口
+     * 后台移除广告接口
      */
     @PostMapping("/remove")
     public JSONObject removeAdvertisement(@RequestBody JSONObject requestJson) {
@@ -89,7 +89,7 @@ public class AdvertisementController {
     }
 
     /**
-     * 修改广告接口
+     * 后台修改广告接口
      */
     @PostMapping("/update")
     public JSONObject updateAdvertisement(@RequestBody JSONObject requestJson) {
@@ -98,7 +98,7 @@ public class AdvertisementController {
     }
 
     /**
-     * 删除广告接口
+     * 后台删除本地文件夹图片接口
      */
     @PostMapping("/delete")
     public JSONObject delete (@RequestBody JSONObject jsonObject) {
@@ -106,13 +106,4 @@ public class AdvertisementController {
         file.delete();
         return CommonUtil.successJson();
     }
-
-    /**
-     * 前台广告轮播接口
-     */
-    @RequestMapping("/advertisementList")
-    public JSONObject advertisementList(HttpServletRequest request){
-        return advertisementService.advertisementList(CommonUtil.request2Json(request));
-    }
-
 }

@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * @author: L-YX
- * @description:
+ * @description: 评论逻辑处理方法接口
  * @data: 2019-06-18 11:20
  * @version: 1.0
  */
