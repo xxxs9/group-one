@@ -11,13 +11,21 @@
         <result column="postId" property="postId"/>
         <result column="postText" property="postText"/>
         <result column="postState" property="postState"/>
-
         <result column="browseTime" property="browseTime"/>
 
     </resultMap>
-    <update id="removeRecord">
+    <update id="updateRecord">
+
+        UPDATE browse_records
+        SET last_browse_time = #{browseTime}
+        WHERE user_uuid = #{uuId} AND post_id = #{postId}
 
     </update>
+
+    <insert id="addRecord">
+        INSERT INTO browse_records(user_uuid, post_id)
+        VALUES (#{uuId},#{postId})
+    </insert>
 
     <select id="getRecords" resultMap="recordMap">
         SELECT
@@ -75,5 +83,42 @@
         FROM browse_records
 
 
+    </select>
+
+    <!--根据帖子id查询浏览过此帖子的uuId -->
+    <select id="getUUIDByPostId" resultType="com.alibaba.fastjson.JSONObject">
+--         SELECT
+--         u.*,
+--         b.post_id                                            postId,
+--         b.last_browse_time                                   browseTime
+--         FROM
+--               (
+--                  SELECT
+--                      id                                      userId,
+--                      uuid                                    uuId,
+--                      username                                username,
+--                      iconurl                                 iconUrl,
+--                  FROM example.user
+--               ) u
+--         LEFT JOIN browse_records b on b.user_uuid = u.uuId
+--         LEFT JOIN post_table p on p.post_id = b.post_id
+--         WHERE
+--         b.post_id = #{postId}
+--         ORDER BY browseTime DESC
+          SELECT
+            DISTINCT(b.user_uuid)     uuId
+            from user u, browse_records b
+            where u.uuid = b.user_uuid
+            and b.post_id = #{postId}
+
+    </select>
+    <select id="getRecordsByUUID" resultMap="recordMap">
+        SELECT
+        DISTINCT(post_id)                  postId,
+        MAX(last_browse_time)              browseTime,
+        user_uuid                          uuId
+        FROM  browse_records
+        WHERE user_uuid = #{uuId}
+        GROUP BY post_id
     </select>
 </mapper>

@@ -3,9 +3,9 @@
     <div class="filter-container">
       <el-form>
         <el-form-item>
-          <el-form class="small-space" inline="true" :model="tempPerm">
+          <el-form class="small-space" :inline="true" :model="tempPerm">
             <el-form-item>
-              <el-input type="text" :type="queryInput" v-model="tempPerm.querykey" placeholder="输入用户昵称关键字搜索"/>
+              <el-input type="text"  v-model="tempPerm.querykey" placeholder="输入用户昵称关键字搜索"/>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" class="el-icon-search" @click="getList"></el-button>
@@ -79,24 +79,21 @@
 
           <!--</div>-->
 
-
+            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
             <el-checkbox-group v-model="permlist" @change="handleCheckedPermChange">
               <div v-for="eperms in perms">
-                <el-checkbox :checked="true" v-if="eperms.state==1" :label="eperms.permId" :key="eperms.permId">{{eperms.permName}}
+                <el-checkbox :checked="true" v-if="eperms.state==1" :label="eperms" :key="eperms">{{eperms.permName}}
                 </el-checkbox>
-                <el-checkbox :checked="false" v-if="eperms.state==0" :label="eperms.permId" :key="eperms.permId">{{eperms.permName}}
+                <el-checkbox :checked="false" v-if="eperms.state==0" :label="eperms" :key="eperms">{{eperms.permName}}
                 </el-checkbox>
               </div>
             </el-checkbox-group>
-
-
-
 
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button v-if="dialogStatus=='update'" type="primary" v-else @click="updatePerm">修 改</el-button>
+        <el-button v-if="dialogStatus=='update'" type="primary" @click="updatePerm">修 改</el-button>
       </div>
     </el-dialog>
   </div>
@@ -206,20 +203,24 @@
       },
       handleCheckAllChange(val) {
         console.log(val);
-        console.log(this.permlist);
-        this.tempPerm.epermissionList = val ? this.permlist : [];
 
+        console.log(this.perms);
+
+        this.permlist = val ? this.perms : [];
+        console.log(this.permlist);
+        this.tempPerm.epermissionList = this.permlist;
+        console.log(this.tempPerm.epermissionList);
         this.isIndeterminate = false;
       },
       handleCheckedPermChange(value) {
         let checkedCount = value.length;
         // console.log(value===this.permlist);
 
-        // console.log(this.permlist);
+        console.log(value);
         this.tempPerm.epermissionList = value;
         console.log(this.tempPerm.epermissionList);
-        this.checkAll = checkedCount === this.permlist.length;
-        this.isIndeterminate = checkedCount > 0 && checkedCount < this.permlist.length;
+        this.checkAll = checkedCount === this.perms.length;
+        this.isIndeterminate = checkedCount > 0 && checkedCount < this.perms.length;
       },
       updatePerm(){
         //删除用户权限
@@ -247,6 +248,8 @@
       refreshPerm($index){
         //恢复用户权限
         let _vue = this;
+        let perms = this.list[$index];
+        this.tempPerm.uuId = perms.uuId;
         this.api({
           url: "/euser/refreshPerm",
           method: "post",

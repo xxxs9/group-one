@@ -149,4 +149,40 @@ public interface ExternalUserDao {
      * @return
      */
     public List<JSONObject> getPermByUUID(JSONObject jsonObject);
+
+    /**
+     * 根据UUID获取该用户所发的帖子id
+     * @param uuId
+     * @return
+     */
+    List<JSONObject> getPostByUUID(@Param("uuId") Integer uuId);
+
+    /**
+     * 获取用户关注的用户uuid
+     * @param uuId
+     * @return
+     */
+    List<JSONObject> getMyIdolId(@Param("uuId") Integer uuId);
+
+    /**
+     * 统计用户发的帖子数
+     * @param uuId
+     * @return
+     */
+    int countPostByUUID(@Param("uuId") Integer uuId);
+
+    /**
+     * 获取用户点赞过的帖子id
+     * @param uuId
+     * @return
+     */
+    List<JSONObject> getPostIdByLike(@Param("uuId") Integer uuId);
+
+    /**
+     * 根据uuId查询用户头像
+     * @param uuId
+     * @return
+     */
+    JSONObject findIconById(@Param("uuId")Integer uuId);
+
 }

@@ -127,22 +127,26 @@ public class ExternalUserServiceImpl implements ExternalUserService {
 //
 //        }
         List<Integer> epermissions = (List<Integer>) jsonObject.get("epermissionList");
+        System.out.println(epermissions);
         Integer uuId = jsonObject.getInteger("uuId");
-        System.out.println(userDao.getPermByUUID(jsonObject));
+//        System.out.println(userDao.getPermByUUID(jsonObject));
         if(userDao.getPermByUUID(jsonObject).size()==0){
             //若用户不拥有权限，则给用户添加所有权限
-            System.out.println(userDao.getPermByUUID(jsonObject).size());
+//            System.out.println(userDao.getPermByUUID(jsonObject).size());
+
             userDao.addPermission(uuId,epermissions);
 
         }else if(epermissions.size()==userDao.getPerm(jsonObject).size()){
             //若前台传回来的权限列表长度与所有权限列表长度相等，则将所有权限置为有效
             userDao.refreshPermissionStatus(jsonObject);
 
-        }else if(epermissions.size()==userDao.getPermByUUID(jsonObject).size()){
-            //若前台传回来的权限列表长度与用户拥有的权限列表长度相同，则用户权限并未改动，直接返回
-            return CommonUtil.successJson();
-
-        }else if(epermissions.size()==0){
+        }
+//        else if(epermissions.size()==userDao.getPermByUUID(jsonObject).size()){
+//            //若前台传回来的权限列表长度与用户拥有的权限列表长度相同，则用户权限并未改动，直接返回
+//            return CommonUtil.successJson();
+//
+//        }
+        else if(epermissions.size()==0){
             userDao.removeUserAllPermission(jsonObject);
         }
         else {
@@ -165,7 +169,13 @@ public class ExternalUserServiceImpl implements ExternalUserService {
 
     @Override
     public JSONObject addPermission(JSONObject jsonObject) {
-//        userDao.addPermission(jsonObject);
+        List<Integer> epermissions = new ArrayList<>();
+        epermissions.add(101);
+        epermissions.add(102);
+        epermissions.add(103);
+        epermissions.add(104);
+        Integer uuId = jsonObject.getInteger("uuId");
+        userDao.addPermission(uuId,epermissions);
         return CommonUtil.successJson();
     }
 
@@ -211,6 +221,27 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         return CommonUtil.successPage(allPerm);
     }
 
+    @Override
+    public JSONObject getPostByUUID(JSONObject jsonObject) {
+        return null;
+    }
+
+    @Override
+    public JSONObject getPostIdByLike(JSONObject jsonObject) {
+        return null;
+    }
+
+    @Override
+    public JSONObject findIconById(JSONObject jsonObject) {
+        return null;
+    }
+
+    @Override
+    public JSONObject getMyself(JSONObject jsonObject) {
+        Integer uuId = jsonObject.getInteger("uuId");
+        userDao.countPostByUUID(uuId);
+        return null;
+    }
 
 
 }

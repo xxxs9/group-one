@@ -69,5 +69,33 @@ public interface ExternalUserService {
      */
     JSONObject getPerm(JSONObject jsonObject);
 
+
+    /**
+     * 根据UUID获取该用户所发的帖子id
+     * @param jsonObject
+     * @return
+     */
+    JSONObject getPostByUUID(JSONObject jsonObject);
+
+    /**
+     * 获取用户点赞过的帖子id
+     * @param jsonObject
+     * @return
+     */
+    JSONObject getPostIdByLike(JSONObject jsonObject);
+
+    /**
+     * 根据uuId查询用户头像
+     * @param jsonObject
+     * @return
+     */
+    JSONObject findIconById(JSONObject jsonObject);
+
+    /**
+     * 获取用户信息
+     * @param jsonObject
+     * @return
+     */
+    JSONObject getMyself(JSONObject jsonObject);
 }
 

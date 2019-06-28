@@ -27,4 +27,7 @@ public interface SortDao {
     int updateSort(JSONObject jsonObject);
 
     int deleteSort(JSONObject jsonObject);
+    int recoverySort(JSONObject jsonObject);
+    List<JSONObject> getSortByName(JSONObject jsonObject);
+    List<JSONObject> getSortById(JSONObject jsonObject);
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.SortDao;
 import com.heeexy.example.service.SortService;
 import com.heeexy.example.util.CommonUtil;
+import com.heeexy.example.util.constants.ErrorEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +25,14 @@ public class SortServiceImpl implements SortService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject addSort(JSONObject jsonObject) {
-        sortDao.addSort(jsonObject);
-        return CommonUtil.successJson();
+        List<JSONObject> list = sortDao.getSortByName(jsonObject);
+        if(list.size()>0){
+            return CommonUtil.errorJson(ErrorEnum.E_10012);
+        }else{
+            sortDao.addSort(jsonObject);
+            return CommonUtil.successJson();
+        }
+
     }
 
     @Override
@@ -47,8 +54,14 @@ public class SortServiceImpl implements SortService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject updateSort(JSONObject jsonObject) {
-        sortDao.updateSort(jsonObject);
-        return CommonUtil.successJson();
+        List<JSONObject> list = sortDao.getSortById(jsonObject);
+        if(list.size()>0){
+            return CommonUtil.errorJson(ErrorEnum.E_10012);
+        }else{
+            sortDao.updateSort(jsonObject);
+            return CommonUtil.successJson();
+        }
+
     }
 
     @Override
@@ -56,6 +69,14 @@ public class SortServiceImpl implements SortService {
     public JSONObject deleteSort(JSONObject jsonObject) {
         sortDao.deleteSort(jsonObject);
         return CommonUtil.successJson();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public JSONObject recoverySort(JSONObject jsonObject) {
+        sortDao.recoverySort(jsonObject);
+
+        return  CommonUtil.successJson();
     }
 
 

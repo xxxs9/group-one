@@ -69,6 +69,6 @@
             w.template_id                                     id,
             w.template_name                                   tname
         from message_template w
-        where w.template_name = #{tname} and  w.template_id != #{id} and  w.status = '1'
+        where  w.status = '1' and w.template_name = #{tname} and  w.template_id != #{id}
     </select>
 </mapper>

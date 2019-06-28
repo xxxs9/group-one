@@ -4,15 +4,16 @@
 <mapper namespace="com.heeexy.example.dao.TagDao">
 
     <insert id="addTag" parameterType="com.alibaba.fastjson.JSONObject">
-        INSERT INTO message_template
-            (template_name,template_content)
+        INSERT INTO tag
+            (tag_name,parent_id,rank)
         VALUES
-            (#{tname},#{content})
+            (#{name},#{parentId},#{rank})
     </insert>
 
     <select id="countTag" resultType="Integer">
         SELECT count(*)
-        FROM message_template
+        FROM tag
+        where status = '1'
     </select>
 
     <select id="listTag" resultType="com.alibaba.fastjson.JSONObject">
@@ -22,7 +23,12 @@
             t.parent_id                                       parentId,
             t.rank                                            rank
         FROM tag t
-        where   t.status = '1'
+        <where>
+            t.status = '1'
+            <if test="queryText != null and queryText != '' ">
+               and t.tag_name LIKE concat('%',#{queryText},'%')
+            </if>
+        </where>
         ORDER BY t.tag_id ASC
         LIMIT #{offSet}, #{pageRow}
     </select>
@@ -41,17 +47,27 @@
     <!--根据标签名查找标签ID-->
     <select id="getTagByName" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
-          tag_id tagId
+          t.tag_id tagId,
+          t.rank  rank
+        FROM tag t
+        WHERE t.tag_name = #{tagName}
+    </select>
+
+    <!--查找是否重名-->
+    <select id="countTagByName" resultType="Integer">
+        SELECT
+          count(0)
         FROM tag
         WHERE tag_name = #{tagName}
     </select>
 
     <update id="updateTag" parameterType="com.alibaba.fastjson.JSONObject">
-        UPDATE message_template
+        UPDATE tag
         SET
-            template_name = #{tname},
-            template_content = #{content}
-        WHERE template_id = #{id}
+            tag_name = #{name},
+            parent_id = #{parentId},
+            rank = #{rank}
+        WHERE tag_id= #{id}
     </update>
     <update id="updateByStatus" parameterType="com.alibaba.fastjson.JSONObject">
         UPDATE tag
@@ -63,4 +79,22 @@
           </foreach>)
 
     </update>
+
+    <insert id="addListTag" parameterType="com.heeexy.example.util.model.Tag">
+        INSERT INTO tag
+            (tag_id,tag_name,parent_id,rank)
+        VALUES
+            (#{id},#{tagName},#{parentId},#{rank})
+    </insert>
+
+    <delete id="deleteAllTag" >
+        delete from tag
+    </delete>
+
+    <select id="getTagByParentId" resultType="Integer">
+        select
+            w.rank                                   rank
+        from tag w
+        where w.status = '1' and w.tag_id = #{parentId}
+    </select>
 </mapper>

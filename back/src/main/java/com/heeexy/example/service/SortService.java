@@ -26,5 +26,6 @@ public interface SortService {
      */
     JSONObject updateSort(JSONObject jsonObject);
     JSONObject deleteSort(JSONObject jsonObject);
+    JSONObject recoverySort(JSONObject jsonObject);
 
 }
