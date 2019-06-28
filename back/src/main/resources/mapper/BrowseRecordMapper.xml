@@ -85,6 +85,7 @@
 
     </select>
 
+    <!--根据帖子id查询浏览过此帖子的uuId -->
     <select id="getUUIDByPostId" resultType="com.alibaba.fastjson.JSONObject">
 --         SELECT
 --         u.*,

@@ -36,6 +36,7 @@ public class PostController {
      * @param request 无参或者搜索数据
      * @return 返回帖子列表
      */
+    @RequiresPermissions("post:list")
     @GetMapping("/list")
     public JSONObject listUser(HttpServletRequest request) {
         return postService.listPost(CommonUtil.request2Json(request));
@@ -46,6 +47,7 @@ public class PostController {
      * @param requestJson 帖子ID，修改数量
      * @return
      */
+    @RequiresPermissions("post:update")
     @PostMapping("/updateLikeOffset")
     public JSONObject updateLikeOffset(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "likeOffset,postId");
@@ -57,6 +59,7 @@ public class PostController {
      * @param requestJson 帖子ID，修改数量
      * @return
      */
+    @RequiresPermissions("post:update")
     @PostMapping("/updateBrowseOffset")
     public JSONObject updateBrowseOffset(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "browseOffset,postId");
@@ -68,6 +71,7 @@ public class PostController {
      * @param requestJson 帖子ID，状态
      * @return
      */
+    @RequiresPermissions("post:update")
     @PostMapping("/updatePostState")
     public JSONObject updatePostState(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "postState,postId");
@@ -118,6 +122,7 @@ public class PostController {
      * @param requestJson 帖子ID，修改的内容（帖子内容、类型、电话、地址）
      * @return
      */
+    @RequiresPermissions("post:update")
     @PostMapping("/updatePost")
     public JSONObject updatePost(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "postId");
@@ -130,6 +135,7 @@ public class PostController {
      * @param jsonObject 图片地址
      * @return
      */
+    @RequiresPermissions("post:delete")
     @PostMapping("/deletePostImg")
     public JSONObject deletePostImg (@RequestBody JSONObject jsonObject) {
         File file = new File(jsonObject.getString("desFilePath"));
@@ -142,6 +148,7 @@ public class PostController {
      * @param requestJson 帖子ID，标签名
      * @return
      */
+    @RequiresPermissions("post:delete")
     @PostMapping("/deletePostTag")
     public JSONObject deletePostTag (@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "postId,tagName");
@@ -153,6 +160,7 @@ public class PostController {
      * @param requestJson 帖子ID，标签ID数组
      * @return
      */
+    @RequiresPermissions("post:add")
     @PostMapping("/addPostTag")
     public JSONObject addPostTag(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "postId,addPostTagId");

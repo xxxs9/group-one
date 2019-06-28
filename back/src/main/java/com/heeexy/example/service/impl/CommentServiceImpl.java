@@ -3,6 +3,7 @@ package com.heeexy.example.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.CommentDao;
 import com.heeexy.example.dao.ExternalUserDao;
+import com.heeexy.example.dao.PostDao;
 import com.heeexy.example.service.CommentService;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import java.util.List;
 
 /**
  * @author L-YX
- * @description
+ * @description 评论逻辑处理实现方法
  * @data 2019-06-18 11:25
  */
 @Service
@@ -25,8 +26,11 @@ public class CommentServiceImpl implements CommentService {
     private ExternalUserDao externalUserDao;
 
     @Autowired
-    private PostServiceImpl postService;
+    private PostDao postDao;
 
+    /**
+     * 评论列表
+     */
     @Override
     public JSONObject listAllComment(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
@@ -93,9 +97,11 @@ public class CommentServiceImpl implements CommentService {
     public JSONObject getByPostId(JSONObject jsonObject) {
         int postId = commentDao.getByCommentId(jsonObject);
         jsonObject.put("postId", postId);
-        List<JSONObject> list = commentDao.getByPostId(jsonObject);
-        int count = commentDao.getByPostIdCount(jsonObject);
-        jsonObject.put("postDetail", postService.queryPostById(jsonObject));
-        return CommonUtil.successPage(jsonObject, list, count);
+        JSONObject DetailData = postDao.queryPostById(jsonObject);
+        List<JSONObject> comment = commentDao.getByPostId(jsonObject);
+        JSONObject postUser = externalUserDao.findUserById(DetailData.getInteger("postOwnerId"));
+        DetailData.put("externalUser",postUser);
+        DetailData.put("comments",comment);
+        return CommonUtil.successJson(DetailData);
     }
 }

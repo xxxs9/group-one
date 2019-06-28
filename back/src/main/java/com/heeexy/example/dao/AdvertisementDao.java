@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * @author: L-YX
- * @description:
+ * @description: 广告方法接口
  * @data: 2019-06-17 20:51
  * @version: 1.0
  */
