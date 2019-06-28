@@ -67,5 +67,25 @@
             status = '2'
         WHERE categories_id = #{id}
     </update>
+    <update id="recoverySort" parameterType="com.alibaba.fastjson.JSONObject">
+        UPDATE post_categories
+        SET
+            status = '1'
+        WHERE categories_id = #{id}
+    </update>
+    <select id="getSortByName" resultType="com.alibaba.fastjson.JSONObject">
+        select
+            w.categories_id                                     id,
+            w.categories_name                                   sortname
+        from post_categories w
+        where w.categories_name = #{sortname} and  w.status = '1'
+    </select>
+    <select id="getSortById" resultType="com.alibaba.fastjson.JSONObject">
+        select
+            w.categories_id                                     id,
+            w.categories_name                                   sortname
+        from post_categories w
+        where w.status = '1' and w.categories_name = #{sortname} and  w.categories_id != #{id}
+    </select>
 
 </mapper>

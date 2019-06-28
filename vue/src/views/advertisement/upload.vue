@@ -181,7 +181,7 @@
         this.dialogStatus = "create";
         this.dialogFormVisible = true
         this.$refs.upload.clearFiles();
-
+        this.tempAdvertisement.imgList = [];
       },
       showUpdate($index) {
         let advertisement = this.list[$index];
@@ -278,9 +278,7 @@
         this.tempAdvertisement.imgList.push(response.url);
         console.log(response.url);
         console.log("传回的地址：" + response.desFilePath)
-        // this.$ref.upload.clearFiles();
-        this.$refs.updateImg.style.display = 'none';
-        this.$refs.upload.clearFiles();
+        this.$refs.updateImg.style.display = "none"
       },
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url;

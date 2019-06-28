@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * @author L-YX
- * @description
+ * @description 收藏逻辑处理实现方法
  * @data 2019-06-18 13:48
  */
 @Service
@@ -26,7 +26,7 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     public JSONObject getByUserId(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
-        int count = collectionDao.countByUserId(jsonObject);
+        int count = collectionDao.getByUserIdCount(jsonObject);
         List<JSONObject> list = collectionDao.getByUserId(jsonObject);
         return CommonUtil.successPage(jsonObject, list, count);
     }
@@ -37,20 +37,15 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     public JSONObject addCollection(JSONObject jsonObject) {
         //根据帖子id判断此贴是否已被收藏
-        int exist = collectionDao.getByPostId(jsonObject);
+        int exist = collectionDao.getByPostIdCount(jsonObject);
         if (exist>0) {
             return CommonUtil.errorJson(ErrorEnum.E_10010);
         }else {
-            int count = collectionDao.getByCollectionCount(jsonObject);
-            if (count==0) {
-                count = 1;
-            }else if (count>200) {
+            int count = collectionDao.getByUserIdCount(jsonObject);
+            if (count>200) {
                 return CommonUtil.errorJson(ErrorEnum.E_10011);
             }
-            count = count+1;
-            jsonObject.put("collectionCount",count );
         }
-        jsonObject.put("collectionState",1 );
         collectionDao.addCollection(jsonObject);
         return CommonUtil.successJson();
     }
@@ -59,11 +54,9 @@ public class CollectionServiceImpl implements CollectionService {
      * 用户移除收藏中的帖子
      */
     @Override
-    public JSONObject removeCollection(JSONObject jsonObject) {
+    public JSONObject deleteCollection(JSONObject jsonObject) {
         //根据用户id去查总数
-        int count = collectionDao.getByCollectionCount(jsonObject);
-        jsonObject.put("collectionCount",count-1 );
-        collectionDao.removeCollection(jsonObject);
+        collectionDao.deleteCollection(jsonObject);
         return CommonUtil.successJson();
     }
 }

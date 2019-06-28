@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * @author: L-YX
- * @description:
+ * @description: 用户收藏方法接口
  * @data: 2019-06-17 20:51
  * @version: 1.0
  */
@@ -23,7 +23,7 @@ public interface CollectionDao {
      * @param jsonObject
      * @return int
      */
-    int countByUserId(JSONObject jsonObject);
+    int getByUserIdCount(JSONObject jsonObject);
 
     /**
      * 添加收藏
@@ -37,18 +37,12 @@ public interface CollectionDao {
      * @param jsonObject
      * @return int
      */
-    int removeCollection(JSONObject jsonObject);
+    int deleteCollection(JSONObject jsonObject);
 
     /**
      * 根据帖子id去判断帖子是否被收藏
      * @param jsonObject
      * @return int
      */
-    int getByPostId(JSONObject jsonObject);
-
-    /**
-     * 根据用户id去查询此用户收藏的帖子总数
-     * @return
-     */
-    int getByCollectionCount(JSONObject jsonObject);
+    int getByPostIdCount(JSONObject jsonObject);
 }

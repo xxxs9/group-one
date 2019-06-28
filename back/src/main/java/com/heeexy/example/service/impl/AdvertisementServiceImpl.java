@@ -9,12 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author L-YX
- * @description
+ * @description 广告逻辑处理实现方法
  * @data 2019-06-18 14:32
  */
 @Service
@@ -53,6 +54,10 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     @Override
     public JSONObject updateAdvertisement(JSONObject jsonObject) {
         JSONArray src = jsonObject.getJSONArray("imgList");
+        String url = jsonObject.getString("srcUrl");
+        String desFilePath = url.replaceFirst("http://localhost:8080/","D://" );
+        File localFile  = new File(desFilePath);
+        localFile.delete();
         if (src.size()!=0){
             for (Object o : src) {
                 jsonObject.put("srcUrl",o );
@@ -72,7 +77,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     /**
-     * 前台广告轮播
+     * 广告轮播
      */
     @Override
     public JSONObject advertisementList(JSONObject jsonObject) {

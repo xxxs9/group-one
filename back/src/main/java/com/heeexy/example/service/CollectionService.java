@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * @author: L-YX
- * @description:
+ * @description: 收藏逻辑处理方法接口
  * @data: 2019-06-18 13:46
  * @version: 1.0
  */
@@ -30,18 +30,5 @@ public interface CollectionService {
      * @param jsonObject
      * @return JSONObject
      */
-    JSONObject removeCollection(JSONObject jsonObject);
-
-//    /**
-//     * 根据帖子id去判断帖子是否被收藏
-//     * @param jsonObject
-//     * @return jsonObject
-//     */
-//    JSONObject getByPostId(JSONObject jsonObject);
-//
-//    /**
-//     * 根据用户id去查询此用户收藏的帖子总数
-//     * @return jsonObject
-//     */
-//    JSONObject getByCollectionCount(JSONObject jsonObject);
+    JSONObject deleteCollection(JSONObject jsonObject);
 }

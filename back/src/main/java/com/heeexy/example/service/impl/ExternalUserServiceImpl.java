@@ -169,7 +169,13 @@ public class ExternalUserServiceImpl implements ExternalUserService {
 
     @Override
     public JSONObject addPermission(JSONObject jsonObject) {
-//        userDao.addPermission(jsonObject);
+        List<Integer> epermissions = new ArrayList<>();
+        epermissions.add(101);
+        epermissions.add(102);
+        epermissions.add(103);
+        epermissions.add(104);
+        Integer uuId = jsonObject.getInteger("uuId");
+        userDao.addPermission(uuId,epermissions);
         return CommonUtil.successJson();
     }
 
@@ -215,6 +221,27 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         return CommonUtil.successPage(allPerm);
     }
 
+    @Override
+    public JSONObject getPostByUUID(JSONObject jsonObject) {
+        return null;
+    }
+
+    @Override
+    public JSONObject getPostIdByLike(JSONObject jsonObject) {
+        return null;
+    }
+
+    @Override
+    public JSONObject findIconById(JSONObject jsonObject) {
+        return null;
+    }
+
+    @Override
+    public JSONObject getMyself(JSONObject jsonObject) {
+        Integer uuId = jsonObject.getInteger("uuId");
+        userDao.countPostByUUID(uuId);
+        return null;
+    }
 
 
 }

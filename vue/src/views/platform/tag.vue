@@ -3,6 +3,8 @@
   .el-tree-node__label{
     font-size: 25px;
     font-weight: bolder;
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+
   }
 </style>
 <template>
@@ -14,18 +16,26 @@
       accordion
       show-checkbox
       node-key="id"
+
       @node-click="handleNodeClick" >
     </el-tree>
     <el-form>
-      <el-form-item>
-        <el-button type="primary" icon="plus" @click="showCreate" v-if="hasPerm('post:add')">添加
-        </el-button>
-        <el-button type="primary" icon="plus" @click="showCreate" v-if="hasPerm('article:add')">批量添加
-        </el-button>
-        <el-button @click="getData">获取数据</el-button>
+      <form class="form-horizontal" enctype="multipart/form-data" >
+        <br/>
+        <br/>
+        <label>请输入：</label>
+          <input type="text" v-model="tempTag.queryText" placeholder="输入标签名字搜索"width="300"/>
+
+          <el-button type="primary" class="el-icon-search" @click="getList"></el-button>
+
+        <label>请选择excel表：</label>
+        <input class="form-input" type="file" name="filename" @change="getFile($event)" width="300"></input>
+        <el-button type="primary" id="my_file"  @click="uploadFileMethod($event)">增量添加</el-button>
+
+        <el-button type="primary" icon="plus" @click="uploadFileCoverMethod($event)" >覆盖添加</el-button>
         <el-button type="danger" icon="delete" @click="removeUser()" v-if="hasPerm('post:delete')">删除
         </el-button>
-      </el-form-item>
+      </form>
     </el-form>
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
@@ -35,6 +45,7 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="标签名称" prop="name" style="width: 60px;"></el-table-column>
+
       <el-table-column align="center" label="上级标签"  prop="parentId" width="100">
         <template slot-scope="scope">
           <el-tag  v-if="scope.row.rank==1" style="margin-right: 3px;" type="success">无</el-tag>
@@ -67,12 +78,14 @@
         <el-form-item label="上级标签 " required>
           <el-select v-model="tempTag.parentId" placeholder="请选择" >
             <el-option
-            key="0"
-            label="无"
-            value="0"
-            ></el-option>
+
+            :key="beginTag.id"
+            :label="beginTag.name"
+            :value="beginTag.id">
+            </el-option>
             <el-option
               v-for="item in typeOption"
+              v-if="item.id != tempTag.parentId"
               :key="item.id"
               :label="item.name"
               :value="item.id">
@@ -80,14 +93,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="标签名称" required>
-          <el-input type="text" v-model="tempTag.tname">
+          <el-input type="text" v-model="tempTag.name">
           </el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button v-if="dialogStatus=='create'" type="success" @click="createUser">创 建</el-button>
-        <el-button type="primary" v-else @click="updateUser">修 改</el-button>
+        <el-button type="primary" @click="updateUser">修 改</el-button>
       </div>
     </el-dialog>
   </div>
@@ -112,7 +124,8 @@
         listQuery: {
           pageNum: 1,//页码
           pageRow: 50,//每页条数
-          name: ''
+          name: '',
+          queryText: ''
         },
         dialogStatus: 'create',
         dialogFormVisible: false,
@@ -126,8 +139,15 @@
         tempTag: {
           id: "",
           name: "",
-          parentId: ""
-        }
+          parentId: "",
+          queryText: ""
+        },
+        beginTag: {
+          id: 0,
+          name: '无',
+          parentId: 1,
+          rank: 1
+        },
       }
     },
     created() {
@@ -136,10 +156,10 @@
     },
     computed:{
       treeData(){
-        let cloneData = JSON.parse(JSON.stringify(this.data))    // 对源数据深度克隆
+        let cloneData = JSON.parse(JSON.stringify(this.data));    // 对源数据深度克隆
         return cloneData.filter(father=>{
-          let branchArr = cloneData.filter(child=>father.id == child.parentId)    //返回每一项的子级数组
-          branchArr.length>0 ? father.children = branchArr : ''   //如果存在子级，则给父级添加一个children属性，并赋值
+          let branchArr = cloneData.filter(child=>father.id == child.parentId);   //返回每一项的子级数组
+          branchArr.length>0 ? father.children = branchArr : '';   //如果存在子级，则给父级添加一个children属性，并赋值
           return father.parentId==0;      //返回第一层
         });
       }
@@ -150,7 +170,6 @@
         if (!this.hasPerm('article:list')) {
           return
         }
-        this.listLoading = true;
         this.api({
           url: "/tag/listAllTag",
           method: "get",
@@ -163,6 +182,8 @@
       },
       getList() {
         //查询列表
+        this.listQuery.queryText = this.tempTag.queryText;
+
         if (!this.hasPerm('article:list')) {
           return
         }
@@ -182,22 +203,32 @@
         return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
       },
       showUpdate($index) {
-        let sort = this.list[$index];
-        alert(sort.imageUrl);
-        this.tempUser.id = sort.id;
-        this.tempUser.sortname = sort.sortname;
-        this.tempUser.imageUrl = sort.imageUrl;
+
+        this.tempTag.id = this.list[$index].id;
+        this.tempTag.name = this.list[$index].name;
+        this.tempTag.parentId = this.list[$index].parentId;
         this.dialogStatus = "update"
         this.dialogFormVisible = true
       },
-      getData(){
-        // alert(this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys()));
-        // console.log(this.$refs.tree.getCheckedKeys());
-        alert(this.$refs.tree.getCheckedKeys())
-      },
+
       handleNodeClick(data){
         // console.log(data)
         console.log(this.treeData)
+      },
+      handleSizeChange(val) {
+        //改变每页数量
+        this.listQuery.pageRow = val
+        this.handleFilter();
+      },
+      handleCurrentChange(val) {
+        //改变页码
+        this.listQuery.pageNum = val
+        this.getList();
+      },
+      handleFilter() {
+        //查询事件
+        this.listQuery.pageNum = 1
+        this.getList()
       },
       showCreate() {
         //显示新增对话框
@@ -206,43 +237,25 @@
         this.dialogStatus = "create"
         this.dialogFormVisible = true
       },
-      showUpdate($index) {
-        //显示修改对话框
-        this.tempTag.id = this.list[$index].id;
-        this.tempTag.content = this.list[$index].content;
-        this.dialogStatus = "update"
-        this.dialogFormVisible = true
-      },
-      createUser() {
-        //添加新用户
-        this.api({
-          url: "/sort/addSort",
-          method: "post",
-          data: this.tempUser
-        }).then(() => {
-          this.getList();
-          this.dialogFormVisible = false
-        })
-      },
+
+
       updateUser() {
         //修改用户信息
         let _vue = this;
         this.api({
-          url: "/sort/updateSort",
+          url: "/tag/updateTag",
           method: "post",
-          data: this.tempUser
+          data: this.tempTag
         }).then(() => {
           let msg = "修改成功";
           this.dialogFormVisible = false
-          if (this.userId === this.tempUser.userId) {
-            msg = '修改成功,部分信息重新登录后生效'
-          }
           this.$message({
             message: msg,
             type: 'success',
             duration: 1 * 1000,
             onClose: () => {
               _vue.getList();
+              _vue.getAllList();
             }
           })
         })
@@ -264,12 +277,63 @@
             method: "post",
             data: this.tempID,
           }).then(() => {
-            this.getList()
+            this.getAllList();
+            this.getList();
+
+
           }).catch(() => {
-            this.$message.error("删除失败")
+            this.$message.error("未选定,删除失败")
           })
         })
       },
+      getFile(event) {
+        this.file = event.target.files[0];
+        console.log(this.file);
+      },
+      uploadFileMethod(event){
+        if(this.file == undefined){
+          this.$message.error("文件为空");
+
+        }else {
+          event.preventDefault();
+          let _vue = this;
+          let formdata = new FormData();
+          formdata.append('filename', this.file);
+          let headers = {headers: {"Content-Type": "multipart/form-data"}}
+          this.api.post("/tag/importTag",formdata,headers).then(function(data){
+
+            _vue.getAllList();
+            _vue.getList();
+          },function(err){
+            console.log("err------: ");
+            console.log(err);
+          })
+        }
+
+
+      },
+      uploadFileCoverMethod(event){
+        if(this.file == undefined){
+          this.$message.error("文件为空");
+
+        }else {
+          event.preventDefault();
+          let _vue = this;
+
+          let formdata = new FormData();
+          formdata.append('filename', this.file);
+          let headers = {headers: {"Content-Type": "multipart/form-data"}}
+          this.api.post("/tag/importCoverTag",formdata,headers).then(function(data){
+            _vue.getAllList();
+            _vue.getList();
+          },function(err){
+            console.log("err------: ");
+            console.log(err);
+          })
+        }
+
+
+      }
     },
 
 
