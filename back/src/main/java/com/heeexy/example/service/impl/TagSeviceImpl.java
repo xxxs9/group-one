@@ -117,7 +117,7 @@ public class TagSeviceImpl implements TagSevice {
 
             if( row.getCell(0).getCellType() !=1){//循环时，得到每一行的单元格进行判断
 //                return CommonUtil.errorJson();
-                return CommonUtil.errorJson(ErrorEnum.E_500);
+                return CommonUtil.errorJson(ErrorEnum.E_10014);
 
 //                throw new MyException("导入失败(第"+(r+1)+"行,标签名称请设为文本格式)");
             }
@@ -128,7 +128,7 @@ public class TagSeviceImpl implements TagSevice {
 
             if(pName == null  || pName.isEmpty()){//判断是否为空
 //                throw new MyException("导入失败(第"+(r+1)+"行,id未填写)");
-                return CommonUtil.errorJson(ErrorEnum.E_503);
+                return CommonUtil.errorJson(ErrorEnum.E_10016);
 
             }
             JSONObject jsonObject =new JSONObject();
@@ -151,7 +151,7 @@ public class TagSeviceImpl implements TagSevice {
             }
             if( row.getCell(1).getCellType() !=1){//循环时，得到每一行的单元格进行判断
 //                return CommonUtil.errorJson();
-                return CommonUtil.errorJson(ErrorEnum.E_500);
+                return CommonUtil.errorJson(ErrorEnum.E_10015);
 
 //                throw new MyException("导入失败(第"+(r+1)+"行,标签名称请设为文本格式)");
             }
@@ -163,7 +163,7 @@ public class TagSeviceImpl implements TagSevice {
 
             if(tagName == null || tagName.isEmpty()){//判断是否为空
 //                throw new MyException("导入失败(第"+(r+1)+"行,用户名未填写)");
-                return CommonUtil.errorJson(ErrorEnum.E_400);
+                return CommonUtil.errorJson(ErrorEnum.E_10017);
             }
             jsonObject.put("tagName",tagName);
             int i = tagDao.countTagByName(jsonObject);
@@ -221,9 +221,11 @@ public class TagSeviceImpl implements TagSevice {
 
             Tag tag = new Tag();
 
-            if( row.getCell(1).getCellType() !=1){//循环时，得到每一行的单元格进行判断
+            if( row.getCell(0).getCellType() !=1){//循环时，得到每一行的单元格进行判断
 //                return CommonUtil.errorJson();
-                return CommonUtil.errorJson(ErrorEnum.E_500);
+                String string = "导入失败(第"+(r+1)+"行,父标签名称请设为文本格式)";
+
+                return  CommonUtil.errorJson(ErrorEnum.E_10014);
 
 //                throw new MyException("导入失败(第"+(r+1)+"行,标签名称请设为文本格式)");
             }
@@ -234,7 +236,7 @@ public class TagSeviceImpl implements TagSevice {
 
             if(pName == null  || pName.isEmpty()){//判断是否为空
 //                throw new MyException("导入失败(第"+(r+1)+"行,id未填写)");
-                return CommonUtil.errorJson(ErrorEnum.E_503);
+                return CommonUtil.errorJson(ErrorEnum.E_10016);
 
             }
             JSONObject jsonObject =new JSONObject();
@@ -260,7 +262,7 @@ public class TagSeviceImpl implements TagSevice {
             }
             if( row.getCell(1).getCellType() !=1){//循环时，得到每一行的单元格进行判断
 //                return CommonUtil.errorJson();
-                return CommonUtil.errorJson(ErrorEnum.E_500);
+                return  CommonUtil.errorJson(ErrorEnum.E_10015);
 
 //                throw new MyException("导入失败(第"+(r+1)+"行,标签名称请设为文本格式)");
             }
@@ -272,7 +274,7 @@ public class TagSeviceImpl implements TagSevice {
 
             if(tagName == null || tagName.isEmpty()){//判断是否为空
 //                throw new MyException("导入失败(第"+(r+1)+"行,用户名未填写)");
-                return CommonUtil.errorJson(ErrorEnum.E_400);
+                return CommonUtil.errorJson(ErrorEnum.E_10017);
             }
             jsonObject.put("tagName",tagName);
             int i = tagDao.countTagByName(jsonObject);
