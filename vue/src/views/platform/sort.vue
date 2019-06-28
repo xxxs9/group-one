@@ -80,8 +80,10 @@
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload">
-          <img v-if="dialogStatus=='update'" :src="tempUser.imageUrl" class="avatar">
-          <i v-if="dialogStatus=='create'" class="el-icon-plus avatar-uploader-icon"></i>
+          <img v-if="dialogStatus=='update'"  :src="tempUser.imageUrl" class="avatar">
+          <img v-else-if="imageUrl"  :src="tempUser.imageUrl" class="avatar">
+
+          <i v-else="dialogStatus=='create'" class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -140,6 +142,7 @@
       handleAvatarSuccess(res, file) {
         this.imageUrl = URL.createObjectURL(file.raw);
         this.tempUser.imageUrl = this.imageUrl;
+
       },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg';

@@ -282,7 +282,7 @@
 
 
           }).catch(() => {
-            this.$message.error("删除失败")
+            this.$message.error("未选定,删除失败")
           })
         })
       },
@@ -291,29 +291,47 @@
         console.log(this.file);
       },
       uploadFileMethod(event){
-        event.preventDefault();
-        let formdata = new FormData();
-        formdata.append('filename', this.file);
-        let headers = {headers: {"Content-Type": "multipart/form-data"}}
-        this.api.post("/tag/importTag",formdata,headers).then(function(data){
-          console.log(data);
-        },function(err){
-          console.log("err------: ");
-          console.log(err);
-        })
+        if(this.file == undefined){
+          this.$message.error("文件为空");
+
+        }else {
+          event.preventDefault();
+          let _vue = this;
+          let formdata = new FormData();
+          formdata.append('filename', this.file);
+          let headers = {headers: {"Content-Type": "multipart/form-data"}}
+          this.api.post("/tag/importTag",formdata,headers).then(function(data){
+
+            _vue.getAllList();
+            _vue.getList();
+          },function(err){
+            console.log("err------: ");
+            console.log(err);
+          })
+        }
+
 
       },
       uploadFileCoverMethod(event){
-        event.preventDefault();
-        let formdata = new FormData();
-        formdata.append('filename', this.file);
-        let headers = {headers: {"Content-Type": "multipart/form-data"}}
-        this.api.post("/tag/importCoverTag",formdata,headers).then(function(data){
-          console.log(data);
-        },function(err){
-          console.log("err------: ");
-          console.log(err);
-        })
+        if(this.file == undefined){
+          this.$message.error("文件为空");
+
+        }else {
+          event.preventDefault();
+          let _vue = this;
+
+          let formdata = new FormData();
+          formdata.append('filename', this.file);
+          let headers = {headers: {"Content-Type": "multipart/form-data"}}
+          this.api.post("/tag/importCoverTag",formdata,headers).then(function(data){
+            _vue.getAllList();
+            _vue.getList();
+          },function(err){
+            console.log("err------: ");
+            console.log(err);
+          })
+        }
+
 
       }
     },
