@@ -36,6 +36,7 @@ public class TemplateController {
     /**
      * 新增文章
      */
+    @RequiresPermissions("message:add")
     @PostMapping("/addTemplate")
     public JSONObject addArticle(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "tname,content");
@@ -49,11 +50,13 @@ public class TemplateController {
     /**
      * 修改文章
      */
+    @RequiresPermissions("message:update")
     @PostMapping("/updateTemplate")
     public JSONObject updateArticle(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "id,content,tname");
         return templateService.updateTemplate(requestJson);
     }
+    @RequiresPermissions("message:delete")
     @PostMapping("/deleteTemplate")
     public JSONObject updateByStatus(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "id");

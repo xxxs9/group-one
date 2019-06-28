@@ -27,22 +27,26 @@ public class SortController {
     @Autowired
     private SortService sortService;
     String string = new String();
-
+    @RequiresPermissions("post:list")
     @GetMapping("/listSort")
     public JSONObject listSort(HttpServletRequest request) {
         return sortService.listSort(CommonUtil.request2Json(request));
     }
+
+    @RequiresPermissions("post:add")
     @PostMapping("/addSort")
     public JSONObject addSort(@RequestBody JSONObject requestJson) {
         requestJson.put("imageUrl",string);
         CommonUtil.hasAllRequired(requestJson, "sortname,imageUrl");
         return sortService.addSort(requestJson);
     }
+    @RequiresPermissions("post:update")
     @PostMapping("/updateSort")
     public JSONObject updateSort(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "id,sortname,imageUrl");
         return sortService.updateSort(requestJson);
     }
+    @RequiresPermissions("post:delete")
     @PostMapping("/deleteSort")
     public JSONObject deleteSort(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "id");

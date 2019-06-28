@@ -3,6 +3,7 @@ package com.heeexy.example.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.service.TagSevice;
 import com.heeexy.example.util.CommonUtil;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +22,15 @@ public class TagController {
     private TagSevice tagSevice;
 
     @GetMapping("/listTag")
-    public JSONObject listArticle(HttpServletRequest request) {
-        System.out.println(tagSevice.listTag(CommonUtil.request2Json(request)));
+    public JSONObject listTag(HttpServletRequest request) {
         return tagSevice.listTag(CommonUtil.request2Json(request));
     }
+    @GetMapping("/listAllTag")
+    public JSONObject listAllTag(HttpServletRequest request) {
+        return tagSevice.listAllTag(CommonUtil.request2Json(request));
+    }
+
+    @RequiresPermissions("post:delete")
     @PostMapping("/deleteTag")
     public JSONObject deleteSort(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "id");

@@ -264,11 +264,15 @@
         post_table
         WHERE post_owner_id = #{uuId}
     </select>
-
-    <select id="getPostByLike" resultType="com.alibaba.fastjson.JSONObject">
+    <!--获取用户点赞过的帖子id-->
+    <select id="getPostIdByLike" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
         post_id        postId
         FROM click_goods
         WHERE user_id = #{uuId}
+    </select>
+    <!--根据uuId查询用户头像-->
+    <select id="findIconById" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT iconurl iconUrl FROM user where uuid = #{uuId}
     </select>
 </mapper>
