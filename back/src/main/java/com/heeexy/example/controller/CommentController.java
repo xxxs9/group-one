@@ -21,7 +21,7 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-
+    @RequiresPermissions("comment:list")
     @GetMapping("/list")
     public JSONObject listUser(HttpServletRequest request) {
         return commentService.listAllComment(CommonUtil.request2Json(request));
@@ -30,9 +30,11 @@ public class CommentController {
     /**
      * 移除评论
      */
+    @RequiresPermissions("comment:delete")
     @PostMapping("/removeComment")
     public JSONObject removeComment(@RequestBody JSONObject requestJson){
-        return commentService.removeComment(requestJson);
+//        return commentService.deleteComment(requestJson);
+        return null;
     }
 
     /**
@@ -56,7 +58,8 @@ public class CommentController {
      */
     @GetMapping("/commentDetails")
     public JSONObject commentDetails(HttpServletRequest request){
-        return commentService.getByPostId(CommonUtil.request2Json(request));
+//        return commentService.getByPostId(CommonUtil.request2Json(request));
+        return null;
     }
 
     /**
