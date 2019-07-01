@@ -32,4 +32,5 @@ public interface StickService {
      */
     JSONObject updatePostStick(JSONObject jsonObject);
 
+
 }
