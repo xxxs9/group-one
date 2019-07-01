@@ -24,11 +24,20 @@ public class ExternalUserController {
     @Autowired
     ExternalUserService service;
 
+    @Autowired
+    BrowseRecordService recordService;
+
+    /**
+     *
+     * @param request
+     * @return
+     */
     @RequiresPermissions("euser:list")
     @GetMapping("/userlist")
     public JSONObject listUser(HttpServletRequest request) {
         return service.getUser(CommonUtil.request2Json(request));
     }
+
     @RequiresPermissions("euser:update")
     @PostMapping("/updateFO")
     public JSONObject updateFansOffset(@RequestBody JSONObject requestJson){
@@ -62,8 +71,8 @@ public class ExternalUserController {
     public JSONObject getPerm(HttpServletRequest request){
         return service.getPerm(CommonUtil.request2Json(request));
     }
-    @Autowired
-    BrowseRecordService recordService;
+
+
     @RequiresPermissions("euser:list")
     @GetMapping("/recordlist")
     public JSONObject getRecord(HttpServletRequest request){

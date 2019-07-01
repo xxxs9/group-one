@@ -273,6 +273,15 @@
     </select>
     <!--根据uuId查询用户头像-->
     <select id="findIconById" resultType="com.alibaba.fastjson.JSONObject">
-        SELECT iconurl iconUrl FROM user where uuid = #{uuId}
+        SELECT iconurl iconUrl,username username FROM user where uuid = #{uuId}
     </select>
+
+    <!--统计用户点赞过的帖子数量-->
+    <select id="countGoodByUUID" resultType="java.lang.Integer">
+        SELECT count(post_id)
+        FROM click_goods
+        WHERE user_id = #{uuId}
+    </select>
+
+
 </mapper>

@@ -13,9 +13,9 @@
     <!--获取用户的粉丝用户ID-->
     <select id="getFansUUIDByUUID" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
-        from_user_uuid
-        FROM example.user u,user_attention ua
-        WHERE u.uuid = ua.to_user_uuid AND u.uuid = #{uuId} AND ua.delete_status = '1'
+        from_user_uuid             fansId
+        FROM user_attention ua
+        WHERE ua.to_user_uuid = #{uuId} AND ua.delete_status = '1'
     </select>
 
     <!--统计粉丝数量-->
