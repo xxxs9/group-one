@@ -6,10 +6,10 @@
     <!--获取用户的点赞用户ID-->
     <select id="getLikeList" resultType="com.alibaba.fastjson.JSONObject">
 
-        select user_id
+        select user_id userId
         from click_goods
         where
-        post_id = #{postid}
+        post_id = #{postId}
     </select>
     <!--<select id=""-->
 

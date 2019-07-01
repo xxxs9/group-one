@@ -18,28 +18,28 @@ public interface UserAttentionDao {
      * @param uuId
      * @return
      */
-    List<JSONObject> getFansUUIDByUUID(@Param("uuId")Integer uuId);
+    List<JSONObject> getFansUUIDByUUID(JSONObject jsonObject);
 
     /**
      * 获取用户关注的用户uuid
      * @param uuId
      * @return
      */
-    List<JSONObject> getMyIdolIdByUUID(@Param("uuId") Integer uuId);
+    List<JSONObject> getMyIdolIdByUUID(JSONObject jsonObject);
 
     /**
      * 统计粉丝数量
      * @param uuId
      * @return
      */
-    int countFansByUUID(@Param("uuId") Integer uuId);
+    int countFansByUUID(JSONObject jsonObject);
 
     /**
      * 统计关注数量
      * @param uuId
      * @return
      */
-    int countIdolByUUID(@Param("uuId") Integer uuId);
+    int countIdolByUUID(JSONObject jsonObject);
 
     /**
      * 新增关注

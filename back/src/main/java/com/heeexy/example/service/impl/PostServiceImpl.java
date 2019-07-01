@@ -1,11 +1,9 @@
 package com.heeexy.example.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.heeexy.example.dao.CommentDao;
-import com.heeexy.example.dao.ExternalUserDao;
-import com.heeexy.example.dao.PostDao;
-import com.heeexy.example.dao.TagDao;
+import com.heeexy.example.dao.*;
 import com.heeexy.example.service.PostService;
 import com.heeexy.example.util.CommonUtil;
 import com.heeexy.example.util.constants.ErrorEnum;
@@ -21,10 +19,10 @@ import static com.heeexy.example.util.constants.ErrorEnum.E_90003;
 import static com.heeexy.example.util.constants.ErrorEnum.E_90004;
 
 /**
- * @author ：Hooonheng
+ * @author ：Hooon
  * @date ：Created in 2019/6/18 10:47
  * @description：
- * @version: $
+ * @version: $2.0
  */
 @Service
 public class PostServiceImpl implements PostService {
@@ -41,6 +39,18 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private TagDao tagDao;
 
+    @Autowired
+    private CollectionDao collectionDao;
+
+    @Autowired
+    private BrowseRecordDao browseRecordDao;
+
+    @Autowired
+    private ThumbsUpDao thumbsUpDao;
+
+    @Autowired
+    private StickDao stickDao;
+
     /**
      * 帖子列表
      * @param jsonObject 页码
@@ -49,6 +59,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public JSONObject listPost(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
+        //发帖用户昵称查询
         String queryOwnewName = jsonObject.getString("queryOwnewName");
         if(queryOwnewName != null && "".equals(queryOwnewName)==false){
             JSONObject queryKey = new JSONObject();
@@ -60,6 +71,7 @@ public class PostServiceImpl implements PostService {
             }
             jsonObject.put("postOwnerId",postOwnerIdList);
         }
+        //标签查询
         String queryPostTagId = jsonObject.getString("queryPostTagId");
         if(null != queryPostTagId && !"".equals(queryPostTagId) && queryPostTagId.length()!=0){
             String[] split = queryPostTagId.split("-");
@@ -106,6 +118,7 @@ public class PostServiceImpl implements PostService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject updateBrowseOffset(JSONObject jsonObject) {
         postDao.updateBrowseOffset(jsonObject);
         return CommonUtil.successJson();
@@ -219,5 +232,89 @@ public class PostServiceImpl implements PostService {
             list.add(object.getString("tagName"));
         }
         return CommonUtil.successJson(list);
+    }
+
+
+    /********************************************小程序数据****************************************************/
+
+    /**
+     * 获取帖子详情
+     * @param jsonObject 帖子ID ，当前用户ID
+     * @return 帖子详情
+     */
+    @Override
+    public JSONObject getDetailById(JSONObject jsonObject) {
+        //获取帖子详情
+        JSONObject postDetail = postDao.queryPostById(jsonObject);
+        JSONObject postOwner = externalUserDao.findUserById(postDetail.getInteger("postOwnerId"));
+        int collect = collectionDao.getByPostIdCount(jsonObject);
+        if(collect == 0){
+            postDetail.put("collectionState",false);
+        }else {
+            postDetail.put("collectionState",true);
+        }
+        List<JSONObject> byPostId = commentDao.getByPostId(jsonObject);
+        postDetail.put("comments",byPostId);
+        postDetail.put("postOwnerName",postOwner.get("username"));
+        postDetail.put("postOwnerUrl",postOwner.get("iconUrl"));
+        postDetail.put("browseCount",browseRecordDao.countPostBrowse(jsonObject) + postDetail.getInteger("browseOffset"));
+        postDetail.put("likeCount",thumbsUpDao.countLikes(jsonObject) + postDetail.getInteger("likeOffset"));
+        postDetail.remove("browseOffset");
+        postDetail.remove("likeOffset");
+        return CommonUtil.successJson(postDetail);
+    }
+
+
+    /**
+     * 获取帖子列表（非详情）
+     * @param jsonObject postIdList(帖子ID数组),userId(当前用户ID)
+     * @return
+     */
+    @Override
+    public List<JSONObject> getPostListApi(JSONObject jsonObject) {
+        List<JSONObject> postList = postDao.getPostListApi(jsonObject);
+        for (JSONObject object : postList) {
+            object.put("userId",jsonObject.get("userId"));
+            object.put("uuId",object.get("postOwnerId"));
+            JSONObject postOwner = externalUserDao.findIconById(object);
+            object.put("postOwnerName", postOwner.get("username"));
+            object.put("postOwnerUrl", postOwner.get("iconUrl"));
+            int collect = collectionDao.getByPostIdCount(object);
+            //判断是否被收藏
+            if(collect == 0){
+                object.put("collectionState",false);
+            }else {
+                object.put("collectionState",true);
+            }
+            object.put("browseCount",browseRecordDao.countPostBrowse(object) + object.getInteger("browseOffset"));
+            object.put("comments",commentDao.getByPostId(object));
+            List<JSONObject> likeUserList = new ArrayList<>();
+            List<JSONObject> likeListId = thumbsUpDao.getLikeList(object);
+            //点赞用户列表循环
+            for (JSONObject likeUser : likeListId) {
+                likeUser.put("uuId",likeUser.get("userId"));
+                likeUserList.add(externalUserDao.findIconById(likeUser));
+            }
+            object.put("likeUserList",likeUserList);
+            object.remove("uuId");
+            object.remove("postTypeId");
+        }
+        return postList;
+    }
+
+    /**
+     * 
+     * @param jsonObject stickId 板块ID
+     * @return 
+     */
+    @Override
+    public JSONObject getStickPost(JSONObject jsonObject) {
+        List<JSONObject> postById = stickDao.getPostById(jsonObject);
+        JSONObject stickObj = new JSONObject();
+        stickObj.put("postIdList",postById);
+        stickObj.put("userId",jsonObject.get("userId"));
+        List<JSONObject> postStickList = getPostListApi(stickObj);
+
+        return null;
     }
 }

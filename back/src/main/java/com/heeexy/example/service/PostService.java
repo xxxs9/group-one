@@ -2,6 +2,8 @@ package com.heeexy.example.service;
 
 import com.alibaba.fastjson.JSONObject;
 
+import java.util.List;
+
 /**
  * @author ：Hooon
  * @date ：Created in 2019/6/18 10:43
@@ -65,4 +67,28 @@ public interface PostService {
      */
     JSONObject addPostTag(JSONObject jsonObject);
 
+
+    /*****************************************小程序数据**********************************************/
+
+    /**
+     * 获取帖子详情
+     * @param jsonObject 帖子ID ，当前用户ID
+     * @return 帖子详情
+     */
+    JSONObject getDetailById(JSONObject jsonObject);
+
+    /**
+     * 获取帖子列表（非详情）
+     * @param jsonObject 帖子ID（数组postIdList）
+     * @return
+     */
+    List<JSONObject> getPostListApi(JSONObject jsonObject);
+
+    /**
+     * 获取板块帖子列表
+     * @param jsonObject 板块ID，帖子ID
+     * @return
+     */
+    JSONObject getStickPost(JSONObject jsonObject);
 }
+

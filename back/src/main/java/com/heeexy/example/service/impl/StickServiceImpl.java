@@ -22,12 +22,22 @@ public class StickServiceImpl implements StickService {
     @Autowired
     private StickDao stickDao;
 
+    /**
+     * 获取板块列表
+     * @param jsonObject
+     * @return
+     */
     @Override
     public JSONObject listStick(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
         return CommonUtil.successJson(stickDao.listStick(jsonObject));
     }
 
+    /**
+     * 获取帖子的制定板块
+     * @param jsonObject 帖子ID
+     * @return
+     */
     @Override
     public JSONObject listStickByPostId(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
@@ -52,6 +62,12 @@ public class StickServiceImpl implements StickService {
         return CommonUtil.successJson(listStick);
     }
 
+
+    /**
+     * 修改帖子的置顶板块
+     * @param jsonObject 帖子ID ，板块ID列表
+     * @return
+     */
     @Override
     public JSONObject updatePostStick(JSONObject jsonObject) {
         JSONArray valueArr = jsonObject.getJSONArray("values");

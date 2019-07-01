@@ -25,6 +25,14 @@
 
     </select>
 
+    <!--获取板块置顶帖子ID-->
+    <select id="getPostById" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+          post_id postId
+        FROM post_stick
+        WHERE stick_id = #{stickId}
+    </select>
+
     <!--置顶帖子-->
     <insert id="addPostStick">
       INSERT INTO post_stick

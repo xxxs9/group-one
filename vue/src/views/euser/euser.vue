@@ -30,8 +30,12 @@
     </div>
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
-
-      <el-table-column align="center" label="用户ID" prop="userId" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="序号" width="80">
+        <template slot-scope="scope">
+          <span v-text="getIndex(scope.$index)"> </span>
+        </template>
+      </el-table-column>
+      <!--<el-table-column align="center" label="用户ID" prop="userId" style="width: 60px;"></el-table-column>-->
       <el-table-column align="center" label="UUID" prop="uuId" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="昵称" prop="username" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="头像"  style="width: 60px;">
@@ -46,7 +50,7 @@
         <template slot-scope="scope">
           <el-button type="primary"  v-text="scope.row.fansCount" size="mini" @click="showfansList(scope.$index)"></el-button>
 
-          <span>/</span>
+          <span>+</span>
           <el-button v-if="hasPerm('euser:update')" type="primary"  v-text="scope.row.fansOffset" size="mini" @click="showfansOffset(scope.$index)"></el-button>
           <span v-else v-text="scope.row.fansOffset"></span>
         </template>
@@ -214,6 +218,10 @@
       ])
     },
     methods: {
+      getIndex($index) {
+        //表格序号
+        return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
+      },
       getAllRoles() {
         this.api({
           url: "/user/getAllRoles",

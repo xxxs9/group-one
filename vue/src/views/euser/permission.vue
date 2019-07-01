@@ -19,12 +19,12 @@
     </div>
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
-      <!--<el-table-column align="center" label="序号" width="80">-->
-        <!--<template slot-scope="scope">-->
-          <!--<span v-text="getIndex(scope.$index)"> </span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-      <el-table-column align="center" label="用户ID" prop="userId" width="150"></el-table-column>
+      <el-table-column align="center" label="序号" width="80">
+        <template slot-scope="scope">
+          <span v-text="getIndex(scope.$index)"> </span>
+        </template>
+      </el-table-column>
+      <!--<el-table-column align="center" label="用户ID" prop="userId" width="150"></el-table-column>-->
       <el-table-column align="center" label="UUID" prop="uuId" width="150"></el-table-column>
       <el-table-column align="center" label="用户昵称" prop="username"></el-table-column>
       <el-table-column align="center" label="用户权限" width="420">
@@ -67,17 +67,6 @@
           </el-input>
         </el-form-item>
         <el-form-item label="用户权限" required>
-          <!--<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>-->
-          <!--<div v-for="eperms in list">-->
-              <!--<el-checkbox-group v-model="tempPerm.epermissionList" @change="handleCheckedPermChange">-->
-
-                <!--<el-checkbox v-for="eperm in eperms.epermissionList" v-if="tempPerm.uuId==eperms.uuId"-->
-                             <!--:label="eperm" :key="eperm"-->
-                <!--&gt;{{eperm}}-->
-                <!--</el-checkbox>-->
-              <!--</el-checkbox-group>-->
-
-          <!--</div>-->
 
             <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
             <el-checkbox-group v-model="permlist" @change="handleCheckedPermChange">
@@ -138,8 +127,9 @@
       // this.getPerm();
     },
     methods: {
-      getPerm(){
-
+      getIndex($index) {
+        //表格序号
+        return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
       },
       getList() {
         //查询列表

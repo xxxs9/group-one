@@ -35,8 +35,15 @@ public interface StickDao {
 
     /**
      * 取消置顶
-     * @param
+     * @param jsonObject
      * @return
      */
     int deletePostStick(JSONObject jsonObject);
+
+    /**
+     * 获取板块置顶的帖子ID列表
+     * @param jsonObject 板块ID
+     * @return
+     */
+    List<JSONObject> getPostById(JSONObject jsonObject);
 }

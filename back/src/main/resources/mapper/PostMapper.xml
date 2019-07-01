@@ -126,14 +126,14 @@
         <result column="postAddress" property="postAddress"></result>
         <result column="priceFloor" property="priceFloor"></result>
         <result column="postText" property="postText"></result>
+        <result column="postTime" property="postTime" />
+        <result column="browseOffset" property="browseOffset"/>
+        <result column="likeOffset" property="likeOffset"/>
         <result column="postType" property="postType" />
         <result column="postOwnerId" property="postOwnerId"></result>
         <result column="priceTop" property="priceTop"></result>
         <collection property="postImgList" ofType="String">
             <id column="postImageSrc" property="postImageSrc"></id>
-        </collection>
-        <collection property="comments" ofType="String">
-            <id column="commentText" property="commentText"></id>
         </collection>
         <collection property="postTagList" ofType="String">
             <id column="postTagName" property="postTagName"/>
@@ -145,7 +145,6 @@
         SELECT
           p.*,
           pi.post_image_src             postImageSrc,
-          c.comment_text                commentText,
           (SELECT categories_name FROM post_categories pc WHERE pc.categories_id = p.postTypeId) postType,
           (SELECT tag_name FROM tag t WHERE t.tag_id = pt2.tag_id)                               postTagName
           FROM (
@@ -154,6 +153,9 @@
                 post_text               postText,
                 post_owner_id           postOwnerId,
                 post_phone              postPhone,
+                DATE_FORMAT(post_time, '%Y.%m.%d %T') postTime,
+                like_offset             likeOffset,
+                browse_offset           browseOffset,
                 post_type_id            postTypeId,
                 post_address            postAddress,
                 price_floor             priceFloor,
@@ -235,6 +237,57 @@
         post_tag_id,post_id,tag_id,parent_id
       FROM post_tag
       WHERE post_id = #{postId} AND tag_id = #{tagId}
+    </select>
+
+    <!--前台列表返回Map-->
+    <resultMap id="postMapApi" type="com.heeexy.example.util.model.One2Many">
+        <id column="postId" property="postId"/>
+        <result column="postType" property="postType" />
+        <result column="postTypeId" property="postTypeId" />
+        <result column="postOwnerId" property="postOwnerId" />
+        <result column="postText" property="postText" />
+        <result column="postTime" property="postTime" />
+        <result column="browseOffset" property="browseOffset"/>
+        <result column="postAddress" property="postAddress"/>
+        <result column="postPhone" property="postPhone"/>
+        <result column="postState" property="postState" />
+        <result column="priceTop" property="priceTop" />
+        <result column="priceFloor" property="priceFloor" />
+        <collection property="postImgList" ofType="String">
+            <id column="postImageSrc" property="postImageSrc"></id>
+        </collection>
+    </resultMap>
+    <!--返回前台帖子列表-->
+    <select id="getPostListApi" resultMap="postMapApi">
+        SELECT
+          p.*,
+          pi.post_image_src             postImageSrc,
+          (SELECT categories_name FROM post_categories pc WHERE pc.categories_id = p.postTypeId) postType
+          FROM (
+            SELECT
+                post_id                 postId,
+                post_text               postText,
+                post_owner_id           postOwnerId,
+                post_type_id            postTypeId,
+                DATE_FORMAT(post_time, '%Y.%m.%d %T') postTime,
+                browse_offset           browseOffset,
+                post_address            postAddress,
+                price_floor             priceFloor,
+                price_top               priceTop
+            FROM
+              post_table
+            <where>
+              post_state = '0'
+                <if test="postIdList != null and postIdList.size() > 0">
+                    AND
+                    <foreach collection="postIdList" item="id" open="post_id in(" close=")" separator=",">
+                        #{id}
+                    </foreach>
+                </if>
+            </where>
+              ORDER BY post_time DESC
+          ) p
+          LEFT JOIN post_image pi ON pi.post_id = p.postId
     </select>
 
 </mapper>
