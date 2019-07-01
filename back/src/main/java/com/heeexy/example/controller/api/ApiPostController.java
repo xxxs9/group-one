@@ -33,9 +33,14 @@ public class ApiPostController {
         return postService.getDetailById(requestJson);
     }
 
-    @PostMapping("/listPostType")
-    public JSONObject listPostType(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "postStick");
-        return postService.getPostListApi(requestJson);
+    /**
+     * 
+     * @param
+     * @return
+     */
+    @PostMapping("/StickPost")
+    public JSONObject getStickPost(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "");
+        return postService.getStickPost(requestJson);
     }
 }

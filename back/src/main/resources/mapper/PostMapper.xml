@@ -276,15 +276,12 @@
                 price_top               priceTop
             FROM
               post_table
-            <where>
-              post_state = '0'
-                <if test="postIdList != null and postIdList.size() > 0">
-                    AND
-                    <foreach collection="postIdList" item="id" open="post_id in(" close=")" separator=",">
-                        #{id}
-                    </foreach>
-                </if>
-            </where>
+            WHERE
+                post_state = '0'
+             AND
+                <foreach collection="postIdList" item="id" open="post_id in(" close=")" separator=",">
+                    #{id.postIdList}
+                </foreach>
               ORDER BY post_time DESC
           ) p
           LEFT JOIN post_image pi ON pi.post_id = p.postId

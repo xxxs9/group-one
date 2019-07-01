@@ -272,6 +272,14 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public List<JSONObject> getPostListApi(JSONObject jsonObject) {
+        JSONArray postIdList = jsonObject.getJSONArray("postIdList");
+        if (postIdList == null && postIdList.size() ==0){
+            return null;
+        }
+        Integer userId = jsonObject.getInteger("userId");
+        if(userId == 0 && userId == null){
+            return null;
+        }
         List<JSONObject> postList = postDao.getPostListApi(jsonObject);
         for (JSONObject object : postList) {
             object.put("userId",jsonObject.get("userId"));
@@ -314,7 +322,6 @@ public class PostServiceImpl implements PostService {
         stickObj.put("postIdList",postById);
         stickObj.put("userId",jsonObject.get("userId"));
         List<JSONObject> postStickList = getPostListApi(stickObj);
-
-        return null;
+        return stickObj;
     }
 }
