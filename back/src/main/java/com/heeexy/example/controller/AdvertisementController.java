@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * @author L-YX
  * @version 1.0
- * @description
+ * @description 后台广告管理
  * @data 2019-06-19 14:50
  */
 @RestController
@@ -30,7 +30,9 @@ public class AdvertisementController {
     AdvertisementServiceImpl advertisementService;
 
     /**
-     * 后台广告列表接口
+     * 查询广告列表(当广告标题为空时无条件查询全部广告列表，反之根据广告标题模糊查询)接口
+     * @param request
+     * @return JSONObject
      */
     @RequestMapping("/list")
     public JSONObject listAdvertisement(HttpServletRequest request){
@@ -39,6 +41,8 @@ public class AdvertisementController {
 
     /**
      * 后台上传广告图片接口
+     * @param req,multiReq
+     * @return Map
      */
     @RequestMapping(value = "/upload")
     public Map imgUpload(HttpServletRequest req, MultipartHttpServletRequest multiReq) throws IOException {
@@ -71,7 +75,9 @@ public class AdvertisementController {
     }
 
     /**
-     * 后台增加广告接口
+     * 添加广告接口
+     * @param requestJson
+     * @return JSONObject
      */
     @RequestMapping("/add")
     public JSONObject addAdvertisement (@RequestBody JSONObject requestJson) {
@@ -82,6 +88,8 @@ public class AdvertisementController {
 
     /**
      * 后台移除广告接口
+     * @param requestJson
+     * @return JSONObject
      */
     @PostMapping("/remove")
     public JSONObject removeAdvertisement(@RequestBody JSONObject requestJson) {
@@ -90,6 +98,8 @@ public class AdvertisementController {
 
     /**
      * 后台修改广告接口
+     * @param requestJson
+     * @return JSONObject
      */
     @PostMapping("/update")
     public JSONObject updateAdvertisement(@RequestBody JSONObject requestJson) {
@@ -99,6 +109,8 @@ public class AdvertisementController {
 
     /**
      * 后台删除本地文件夹图片接口
+     * @param jsonObject
+     * @return JSONObject
      */
     @PostMapping("/delete")
     public JSONObject delete (@RequestBody JSONObject jsonObject) {

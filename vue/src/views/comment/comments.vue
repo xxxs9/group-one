@@ -30,14 +30,16 @@
     </div>
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
-      <el-table-column align="center" label="评论ID" prop="commentId" style="width: 50px;"></el-table-column>
-      <el-table-column align="center" label="帖子ID" prop="postId" style="width: 50px;"></el-table-column>
+      <el-table-column align="center" label="序号" width="80">
+        <template slot-scope="scope">
+          <span v-text="getIndex(scope.$index)"> </span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="发帖用户" prop="postUserName" style="width: 50px;"></el-table-column>
       <el-table-column align="center" label="评论用户" prop="commentUserName" style="width: 50px;"></el-table-column>
       <el-table-column align="center" label="接收评论用户" prop="acceptUserName" style="width: 120px;"></el-table-column>
       <el-table-column align="center" label="评论内容" prop="commentText" width="140"></el-table-column>
       <el-table-column align="center" label="评论时间" prop="commentTime" width="170"></el-table-column>
-      <el-table-column align="center" label="评论状态" prop="commentState" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="评论详情" width="120">
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" @click="showDetail(scope.$index)"

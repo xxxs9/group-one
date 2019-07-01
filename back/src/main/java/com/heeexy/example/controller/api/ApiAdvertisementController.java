@@ -24,6 +24,8 @@ public class ApiAdvertisementController {
 
     /**
      * 前台广告轮播接口
+     * @param request
+     * @return JSONObject
      */
     @GetMapping("/swiper")
     public JSONObject advertisementList(HttpServletRequest request){

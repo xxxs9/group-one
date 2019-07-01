@@ -2,6 +2,7 @@ package com.heeexy.example.controller.api;
 
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.service.impl.CollectionServiceImpl;
+import com.heeexy.example.service.impl.PostServiceImpl;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,11 +24,15 @@ public class ApiCollectionController {
     @Autowired
     CollectionServiceImpl collectionService;
 
+    @Autowired
+    PostServiceImpl postService;
+
     /**
      * 前台用户收藏列表接口
      */
     @RequestMapping("/collectionList")
     public JSONObject collectionList(HttpServletRequest request) {
+//        CommonUtil.request2Json(request).put("",111 );
         return collectionService.getByUserId(CommonUtil.request2Json(request));
     }
 

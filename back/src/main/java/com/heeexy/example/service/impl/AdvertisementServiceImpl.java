@@ -24,7 +24,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     private AdvertisementDao advertisementDao;
 
     /**
-     * 后台广告列表
+     * 查询广告列表(当广告标题为空时无条件查询全部广告列表，反之根据广告标题模糊查询)
+     * @param jsonObject (key:advertisementType)
+     * @return JSONObject
      */
     @Override
     public JSONObject listAllAdvertisement(JSONObject jsonObject) {
@@ -35,7 +37,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     /**
-     * 增加广告
+     * 添加广告
+     * @param jsonObject (key:advertisementRef,srcUrl,advertisementType,advertisementStatus)
+     * @return JSONObject
      */
     @Override
     public JSONObject addAdvertisement(JSONObject jsonObject) {
@@ -49,7 +53,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     /**
-     * 修改广告
+     * 修改广告（修改客户需求图片链接，图片路径和图片标题）
+     * @param jsonObject (key:advertisementRef,srcUrl,advertisementType,advertisementId)
+     * @return JSONObject
      */
     @Override
     public JSONObject updateAdvertisement(JSONObject jsonObject) {
@@ -68,7 +74,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     /**
-     * 删除广告
+     * 修改广告状态，决定播放与否
+     * @param jsonObject (key:advertisementStatus,advertisementId)
+     * @return JSONObject
      */
     @Override
     public JSONObject removeAdvertisement(JSONObject jsonObject) {
@@ -77,7 +85,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     /**
-     * 广告轮播
+     * 根据广告状态查询显示广告
+     * @param jsonObject (无有用参数)
+     * @return JSONObject
      */
     @Override
     public JSONObject advertisementList(JSONObject jsonObject) {
