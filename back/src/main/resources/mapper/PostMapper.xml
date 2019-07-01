@@ -281,7 +281,7 @@
                 <if test="postIdList != null and postIdList.size() > 0">
                     AND
                     <foreach collection="postIdList" item="id" open="post_id in(" close=")" separator=",">
-                        #{id}
+                        #{id.postIdList}
                     </foreach>
                 </if>
             </where>

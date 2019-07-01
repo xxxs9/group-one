@@ -7,8 +7,7 @@ import com.heeexy.example.service.PostService;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,32 +17,30 @@ import javax.servlet.http.HttpServletRequest;
  * @description: 前台用户接口
  * @version:
  */
-@Controller
+@RestController
 @RequestMapping("/api/user")
 public class ApiExternalUserController {
 
     @Autowired
     ExternalUserService externalUserService;
 
-
-
     /**
      * 获取用户信息(发帖数量，关注数量，粉丝数量，点赞数量，收藏数量，头像、昵称)
-     * @param request
+     * @param requestJson
      * @return
      */
-    @GetMapping("/myself")
-    public JSONObject getMyself(HttpServletRequest request){
-
-        return externalUserService.getMyself(CommonUtil.request2Json(request));
+    @PostMapping("/myself")
+    public JSONObject getMyself(@RequestBody JSONObject requestJson){
+        CommonUtil.hasAllRequired(requestJson, "uuId");
+        return externalUserService.getMyself(requestJson);
     }
 
-    @GetMapping("/others")
-    public JSONObject getOthers(JSONObject jsonObject){
-//        externalUserService.getMyself()
-//        postService.getPostListApi(CommonUtil.request2Json(request));
-        return null;
+    @PostMapping("/others")
+    public JSONObject getOthers(@RequestBody JSONObject requestJson){
+        CommonUtil.hasAllRequired(requestJson, "uuId");
+        return externalUserService.getOthers(requestJson);
     }
+
 
 
 

@@ -320,10 +320,11 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         JSONObject postIds = new JSONObject();
         postIds.put("postIdList",postIdList);
         postIds.put("userId",jsonObject.getInteger("userId"));
-        JSONObject postListApi = postService.getPostListApi(postIds);
-        getMyself(jsonObject);
-//        postIds.put("");
-        return null;
+        List<JSONObject> postList = postService.getPostListApi(postIds);
+        JSONObject object = new JSONObject();
+        object.put("postList",postList);
+        object.put("others",getMyself(jsonObject));
+        return CommonUtil.successJson(object);
     }
 
 
