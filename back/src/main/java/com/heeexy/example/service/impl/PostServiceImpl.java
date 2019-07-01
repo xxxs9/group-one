@@ -19,10 +19,10 @@ import static com.heeexy.example.util.constants.ErrorEnum.E_90003;
 import static com.heeexy.example.util.constants.ErrorEnum.E_90004;
 
 /**
- * @author ：Hooonheng
+ * @author ：Hooon
  * @date ：Created in 2019/6/18 10:47
  * @description：
- * @version: $
+ * @version: $2.0
  */
 @Service
 public class PostServiceImpl implements PostService {
@@ -47,6 +47,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private ThumbsUpDao thumbsUpDao;
+
+    @Autowired
+    private StickDao stickDao;
 
     /**
      * 帖子列表
@@ -268,7 +271,7 @@ public class PostServiceImpl implements PostService {
      * @return
      */
     @Override
-    public JSONObject getPostListApi(JSONObject jsonObject) {
+    public List<JSONObject> getPostListApi(JSONObject jsonObject) {
         List<JSONObject> postList = postDao.getPostListApi(jsonObject);
         for (JSONObject object : postList) {
             object.put("userId",jsonObject.get("userId"));
@@ -285,7 +288,7 @@ public class PostServiceImpl implements PostService {
             }
             object.put("browseCount",browseRecordDao.countPostBrowse(object) + object.getInteger("browseOffset"));
             object.put("comments",commentDao.getByPostId(object));
-            List<JSONObject> likeUserList= new ArrayList<>();
+            List<JSONObject> likeUserList = new ArrayList<>();
             List<JSONObject> likeListId = thumbsUpDao.getLikeList(object);
             //点赞用户列表循环
             for (JSONObject likeUser : likeListId) {
@@ -296,6 +299,22 @@ public class PostServiceImpl implements PostService {
             object.remove("uuId");
             object.remove("postTypeId");
         }
-        return CommonUtil.successJson(postList);
+        return postList;
+    }
+
+    /**
+     * 
+     * @param jsonObject stickId 板块ID
+     * @return 
+     */
+    @Override
+    public JSONObject getStickPost(JSONObject jsonObject) {
+        List<JSONObject> postById = stickDao.getPostById(jsonObject);
+        JSONObject stickObj = new JSONObject();
+        stickObj.put("postIdList",postById);
+        stickObj.put("userId",jsonObject.get("userId"));
+        List<JSONObject> postStickList = getPostListApi(stickObj);
+
+        return null;
     }
 }
