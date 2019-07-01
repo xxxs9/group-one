@@ -2,20 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.heeexy.example.dao.TagDao">
-
+    <!--添加标签-->
     <insert id="addTag" parameterType="com.alibaba.fastjson.JSONObject">
         INSERT INTO tag
             (tag_name,parent_id,rank)
         VALUES
             (#{name},#{parentId},#{rank})
     </insert>
-
+    <!--统计标签-->
     <select id="countTag" resultType="Integer">
         SELECT count(*)
         FROM tag
         where status = '1'
     </select>
 
+    <!--标签列表-->
     <select id="listTag" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
             t.tag_id                                          id,
@@ -32,6 +33,7 @@
         ORDER BY t.tag_id ASC
         LIMIT #{offSet}, #{pageRow}
     </select>
+    <!--所有标签-->
     <select id="listAllTag" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
             t.tag_id                                          id,
@@ -61,6 +63,7 @@
         WHERE tag_name = #{tagName}
     </select>
 
+    <!--修改标签-->
     <update id="updateTag" parameterType="com.alibaba.fastjson.JSONObject">
         UPDATE tag
         SET
@@ -80,6 +83,7 @@
 
     </update>
 
+    <!--批量添加-->
     <insert id="addListTag" parameterType="com.heeexy.example.util.model.Tag">
         INSERT INTO tag
             (tag_id,tag_name,parent_id,rank)
@@ -87,10 +91,12 @@
             (#{id},#{tagName},#{parentId},#{rank})
     </insert>
 
+    <!--删除所有标签-->
     <delete id="deleteAllTag" >
         delete from tag
     </delete>
 
+    <!--根据父ID查找标签-->
     <select id="getTagByParentId" resultType="Integer">
         select
             w.rank                                   rank

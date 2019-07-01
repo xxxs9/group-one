@@ -8,28 +8,42 @@ import java.util.List;
 
 public interface TagDao {
     /**
-     * 新增文章
+     * 新增标签
      */
     int addTag(JSONObject jsonObject);
 
+    /**
+     * 批量新增标签
+     */
     int addListTag(Tag tag);
 
-
-    int countTag(JSONObject jsonObject);
-    int countTagByName(JSONObject jsonObject);
     /**
-     * 文章列表
+     * 查询标签数
      */
+    int countTag(JSONObject jsonObject);
+    /**
+     * 根据标签名查询标签
+     */
+    int countTagByName(JSONObject jsonObject);
 
+    /**
+     * 标签列表
+     */
     List<JSONObject> listTag(JSONObject jsonObject);
 
+    /**
+     * 所有标签列表
+     */
     List<JSONObject> listAllTag(JSONObject jsonObject);
 
     /**
-     * 更新文章
+     * 更新标签
      */
     int updateTag(JSONObject jsonObject);
 
+    /**
+     * 修改标签状态
+     */
     int updateByStatus(JSONObject jsonObject);
 
     /**
@@ -38,6 +52,13 @@ public interface TagDao {
      * @return 标签ID
      */
     JSONObject getTagByName(JSONObject jsonObject);
+
+    /**
+     * 删除所有标签
+     */
     int deleteAllTag();
+    /**
+     * 根据父标签ID查找标签
+     */
     int getTagByParentId(JSONObject jsonObject);
 }

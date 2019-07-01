@@ -24,9 +24,9 @@
         <br/>
         <br/>
         <label>请输入：</label>
-          <input type="text" v-model="tempTag.queryText" placeholder="输入标签名字搜索"width="300"/>
+        <input type="text" v-model="tempTag.queryText" placeholder="输入标签名字搜索"width="300"/>
 
-          <el-button type="primary" class="el-icon-search" @click="getList"></el-button>
+        <el-button type="primary" class="el-icon-search" @click="getList"></el-button>
 
         <label>请选择excel表：</label>
         <input class="form-input" type="file" name="filename" @change="getFile($event)" width="300"></input>
@@ -44,9 +44,7 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="标签名称" prop="name" style="width: 60px;"></el-table-column>
-
-      <el-table-column align="center" label="上级标签"  prop="parentId" width="100">
+      <el-table-column align="center" label="上级标签"  prop="parentId" width="300">
         <template slot-scope="scope">
           <el-tag  v-if="scope.row.rank==1" style="margin-right: 3px;" type="success">无</el-tag>
           <div v-if="scope.row.rank!=1" v-for="tags in list" style="text-align: center">
@@ -55,6 +53,9 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="标签名称" prop="name" style="width: 60px;"></el-table-column>
+
+
       <!--<el-table-column align="center" label="等级" prop="rank" width="170"></el-table-column>-->
       <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
@@ -79,9 +80,9 @@
           <el-select v-model="tempTag.parentId" placeholder="请选择" >
             <el-option
 
-            :key="beginTag.id"
-            :label="beginTag.name"
-            :value="beginTag.id">
+              :key="beginTag.id"
+              :label="beginTag.name"
+              :value="beginTag.id">
             </el-option>
             <el-option
               v-for="item in typeOption"
@@ -232,7 +233,7 @@
       },
       showCreate() {
         //显示新增对话框
-         this.tempTag.parentId = "";
+        this.tempTag.parentId = "";
         this.tempTag.content = "";
         this.dialogStatus = "create"
         this.dialogFormVisible = true

@@ -32,13 +32,17 @@ public class TagSeviceImpl implements TagSevice {
     @Autowired
     private TagDao tagDao;
 
-    @Override
-    public JSONObject addTag(JSONObject jsonObject) {
-        return null;
-    }
 
     @Override
-    public JSONObject listTag(JSONObject jsonObject) {
+    public JSONObject listTag (JSONObject jsonObject) {
+        /**
+         * create by: lc
+         * description: 分页显示标签
+         * create time: 2019/6/29 10:33
+         *
+          * @param jsonObject
+         * @return com.alibaba.fastjson.JSONObject
+         */
         CommonUtil.fillPageParam(jsonObject);
         int count = tagDao.countTag(jsonObject);
         List<JSONObject> list = tagDao.listTag(jsonObject);
@@ -46,7 +50,15 @@ public class TagSeviceImpl implements TagSevice {
     }
 
     @Override
-    public JSONObject listAllTag(JSONObject jsonObject) {
+    public JSONObject listAllTag (JSONObject jsonObject) {
+        /**
+         * create by: lc
+         * description: 显示标签
+         * create time: 2019/6/29 10:33
+         *
+          * @param jsonObject
+         * @return com.alibaba.fastjson.JSONObject
+         */
         CommonUtil.fillPageParam(jsonObject);
         int count = tagDao.countTag(jsonObject);
         List<JSONObject> list = tagDao.listAllTag(jsonObject);
@@ -54,7 +66,15 @@ public class TagSeviceImpl implements TagSevice {
     }
 
     @Override
-    public JSONObject updateTag(JSONObject jsonObject) {
+    public JSONObject updateTag (JSONObject jsonObject) {
+        /**
+         * create by: lc
+         * description:
+         * create time: 2019/7/1 10:34
+         *
+          * @param jsonObject
+         * @return com.alibaba.fastjson.JSONObject
+         */
         JSONObject tagByName = tagDao.getTagByName(jsonObject);
         Integer parentId = (Integer) jsonObject.get("parentId");
         int rank;
@@ -73,17 +93,31 @@ public class TagSeviceImpl implements TagSevice {
     }
 
     @Override
-    public JSONObject deleteTag(JSONObject jsonObject) {
-/*
-        System.out.println(jsonObject);
-*/
+    public JSONObject deleteTag (JSONObject jsonObject) {
+        /**
+         * create by: lc
+         * description: 删除标签
+         * create time: 2019/6/29 10:35
+         *
+          * @param jsonObject
+         * @return com.alibaba.fastjson.JSONObject
+         */
         tagDao.updateByStatus(jsonObject);
         return CommonUtil.successJson();
     }
 
     @Override
     @Transactional(readOnly = false,rollbackFor = Exception.class)
-    public JSONObject batchImport(String fileName, MultipartFile file) throws Exception {
+    public JSONObject batchImport (String fileName, MultipartFile file) throws Exception {
+        /**
+         * create by: lc
+         * description: 增量导入标签
+         * create time: 2019/6/29 10:35
+         *
+          * @param fileName
+         * @param file
+         * @return com.alibaba.fastjson.JSONObject
+         */
         boolean notNull = false;
         List<Tag> tagList = new ArrayList<>();
         if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
@@ -188,7 +222,16 @@ public class TagSeviceImpl implements TagSevice {
 
     @Override
     @Transactional(readOnly = false,rollbackFor = Exception.class)
-    public JSONObject coverImport(String fileName, MultipartFile file) throws Exception {
+    public JSONObject coverImport (String fileName, MultipartFile file) throws Exception {
+        /**
+         * create by: lc
+         * description:
+         * create time: 2019/6/29 10:35
+         *
+          * @param fileName
+         * @param file
+         * @return com.alibaba.fastjson.JSONObject
+         */
         tagDao.deleteAllTag();
         boolean notNull = false;
         List<Tag> tagList = new ArrayList<>();
