@@ -264,7 +264,7 @@ public class PostServiceImpl implements PostService {
 
     /**
      * 获取帖子列表（非详情）
-     * @param jsonObject 帖子ID（数组postIdList）,userId
+     * @param jsonObject postIdList(帖子ID数组),userId(当前用户ID)
      * @return
      */
     @Override
@@ -272,10 +272,12 @@ public class PostServiceImpl implements PostService {
         List<JSONObject> postList = postDao.getPostListApi(jsonObject);
         for (JSONObject object : postList) {
             object.put("userId",jsonObject.get("userId"));
-            JSONObject postOwner = externalUserDao.findUserById(object.getInteger("postOwnerId"));
+            object.put("uuId",object.get("postOwnerId"));
+            JSONObject postOwner = externalUserDao.findIconById(object);
             object.put("postOwnerName", postOwner.get("username"));
             object.put("postOwnerUrl", postOwner.get("iconUrl"));
             int collect = collectionDao.getByPostIdCount(object);
+            //判断是否被收藏
             if(collect == 0){
                 object.put("collectionState",false);
             }else {
@@ -283,6 +285,14 @@ public class PostServiceImpl implements PostService {
             }
             object.put("browseCount",browseRecordDao.countPostBrowse(object) + object.getInteger("browseOffset"));
             object.put("comments",commentDao.getByPostId(object));
+            List<JSONObject> likeUserList= new ArrayList<>();
+            List<JSONObject> likeListId = thumbsUpDao.getLikeList(object);
+            //点赞用户列表循环
+            for (JSONObject likeUser : likeListId) {
+                likeUser.put("uuId",likeUser.get("userId"));
+                likeUserList.add(externalUserDao.findIconById(likeUser));
+            }
+            object.put("likeUserList",likeUserList);
         }
         return CommonUtil.successJson(postList);
     }

@@ -292,7 +292,7 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         int myfans = userAttentionDao.countFansByUUID(jsonObject);//粉丝数量
         int mygood = userDao.countGoodByUUID(jsonObject);//点赞数量
         jsonObject.put("userId",uuId);
-        int mycollention = collectionDao.countByUserId(jsonObject);//收藏数量
+        int mycollention = collectionDao.getByUserIdCount(jsonObject);//收藏数量
         JSONObject myicon = userDao.findIconById(jsonObject);//头像、昵称
 
         JSONObject myself = new JSONObject();
