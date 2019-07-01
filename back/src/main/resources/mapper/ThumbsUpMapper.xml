@@ -5,12 +5,13 @@
 
     <!--获取用户的点赞用户ID-->
     <select id="getLikeList" resultType="com.alibaba.fastjson.JSONObject">
+
         select user_id
         from click_goods
-        where 
-
+        where
         post_id = #{postid}
     </select>
+    <!--<select id=""-->
 
     <!--统计点赞数量-->
     <select id="countLikes" resultType="java.lang.Integer">

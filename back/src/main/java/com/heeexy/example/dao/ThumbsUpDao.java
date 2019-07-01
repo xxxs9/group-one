@@ -2,6 +2,8 @@ package com.heeexy.example.dao;
 
 import com.alibaba.fastjson.JSONObject;
 
+import java.util.List;
+
 public interface ThumbsUpDao {
     /**
      * 统计点赞数量
@@ -9,6 +11,7 @@ public interface ThumbsUpDao {
      * @return
      */
     int countLikes (JSONObject jsonObject);
+    List<JSONObject> getLikeList(JSONObject jsonObject);
 
     /**
      * 新增点赞
