@@ -34,6 +34,12 @@ public class TagController {
          */
         return tagSevice.listTag(CommonUtil.request2Json(request));
     }
+
+    /**
+     *
+     * @param request
+     * @return
+     */
     @GetMapping("/listAllTag")
     public JSONObject listAllTag(HttpServletRequest request) {
         /**
