@@ -119,4 +119,14 @@ public interface PostDao {
      * @return
      */
     JSONObject getTagById(JSONObject jsonObject);
+
+
+    /********************************小程序数据*******************************************/
+    
+    /**
+     *
+     * @param
+     * @return 
+     */
+    List<JSONObject> getPostListApi(JSONObject jsonObject);
 }

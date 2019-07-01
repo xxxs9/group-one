@@ -1,11 +1,9 @@
 package com.heeexy.example.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.heeexy.example.dao.CommentDao;
-import com.heeexy.example.dao.ExternalUserDao;
-import com.heeexy.example.dao.PostDao;
-import com.heeexy.example.dao.TagDao;
+import com.heeexy.example.dao.*;
 import com.heeexy.example.service.PostService;
 import com.heeexy.example.util.CommonUtil;
 import com.heeexy.example.util.constants.ErrorEnum;
@@ -41,6 +39,15 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private TagDao tagDao;
 
+    @Autowired
+    private CollectionDao collectionDao;
+
+    @Autowired
+    private BrowseRecordDao browseRecordDao;
+
+    @Autowired
+    private ThumbsUpDao thumbsUpDao;
+
     /**
      * 帖子列表
      * @param jsonObject 页码
@@ -49,6 +56,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public JSONObject listPost(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
+        //发帖用户昵称查询
         String queryOwnewName = jsonObject.getString("queryOwnewName");
         if(queryOwnewName != null && "".equals(queryOwnewName)==false){
             JSONObject queryKey = new JSONObject();
@@ -60,6 +68,7 @@ public class PostServiceImpl implements PostService {
             }
             jsonObject.put("postOwnerId",postOwnerIdList);
         }
+        //标签查询
         String queryPostTagId = jsonObject.getString("queryPostTagId");
         if(null != queryPostTagId && !"".equals(queryPostTagId) && queryPostTagId.length()!=0){
             String[] split = queryPostTagId.split("-");
@@ -106,6 +115,7 @@ public class PostServiceImpl implements PostService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject updateBrowseOffset(JSONObject jsonObject) {
         postDao.updateBrowseOffset(jsonObject);
         return CommonUtil.successJson();
@@ -231,9 +241,49 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public JSONObject getDetailById(JSONObject jsonObject) {
-        JSONObject postDetail = queryPostById(jsonObject);
+        //获取帖子详情
+        JSONObject postDetail = postDao.queryPostById(jsonObject);
+        JSONObject postOwner = externalUserDao.findUserById(postDetail.getInteger("postOwnerId"));
+        int collect = collectionDao.getByPostIdCount(jsonObject);
+        if(collect == 0){
+            postDetail.put("collectionState",false);
+        }else {
+            postDetail.put("collectionState",true);
+        }
+        List<JSONObject> byPostId = commentDao.getByPostId(jsonObject);
+        postDetail.put("comments",byPostId);
+        postDetail.put("postOwnerName",postOwner.get("username"));
+        postDetail.put("postOwnerUrl",postOwner.get("iconUrl"));
+        postDetail.put("browseCount",browseRecordDao.countPostBrowse(jsonObject) + postDetail.getInteger("browseOffset"));
+        postDetail.put("likeCount",thumbsUpDao.countLikes(jsonObject) + postDetail.getInteger("likeOffset"));
+        postDetail.remove("browseOffset");
+        postDetail.remove("likeOffset");
+        return CommonUtil.successJson(postDetail);
+    }
 
 
-        return null;
+    /**
+     * 获取帖子列表（非详情）
+     * @param jsonObject 帖子ID（数组postIdList）,userId
+     * @return
+     */
+    @Override
+    public JSONObject listPostApi(JSONObject jsonObject) {
+        List<JSONObject> postList = postDao.getPostListApi(jsonObject);
+        for (JSONObject object : postList) {
+            object.put("userId",jsonObject.get("userId"));
+            JSONObject postOwner = externalUserDao.findUserById(object.getInteger("postOwnerId"));
+            object.put("postOwnerName", postOwner.get("username"));
+            object.put("postOwnerUrl", postOwner.get("iconUrl"));
+            int collect = collectionDao.getByPostIdCount(object);
+            if(collect == 0){
+                object.put("collectionState",false);
+            }else {
+                object.put("collectionState",true);
+            }
+            object.put("browseCount",browseRecordDao.countPostBrowse(object) + object.getInteger("browseOffset"));
+            object.put("comments",commentDao.getByPostId(object));
+        }
+        return CommonUtil.successJson(postList);
     }
 }

@@ -60,4 +60,11 @@ public interface BrowseRecordDao {
      * @return
      */
     int addRecord(JSONObject jsonObject);
+
+    /**
+     * 查询帖子的浏览数
+     * @param jsonObject 帖子ID
+     * @return
+     */
+    int countPostBrowse(JSONObject jsonObject);
 }

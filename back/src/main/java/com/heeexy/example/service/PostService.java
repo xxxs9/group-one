@@ -75,4 +75,10 @@ public interface PostService {
      */
     JSONObject getDetailById(JSONObject jsonObject);
 
+    /**
+     * 获取帖子列表（非详情）
+     * @param jsonObject 帖子ID（数组postIdList）
+     * @return
+     */
+    JSONObject  listPostApi(JSONObject jsonObject);
 }
