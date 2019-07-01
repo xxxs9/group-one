@@ -80,5 +80,5 @@ public interface PostService {
      * @param jsonObject 帖子ID（数组postIdList）
      * @return
      */
-    JSONObject  listPostApi(JSONObject jsonObject);
+    JSONObject  getPostListApi(JSONObject jsonObject);
 }

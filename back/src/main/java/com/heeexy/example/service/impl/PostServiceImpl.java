@@ -268,7 +268,7 @@ public class PostServiceImpl implements PostService {
      * @return
      */
     @Override
-    public JSONObject listPostApi(JSONObject jsonObject) {
+    public JSONObject getPostListApi(JSONObject jsonObject) {
         List<JSONObject> postList = postDao.getPostListApi(jsonObject);
         for (JSONObject object : postList) {
             object.put("userId",jsonObject.get("userId"));
@@ -293,6 +293,8 @@ public class PostServiceImpl implements PostService {
                 likeUserList.add(externalUserDao.findIconById(likeUser));
             }
             object.put("likeUserList",likeUserList);
+            object.remove("uuId");
+            object.remove("postTypeId");
         }
         return CommonUtil.successJson(postList);
     }
