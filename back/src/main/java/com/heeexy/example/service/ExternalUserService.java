@@ -34,16 +34,15 @@ public interface ExternalUserService {
     JSONObject getUserPermission(JSONObject jsonObject);
 
     /**
-     * 将用户曾经拥有而修改为不再拥有的权限 delete_status改为'2'
-     * @param uuId
-     * @param permissions
+     * 修改用户的权限状态
+     * @param jsonObject
      * @return
      */
     JSONObject updatePermission(JSONObject jsonObject);
 
     /**
      * 修改用户被禁用的权限状态 delete_status改为'1'
-     * @param uuId
+     * @param jsonObject
      * @return
      */
     JSONObject refreshPermissionStatus(JSONObject jsonObject);
