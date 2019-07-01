@@ -47,7 +47,7 @@
       <el-table-column align="center" label="上级标签"  prop="parentId" width="300">
         <template slot-scope="scope">
           <el-tag  v-if="scope.row.rank==1" style="margin-right: 3px;" type="success">无</el-tag>
-          <div v-if="scope.row.rank!=1" v-for="tags in list" style="text-align: center">
+          <div v-if="scope.row.rank!=1" v-for="tags in typeOption" style="text-align: center">
             <el-tag  v-if="scope.row.parentId == tags.id" style="margin-right: 3px;" type="danger" v-text="tags.name"></el-tag>
 
           </div>
@@ -86,7 +86,7 @@
             </el-option>
             <el-option
               v-for="item in typeOption"
-              v-if="item.id != tempTag.parentId"
+              v-if="item.name != tempTag.name"
               :key="item.id"
               :label="item.name"
               :value="item.id">
@@ -118,6 +118,7 @@
           children: 'children',
           label: 'name'
         },
+
         typeOption: '',
         totalCount: 0, //分页组件--数据总条数
         list: [],//表格的数据
@@ -199,6 +200,7 @@
           this.totalCount = data.totalCount;
         })
       },
+
       getIndex($index) {
         //表格序号
         return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1

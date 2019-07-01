@@ -10,15 +10,7 @@
           </el-button>
         </el-form-item>
       </el-form>
-      <el-form-item>
-        <el-select v-model="tempTemplate.id" filterable clearable placeholder="选择帖子类型" @change="getList">
-          <el-option v-for="item in typeOption" :key="item.id" :label="'# '+item.sortname+' #'" :value="item.id">
-          </el-option>
-        </el-select>
-        <el-form-item>
-          <el-button type="primary" class="el-icon-close" @click="refashList"></el-button>
-        </el-form-item>
-      </el-form-item>
+
     </div>
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
@@ -54,11 +46,12 @@
       <el-form class="small-space" :model="tempTemplate" label-position="left" label-width="60px"
                style='width: 300px; margin-left:50px;'>
         <el-form-item  v-if="dialogStatus=='create'" label="名字">
-          <el-input type="text" v-model="tempTemplate.tname">
+          <el-input type="text" v-model="tempTemplate.tname" style="width: 500px ">
           </el-input>
         </el-form-item>
         <el-form-item label="内容">
-          <el-input type="text" v-model="tempTemplate.content">
+          <el-input type="textarea" v-model="tempTemplate.content"    placeholder="请输入内容"
+                    maxlength="100" show-word-limit style="width: 500px ">
           </el-input>
         </el-form-item>
       </el-form>
@@ -85,7 +78,6 @@
             pageRow: 50,//每页条数
             name: ''
           },
-          typeOption: '',
           dialogStatus: 'create',
           dialogFormVisible: false,
           textMap: {
@@ -118,13 +110,7 @@
             this.totalCount = data.totalCount;
           })
         },
-        refashList() {
-/*          this.tempTemplate.queryText = '';
-          this.tempTemplate.dataValue = '';
-          this.tempTemplate.queryOwnewName = '';
-          this.tempTemplate.queryPostTypeId = '';*/
-          this.getList();
-        },
+
         handleSizeChange(val) {
           //改变每页数量
           this.listQuery.pageRow = val
@@ -197,7 +183,7 @@
         },
         removeTemplate($index) {
           let _vue = this;
-          this.$confirm('确定删除此用户?', '提示', {
+          this.$confirm('确定删除此模板?', '提示', {
             confirmButtonText: '确定',
             showCancelButton: false,
             type: 'warning'
