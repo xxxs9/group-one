@@ -220,13 +220,12 @@ public class TagSeviceImpl implements TagSevice {
         return CommonUtil.successJson();
     }
 
-
     @Override
     @Transactional(readOnly = false,rollbackFor = Exception.class)
     public JSONObject coverImport (String fileName, MultipartFile file) throws Exception {
         /**
          * create by: lc
-         * description: 覆盖标签导入
+         * description:
          * create time: 2019/6/29 10:35
          *
           * @param fileName
