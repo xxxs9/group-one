@@ -4,7 +4,13 @@
 <mapper namespace="com.heeexy.example.dao.ThumbsUpDao">
 
     <!--获取用户的点赞用户ID-->
+    <select id="getLikeList" resultType="com.alibaba.fastjson.JSONObject">
+        select user_id
+        from click_goods
+        where 
 
+        post_id = #{postid}
+    </select>
 
     <!--统计点赞数量-->
     <select id="countLikes" resultType="java.lang.Integer">
