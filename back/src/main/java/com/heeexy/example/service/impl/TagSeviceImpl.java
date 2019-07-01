@@ -32,13 +32,17 @@ public class TagSeviceImpl implements TagSevice {
     @Autowired
     private TagDao tagDao;
 
-    @Override
-    public JSONObject addTag(JSONObject jsonObject) {
-        return null;
-    }
 
     @Override
-    public JSONObject listTag(JSONObject jsonObject) {
+    public JSONObject listTag (JSONObject jsonObject) {
+        /**
+         * create by: lc
+         * description: 分页显示标签
+         * create time: 2019/6/29 10:33
+         *
+          * @param jsonObject
+         * @return com.alibaba.fastjson.JSONObject
+         */
         CommonUtil.fillPageParam(jsonObject);
         int count = tagDao.countTag(jsonObject);
         List<JSONObject> list = tagDao.listTag(jsonObject);
@@ -46,7 +50,15 @@ public class TagSeviceImpl implements TagSevice {
     }
 
     @Override
-    public JSONObject listAllTag(JSONObject jsonObject) {
+    public JSONObject listAllTag (JSONObject jsonObject) {
+        /**
+         * create by: lc
+         * description: 显示标签
+         * create time: 2019/6/29 10:33
+         *
+          * @param jsonObject
+         * @return com.alibaba.fastjson.JSONObject
+         */
         CommonUtil.fillPageParam(jsonObject);
         int count = tagDao.countTag(jsonObject);
         List<JSONObject> list = tagDao.listAllTag(jsonObject);
@@ -54,7 +66,15 @@ public class TagSeviceImpl implements TagSevice {
     }
 
     @Override
-    public JSONObject updateTag(JSONObject jsonObject) {
+    public JSONObject updateTag (JSONObject jsonObject) {
+        /**
+         * create by: lc
+         * description:
+         * create time: 2019/7/1 10:34
+         *
+          * @param jsonObject
+         * @return com.alibaba.fastjson.JSONObject
+         */
         JSONObject tagByName = tagDao.getTagByName(jsonObject);
         Integer parentId = (Integer) jsonObject.get("parentId");
         int rank;
@@ -73,17 +93,31 @@ public class TagSeviceImpl implements TagSevice {
     }
 
     @Override
-    public JSONObject deleteTag(JSONObject jsonObject) {
-/*
-        System.out.println(jsonObject);
-*/
+    public JSONObject deleteTag (JSONObject jsonObject) {
+        /**
+         * create by: lc
+         * description: 删除标签
+         * create time: 2019/6/29 10:35
+         *
+          * @param jsonObject
+         * @return com.alibaba.fastjson.JSONObject
+         */
         tagDao.updateByStatus(jsonObject);
         return CommonUtil.successJson();
     }
 
     @Override
     @Transactional(readOnly = false,rollbackFor = Exception.class)
-    public JSONObject batchImport(String fileName, MultipartFile file) throws Exception {
+    public JSONObject batchImport (String fileName, MultipartFile file) throws Exception {
+        /**
+         * create by: lc
+         * description: 增量导入标签
+         * create time: 2019/6/29 10:35
+         *
+          * @param fileName
+         * @param file
+         * @return com.alibaba.fastjson.JSONObject
+         */
         boolean notNull = false;
         List<Tag> tagList = new ArrayList<>();
         if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
@@ -117,7 +151,7 @@ public class TagSeviceImpl implements TagSevice {
 
             if( row.getCell(0).getCellType() !=1){//循环时，得到每一行的单元格进行判断
 //                return CommonUtil.errorJson();
-                return CommonUtil.errorJson(ErrorEnum.E_500);
+                return CommonUtil.errorJson(ErrorEnum.E_10014);
 
 //                throw new MyException("导入失败(第"+(r+1)+"行,标签名称请设为文本格式)");
             }
@@ -128,7 +162,7 @@ public class TagSeviceImpl implements TagSevice {
 
             if(pName == null  || pName.isEmpty()){//判断是否为空
 //                throw new MyException("导入失败(第"+(r+1)+"行,id未填写)");
-                return CommonUtil.errorJson(ErrorEnum.E_503);
+                return CommonUtil.errorJson(ErrorEnum.E_10016);
 
             }
             JSONObject jsonObject =new JSONObject();
@@ -151,7 +185,7 @@ public class TagSeviceImpl implements TagSevice {
             }
             if( row.getCell(1).getCellType() !=1){//循环时，得到每一行的单元格进行判断
 //                return CommonUtil.errorJson();
-                return CommonUtil.errorJson(ErrorEnum.E_500);
+                return CommonUtil.errorJson(ErrorEnum.E_10015);
 
 //                throw new MyException("导入失败(第"+(r+1)+"行,标签名称请设为文本格式)");
             }
@@ -163,7 +197,7 @@ public class TagSeviceImpl implements TagSevice {
 
             if(tagName == null || tagName.isEmpty()){//判断是否为空
 //                throw new MyException("导入失败(第"+(r+1)+"行,用户名未填写)");
-                return CommonUtil.errorJson(ErrorEnum.E_400);
+                return CommonUtil.errorJson(ErrorEnum.E_10017);
             }
             jsonObject.put("tagName",tagName);
             int i = tagDao.countTagByName(jsonObject);
@@ -188,7 +222,16 @@ public class TagSeviceImpl implements TagSevice {
 
     @Override
     @Transactional(readOnly = false,rollbackFor = Exception.class)
-    public JSONObject coverImport(String fileName, MultipartFile file) throws Exception {
+    public JSONObject coverImport (String fileName, MultipartFile file) throws Exception {
+        /**
+         * create by: lc
+         * description:
+         * create time: 2019/6/29 10:35
+         *
+          * @param fileName
+         * @param file
+         * @return com.alibaba.fastjson.JSONObject
+         */
         tagDao.deleteAllTag();
         boolean notNull = false;
         List<Tag> tagList = new ArrayList<>();
@@ -221,9 +264,11 @@ public class TagSeviceImpl implements TagSevice {
 
             Tag tag = new Tag();
 
-            if( row.getCell(1).getCellType() !=1){//循环时，得到每一行的单元格进行判断
+            if( row.getCell(0).getCellType() !=1){//循环时，得到每一行的单元格进行判断
 //                return CommonUtil.errorJson();
-                return CommonUtil.errorJson(ErrorEnum.E_500);
+                String string = "导入失败(第"+(r+1)+"行,父标签名称请设为文本格式)";
+
+                return  CommonUtil.errorJson(ErrorEnum.E_10014);
 
 //                throw new MyException("导入失败(第"+(r+1)+"行,标签名称请设为文本格式)");
             }
@@ -234,7 +279,7 @@ public class TagSeviceImpl implements TagSevice {
 
             if(pName == null  || pName.isEmpty()){//判断是否为空
 //                throw new MyException("导入失败(第"+(r+1)+"行,id未填写)");
-                return CommonUtil.errorJson(ErrorEnum.E_503);
+                return CommonUtil.errorJson(ErrorEnum.E_10016);
 
             }
             JSONObject jsonObject =new JSONObject();
@@ -260,7 +305,7 @@ public class TagSeviceImpl implements TagSevice {
             }
             if( row.getCell(1).getCellType() !=1){//循环时，得到每一行的单元格进行判断
 //                return CommonUtil.errorJson();
-                return CommonUtil.errorJson(ErrorEnum.E_500);
+                return  CommonUtil.errorJson(ErrorEnum.E_10015);
 
 //                throw new MyException("导入失败(第"+(r+1)+"行,标签名称请设为文本格式)");
             }
@@ -272,7 +317,7 @@ public class TagSeviceImpl implements TagSevice {
 
             if(tagName == null || tagName.isEmpty()){//判断是否为空
 //                throw new MyException("导入失败(第"+(r+1)+"行,用户名未填写)");
-                return CommonUtil.errorJson(ErrorEnum.E_400);
+                return CommonUtil.errorJson(ErrorEnum.E_10017);
             }
             jsonObject.put("tagName",tagName);
             int i = tagDao.countTagByName(jsonObject);

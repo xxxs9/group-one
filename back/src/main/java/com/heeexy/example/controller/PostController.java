@@ -1,7 +1,6 @@
 package com.heeexy.example.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.heeexy.example.service.PostService;
 import com.heeexy.example.service.impl.PostServiceImpl;
 import com.heeexy.example.util.CommonUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -166,5 +165,6 @@ public class PostController {
         CommonUtil.hasAllRequired(requestJson, "postId,addPostTagId");
         return postService.addPostTag(requestJson);
     }
+
 
 }

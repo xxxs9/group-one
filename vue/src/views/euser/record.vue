@@ -40,13 +40,13 @@
     </div>
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
-      <!--<el-table-column align="center" label="序号" width="80">-->
-      <!--<template slot-scope="scope">-->
-      <!--<span v-text="getIndex(scope.$index)"> </span>-->
-      <!--</template>-->
-      <!--</el-table-column>-->
-      <el-table-column align="center" label="用户ID" prop="userId" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="UUID" prop="uuId" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="序号" width="80">
+      <template slot-scope="scope">
+      <span v-text="getIndex(scope.$index)"> </span>
+      </template>
+      </el-table-column>
+      <!--<el-table-column align="center" label="用户ID" prop="userId" style="width: 60px;"></el-table-column>-->
+      <!--<el-table-column align="center" label="UUID" prop="uuId" style="width: 60px;"></el-table-column>-->
       <el-table-column align="center" label="昵称" prop="username" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="性别" prop="sex" style="width: 60px;"></el-table-column>
       <!--<el-table-column align="center" label="帖子ID" prop="postId" style="width: 60px;"></el-table-column>-->
@@ -223,6 +223,10 @@
         })
         this.dialogStatus = "postDetail";
         this.dialogFormVisible = true;
+      },
+      getIndex($index) {
+        //表格序号
+        return (this.listQuery.pageNum - 1) * this.listQuery.pageRow + $index + 1
       },
 
     }
