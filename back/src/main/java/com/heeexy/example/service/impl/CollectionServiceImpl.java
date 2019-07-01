@@ -11,6 +11,7 @@ import com.heeexy.example.util.constants.ErrorEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +26,9 @@ public class CollectionServiceImpl implements CollectionService {
 
     @Autowired
     private ExternalUserDao externalUserDao;
+
+    @Autowired
+    PostServiceImpl postService;
 
     /**
      * 用户收藏帖子列表
@@ -41,7 +45,16 @@ public class CollectionServiceImpl implements CollectionService {
 //        }
         int count = collectionDao.getByUserIdCount(jsonObject);
         List<JSONObject> list = collectionDao.getByUserId(jsonObject);
-        return CommonUtil.successPage(jsonObject, list, count);
+        List<Integer> postIdList = new ArrayList<>();
+        for (JSONObject object : list) {
+            postIdList.add(object.getInteger("postId"));
+        }
+        jsonObject.put("postIdList", postIdList);
+        List<JSONObject> postListApi = postService.getPostListApi(jsonObject);
+        JSONObject collectionList = new JSONObject();
+        collectionList.put("postListApi", postListApi);
+        collectionList.put("collectionList",list );
+        return CommonUtil.successJson(collectionList);
     }
 
     /**

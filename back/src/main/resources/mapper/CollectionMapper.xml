@@ -9,7 +9,7 @@
         <result column="collectionTime" property="collectionTime" />
     </resultMap>
 
-    <select id="getByUserId" parameterType="java.lang.Integer" resultMap="collectionMap">
+    <select id="getByUserId" resultMap="collectionMap">
         SELECT
         collection_id                                                            collectionId
         ,DATE_FORMAT(collection_time, '%Y.%m.%d %T')                             collectionTime

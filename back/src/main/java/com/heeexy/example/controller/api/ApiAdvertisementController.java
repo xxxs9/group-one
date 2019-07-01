@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author L-YX
  * @version 1.0
- * @description 广告接口
+ * @description 前台广告接口
  * @data 2019-06-28 09:43
  */
 @RestController
-@RequestMapping("/home")
+@RequestMapping("/api/home")
 public class ApiAdvertisementController {
     @Autowired
     AdvertisementServiceImpl advertisementService;

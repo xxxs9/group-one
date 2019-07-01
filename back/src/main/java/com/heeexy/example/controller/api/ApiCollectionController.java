@@ -24,16 +24,12 @@ public class ApiCollectionController {
     @Autowired
     CollectionServiceImpl collectionService;
 
-    @Autowired
-    PostServiceImpl postService;
-
     /**
      * 前台用户收藏列表接口
      */
     @RequestMapping("/collectionList")
-    public JSONObject collectionList(HttpServletRequest request) {
-//        CommonUtil.request2Json(request).put("",111 );
-        return collectionService.getByUserId(CommonUtil.request2Json(request));
+    public JSONObject collectionList(@RequestBody JSONObject requestJson) {
+        return collectionService.getByUserId(requestJson);
     }
 
     /**

@@ -36,6 +36,6 @@ public class ApiPostController {
     @PostMapping("/listPostType")
     public JSONObject listPostType(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "postStick");
-        return postService.getPostListApi(requestJson);
+        return postService.getStickPost(requestJson);
     }
 }
