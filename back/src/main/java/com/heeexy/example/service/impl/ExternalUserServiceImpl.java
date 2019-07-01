@@ -5,6 +5,7 @@ import com.heeexy.example.dao.CollectionDao;
 import com.heeexy.example.dao.ExternalUserDao;
 import com.heeexy.example.dao.UserAttentionDao;
 import com.heeexy.example.service.ExternalUserService;
+import com.heeexy.example.service.PostService;
 import com.heeexy.example.util.CommonUtil;
 import com.heeexy.example.util.constants.ErrorEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,10 @@ public class ExternalUserServiceImpl implements ExternalUserService {
 
     @Autowired
     CollectionDao collectionDao;
+
+    @Autowired
+    PostService postService;
+
 
     /**
      * 用户列表
@@ -263,10 +268,6 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         return CommonUtil.successPage(allPerm);
     }
 
-    @Override
-    public JSONObject getPostByUUID(JSONObject jsonObject) {
-        return null;
-    }
 
     @Override
     public JSONObject getPostIdByLike(JSONObject jsonObject) {
@@ -310,6 +311,19 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         myself.put("myicon",myicon);
 
         return CommonUtil.successJson(myself);
+    }
+
+    @Override
+    public JSONObject getOthers(JSONObject jsonObject) {
+
+        List<JSONObject> postIdList = userDao.getPostByUUID(jsonObject);
+        JSONObject postIds = new JSONObject();
+        postIds.put("postIdList",postIdList);
+        postIds.put("userId",jsonObject.getInteger("userId"));
+        JSONObject postListApi = postService.getPostListApi(postIds);
+        getMyself(jsonObject);
+//        postIds.put("");
+        return null;
     }
 
 

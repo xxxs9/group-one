@@ -70,13 +70,6 @@ public interface ExternalUserService {
 
 
     /**
-     * 根据UUID获取该用户所发的帖子id
-     * @param jsonObject
-     * @return
-     */
-    JSONObject getPostByUUID(JSONObject jsonObject);
-
-    /**
      * 获取用户点赞过的帖子id
      * @param jsonObject
      * @return
@@ -96,5 +89,12 @@ public interface ExternalUserService {
      * @return
      */
     JSONObject getMyself(JSONObject jsonObject);
+
+    /**
+     * 获取其他用户信息
+     * @param jsonObject
+     * @return
+     */
+    JSONObject getOthers(JSONObject jsonObject);
 }
 

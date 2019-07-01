@@ -65,4 +65,20 @@ public interface PostService {
      */
     JSONObject addPostTag(JSONObject jsonObject);
 
+
+    /*****************************************小程序数据**********************************************/
+
+    /**
+     * 获取帖子详情
+     * @param jsonObject 帖子ID ，当前用户ID
+     * @return 帖子详情
+     */
+    JSONObject getDetailById(JSONObject jsonObject);
+
+    /**
+     * 获取帖子列表（非详情）
+     * @param jsonObject 帖子ID（数组postIdList）
+     * @return
+     */
+    JSONObject  getPostListApi(JSONObject jsonObject);
 }

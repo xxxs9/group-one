@@ -25,8 +25,7 @@ public class ApiExternalUserController {
     @Autowired
     ExternalUserService externalUserService;
 
-    @Autowired
-    PostService postService;
+
 
     /**
      * 获取用户信息(发帖数量，关注数量，粉丝数量，点赞数量，收藏数量，头像、昵称)
@@ -40,8 +39,9 @@ public class ApiExternalUserController {
     }
 
     @GetMapping("/others")
-    public JSONObject getOthers(){
-
+    public JSONObject getOthers(JSONObject jsonObject){
+//        externalUserService.getMyself()
+//        postService.getPostListApi(CommonUtil.request2Json(request));
         return null;
     }
 
