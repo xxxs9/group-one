@@ -287,13 +287,19 @@ public class ExternalUserServiceImpl implements ExternalUserService {
     @Override
     public JSONObject getMyself(JSONObject jsonObject) {
         Integer uuId = jsonObject.getInteger("uuId");
-        int myrelease = userDao.countPostByUUID(jsonObject);//发帖数量
-        int myattention = userAttentionDao.countIdolByUUID(jsonObject);//关注数量
-        int myfans = userAttentionDao.countFansByUUID(jsonObject);//粉丝数量
-        int mygood = userDao.countGoodByUUID(jsonObject);//点赞数量
+        //发帖数量
+        int myrelease = userDao.countPostByUUID(jsonObject);
+        //关注数量
+        int myattention = userAttentionDao.countIdolByUUID(jsonObject);
+        //粉丝数量
+        int myfans = userAttentionDao.countFansByUUID(jsonObject);
+        //点赞数量
+        int mygood = userDao.countGoodByUUID(jsonObject);
         jsonObject.put("userId",uuId);
-        int mycollention = collectionDao.countByUserId(jsonObject);//收藏数量
-        JSONObject myicon = userDao.findIconById(jsonObject);//头像、昵称
+        //收藏数量
+        int mycollention = collectionDao.getByUserIdCount(jsonObject);
+        //头像、昵称
+        JSONObject myicon = userDao.findIconById(jsonObject);
 
         JSONObject myself = new JSONObject();
         myself.put("myrelease",myrelease);

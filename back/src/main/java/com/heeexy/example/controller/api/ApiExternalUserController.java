@@ -3,6 +3,7 @@ package com.heeexy.example.controller.api;
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.ExternalUserDao;
 import com.heeexy.example.service.ExternalUserService;
+import com.heeexy.example.service.PostService;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,14 +19,17 @@ import javax.servlet.http.HttpServletRequest;
  * @version:
  */
 @Controller
-@RequestMapping("/api/euser")
+@RequestMapping("/api/user")
 public class ApiExternalUserController {
 
     @Autowired
     ExternalUserService externalUserService;
 
+    @Autowired
+    PostService postService;
+
     /**
-     * 获取用户信息
+     * 获取用户信息(发帖数量，关注数量，粉丝数量，点赞数量，收藏数量，头像、昵称)
      * @param request
      * @return
      */
@@ -34,6 +38,13 @@ public class ApiExternalUserController {
 
         return externalUserService.getMyself(CommonUtil.request2Json(request));
     }
+
+    @GetMapping("/others")
+    public JSONObject getOthers(){
+
+        return null;
+    }
+
 
 
 

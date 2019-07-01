@@ -28,7 +28,7 @@ public class ExternalUserController {
     BrowseRecordService recordService;
 
     /**
-     *
+     * 获取用户列表
      * @param request
      * @return
      */
@@ -38,6 +38,11 @@ public class ExternalUserController {
         return service.getUser(CommonUtil.request2Json(request));
     }
 
+    /**
+     * 修改粉丝偏移量
+     * @param requestJson
+     * @return
+     */
     @RequiresPermissions("euser:update")
     @PostMapping("/updateFO")
     public JSONObject updateFansOffset(@RequestBody JSONObject requestJson){
@@ -45,10 +50,21 @@ public class ExternalUserController {
         return service.updateFansOffset(requestJson);
     }
 
+    /**
+     * 获取权限列表
+     * @param request
+     * @return
+     */
     @GetMapping("/userPerm")
     public JSONObject listPerm(HttpServletRequest request){
         return service.getUserPermission(CommonUtil.request2Json(request));
     }
+
+    /**
+     * 修改用户权限
+     * @param requestJson
+     * @return
+     */
     @RequiresPermissions("euser:update")
     @PostMapping("/updatePerm")
     public JSONObject updatePermission(@RequestBody JSONObject requestJson){
@@ -56,23 +72,43 @@ public class ExternalUserController {
         return service.updatePermission(requestJson);
     }
 
+    /**
+     * 恢复用户权限
+     * @param requestJson
+     * @return
+     */
     @PostMapping("/refreshPerm")
     public JSONObject refreshPermission(@RequestBody JSONObject requestJson){
         CommonUtil.hasAllRequired(requestJson,"uuId");
         return service.refreshPermissionStatus(requestJson);
     }
+
+    /**
+     * 获取粉丝列表
+     * @param request
+     * @return
+     */
     @RequiresPermissions("euser:list")
     @GetMapping("/fanslist")
     public JSONObject getFans(HttpServletRequest request){
         return service.getFans(CommonUtil.request2Json(request));
     }
 
+    /**
+     *
+     * @param request
+     * @return
+     */
     @GetMapping("/perms")
     public JSONObject getPerm(HttpServletRequest request){
         return service.getPerm(CommonUtil.request2Json(request));
     }
 
-
+    /**
+     * 获取浏览记录
+     * @param request
+     * @return
+     */
     @RequiresPermissions("euser:list")
     @GetMapping("/recordlist")
     public JSONObject getRecord(HttpServletRequest request){
