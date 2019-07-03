@@ -38,6 +38,7 @@ const user = {
           method: "post",
           data: loginForm
         }).then(data => {
+
           if (data.result === "success") {
             //cookie中保存前端登录状态
             setToken();

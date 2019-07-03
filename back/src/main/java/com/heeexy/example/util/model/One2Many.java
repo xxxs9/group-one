@@ -32,7 +32,7 @@ public class One2Many extends JSONObject {
     /**
      * 帖子图片数组
      */
-    private Set<Integer> postImgList;
+    private Set<Integer> imgUrl;
 
 	/**
 	 * 评论，广告和收藏

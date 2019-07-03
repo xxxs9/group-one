@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.*;
 import com.heeexy.example.service.PostService;
 import com.heeexy.example.util.CommonUtil;
+import com.heeexy.example.util.StringTools;
 import com.heeexy.example.util.constants.ErrorEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.heeexy.example.util.constants.ErrorEnum.E_90003;
@@ -267,45 +270,79 @@ public class PostServiceImpl implements PostService {
 
     /**
      * 获取帖子列表（非详情）
-     * @param jsonObject postIdList(帖子ID数组),userId(当前用户ID)
+     * @param jsonObject postIdList[postIdo9](帖子ID数组),userId(当前用户ID)
      * @return
      */
     @Override
     public List<JSONObject> getPostListApi(JSONObject jsonObject) {
+        //获取帖子ID列表
         JSONArray postIdList = jsonObject.getJSONArray("postIdList");
+        //判断帖子列表是否为空
         if (postIdList == null && postIdList.size() ==0){
             return null;
         }
+        //获取当前用户ID
         Integer userId = jsonObject.getInteger("userId");
+        //判断当前用户ID是否为空
         if(userId == 0 && userId == null){
             return null;
         }
+        //获取列表
         List<JSONObject> postList = postDao.getPostListApi(jsonObject);
+        //循环列表内容（处理单个帖子内容）
         for (JSONObject object : postList) {
             object.put("userId",jsonObject.get("userId"));
-            object.put("uuId",object.get("postOwnerId"));
+            object.put("uuId",object.get("uid"));
+            //获取发帖用户ID和头像
             JSONObject postOwner = externalUserDao.findIconById(object);
-            object.put("postOwnerName", postOwner.get("username"));
-            object.put("postOwnerUrl", postOwner.get("iconUrl"));
+            object.put("username", postOwner.get("username"));
+            object.put("avatarurl", postOwner.get("iconUrl"));
+            //查询是否被收藏
             int collect = collectionDao.getByPostIdCount(object);
-            //判断是否被收藏
+            //0为未被收藏，1为已收藏
             if(collect == 0){
                 object.put("collectionState",false);
             }else {
                 object.put("collectionState",true);
             }
-            object.put("browseCount",browseRecordDao.countPostBrowse(object) + object.getInteger("browseOffset"));
+            //计算浏览量（统计浏览量列表+偏移量）
+            object.put("seepeople",browseRecordDao.countPostBrowse(object) + object.getInteger("seepeople"));
             object.put("comments",commentDao.getByPostId(object));
-            List<JSONObject> likeUserList = new ArrayList<>();
+            //帖子ID
+            object.put("tid",object.get("postId"));
+            //点赞用户昵称的List
+            List<String> likeUserList = new ArrayList<>();
+            //获取点赞的用户IDList
             List<JSONObject> likeListId = thumbsUpDao.getLikeList(object);
             //点赞用户列表循环
             for (JSONObject likeUser : likeListId) {
                 likeUser.put("uuId",likeUser.get("userId"));
-                likeUserList.add(externalUserDao.findIconById(likeUser));
+                //查询点赞用户的昵称
+                JSONObject iconById = externalUserDao.findIconById(likeUser);
+                likeUserList.add(iconById.getString("username"));
             }
-            object.put("likeUserList",likeUserList);
+            //点赞用户不足6个时补齐6个
+            if(likeUserList.size() < 6){
+                for(int i = likeUserList.size();i < 6 ;i++){
+                    likeUserList.add("游客");
+                }
+            }
+            Integer priceFloor = object.getInteger("priceFloor");
+            Integer priceTop = object.getInteger("priceTop");
+            String price = "";
+            if(priceTop == 0){
+                price = "参考价格：" + priceFloor;
+            }else {
+                price = "参考价格：" + priceFloor + "---" + priceTop;
+            }
+            String desc = object.getString("desc");
+            object.put("desc",desc + "\n" + price);
+            object.put("good",likeUserList);
+//            String postTime = object.getString("postTime");
+//            String time = StringTools.CalculateTime(postTime);
+//            object.put("time",time);
+
             object.remove("uuId");
-            object.remove("postTypeId");
         }
         return postList;
     }
@@ -317,11 +354,44 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public JSONObject getStickPost(JSONObject jsonObject) {
+        CommonUtil.fillPageParam(jsonObject);
+        Object userId = jsonObject.get("userId");
+        String stickId = jsonObject.getString("stickId");
+        //获取置顶帖子
         List<JSONObject> postById = stickDao.getPostById(jsonObject);
+        List<JSONObject> topPostList = getPostList(postById, userId);
+        if(topPostList != null || topPostList.size()>0){
+            for (JSONObject object : topPostList) {
+                String postStick = object.getString("postStick");
+                if(!postStick.equals(stickId) && !"1".equals(postStick)){
+                    topPostList.remove(object);
+                }
+                object.put("top",true);
+            }
+        }
+
+        //获取剩余帖子
+        List<JSONObject> postIdByStick = postDao.getPostIdByStick(jsonObject);
+        List<JSONObject> otherPostList = getPostList(postIdByStick, userId);
+        for (JSONObject object : otherPostList) {
+            object.put("top",false);
+        }
+        Collections.sort(otherPostList, new Comparator<JSONObject>() {
+            @Override
+            public int compare(JSONObject o1, JSONObject o2) {
+                return ((Integer)o2.get("browseCount")).compareTo((Integer)o1.get("browseCount"));
+            }
+        });
+        topPostList.addAll(otherPostList);
+        jsonObject.put("postList",topPostList);
+        return jsonObject;
+    }
+
+    public List<JSONObject> getPostList(List<JSONObject> postIdList,Object userId){
         JSONObject stickObj = new JSONObject();
-        stickObj.put("postIdList",postById);
-        stickObj.put("userId",jsonObject.get("userId"));
+        stickObj.put("postIdList",postIdList);
+        stickObj.put("userId",userId);
         List<JSONObject> postStickList = getPostListApi(stickObj);
-        return stickObj;
+        return postStickList;
     }
 }

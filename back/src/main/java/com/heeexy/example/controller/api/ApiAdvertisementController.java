@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
  * @data 2019-06-28 09:43
  */
 @RestController
-@RequestMapping("/home")
+@RequestMapping("/api/home")
 public class ApiAdvertisementController {
     @Autowired
     AdvertisementServiceImpl advertisementService;
