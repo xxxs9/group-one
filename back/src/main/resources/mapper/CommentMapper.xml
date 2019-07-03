@@ -85,19 +85,12 @@
         SELECT COUNT(0) FROM comment WHERE commentuser_id = #{commentUserId}  AND comment_state = 1
     </select>
 
-    <select id="getByAcceptUserId" resultMap="commentMap">
+    <select id="getByAcceptUserId" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
-        comment_id                                                     commentId,
-        post_id                                                        postId,
-        (select username from user where user.uuid = c.postuser_id)    postUserName,
-        (select username from user where user.uuid = c.commentuser_id) commentUserName,
-        (select username from user where user.uuid = c.acceptuser_id)  acceptUserName,
-        comment_text                                                   commentText,
-        DATE_FORMAT(comment_time, '%Y.%m.%d %T')                       commentTime,
-        comment_state                                                  commentState
+        post_id                                                        postId
         FROM comment c
         WHERE acceptuser_id = #{acceptUserId}  AND c.comment_state = 1
-        ORDER BY comment_time LIMIT #{offSet}, #{pageRow}
+        ORDER BY comment_time
     </select>
 
     <select id="countByAcceptUserId" resultType="java.lang.Integer">

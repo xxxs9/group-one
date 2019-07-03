@@ -29,7 +29,7 @@ public class CommentServiceImpl implements CommentService {
     private PostDao postDao;
 
     /**
-     * 评论列表
+     * 后台评论列表
      * @param jsonObject (key:commentText,commentTime,commentUserName)
      * @return JSONObject
      */
@@ -63,7 +63,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
-     * 添加评论
+     * 前台添加评论
      * @param jsonObject (key:postId,postUserId,commentUserId,acceptUserId,commentText)
      * @return JSONObject
      */
@@ -74,7 +74,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
-     * 我评论过谁
+     * 前台我评论过谁
      * @param jsonObject (key:commentUserId)
      * @return JSONObject
      */
@@ -92,7 +92,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
-     * 谁评论过我
+     * 前台谁评论过我
      * @param jsonObject (key:acceptUserId)
      * @return JSONObject
      */
@@ -101,7 +101,12 @@ public class CommentServiceImpl implements CommentService {
         CommonUtil.fillPageParam(jsonObject);
         int count = commentDao.countByAcceptUserId(jsonObject);
         List<JSONObject> list = commentDao.getByAcceptUserId(jsonObject);
-        return CommonUtil.successPage(jsonObject, list, count);
+        jsonObject.put("postIdList", list);
+        List<JSONObject> postListApi = postDao.getPostListApi(jsonObject);
+        JSONObject acceptUser = new JSONObject();
+        acceptUser.put("postIdList",postListApi );
+        acceptUser.put("count", count);
+        return CommonUtil.successJson(acceptUser);
     }
 
     /**
