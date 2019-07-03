@@ -21,7 +21,9 @@ public class ApiCommentController {
     private CommentService commentService;
 
     /**
-     * 前台谁评论过我
+     * 前台谁评论过我接口
+     * @param requestJson (key:acceptUserId)
+     * @return JSONObject
      */
     @GetMapping("/acceptCom")
     public JSONObject AcceptUser(@RequestBody JSONObject requestJson) {
@@ -29,7 +31,9 @@ public class ApiCommentController {
     }
 
     /**
-     * 前台我评论过谁
+     * 前台我评论过谁接口
+     * @param requestJson (key:commentUserId)
+     * @return JSONObject
      */
     @GetMapping("/userCom")
     public JSONObject CommentUser(@RequestBody JSONObject requestJson) {
@@ -37,7 +41,9 @@ public class ApiCommentController {
     }
 
     /**
-     * 前台添加评论
+     * 前台添加评论接口
+     * @param requestJson (key:postId,postUserId,commentUserId,acceptUserId,commentText)
+     * @return JSONObject
      */
     @PostMapping("/addCom")
     public JSONObject addComment(@RequestBody JSONObject requestJson){
@@ -46,7 +52,9 @@ public class ApiCommentController {
     }
 
     /**
-     * 前台评论详情
+     * 前台评论详情接口
+     * @param requestJson (key:postId)
+     * @return JSONObject
      */
     @GetMapping("/detailsCom")
     public JSONObject commentDetails(@RequestBody JSONObject requestJson){
@@ -54,7 +62,9 @@ public class ApiCommentController {
     }
 
     /**
-     * 前台删除评论
+     * 前台删除评论接口
+     * @param requestJson (key:commentId)
+     * @return JSONObject
      */
     @PostMapping("/delCom")
     public JSONObject removeComment(@RequestBody JSONObject requestJson){

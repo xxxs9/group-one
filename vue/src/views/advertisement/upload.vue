@@ -14,6 +14,9 @@
             <el-form-item>
               <el-button type="primary" class="el-icon-search" @click="getList">搜索</el-button>
             </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="el-icon-refresh" circle @click="refashList"></el-button>
+            </el-form-item>
           </el-form>
         </el-form-item>
       </el-form>
@@ -282,6 +285,11 @@
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
+      },
+
+      refashList() {
+        this.tempAdvertisement.name = '';
+        this.getList();
       }
     }
   }

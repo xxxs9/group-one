@@ -20,6 +20,13 @@
         ORDER BY collection_time DESC LIMIT #{offSet}, #{pageRow}
     </select>
 
+    <select id="getPostIdByUserId" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        post_id                                                                 postId
+        FROM collection
+        WHERE user_id = #{userId}
+    </select>
+
     <insert id="addCollection" useGeneratedKeys="true" keyProperty="collectionId">
         INSERT INTO collection(user_id,post_id)
         VALUES (#{userId},#{postId})

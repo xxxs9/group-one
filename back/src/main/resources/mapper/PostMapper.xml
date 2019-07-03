@@ -280,7 +280,7 @@
                 post_state = '0'
              AND
                 <foreach collection="postIdList" item="id" open="post_id in(" close=")" separator=",">
-                    #{id.postIdList}
+                    #{id.postId}
                 </foreach>
               ORDER BY post_time DESC
           ) p

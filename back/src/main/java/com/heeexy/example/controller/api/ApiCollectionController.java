@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author L-YX
  * @version 1.0
- * @description 用户收藏接口
+ * @description 前台用户收藏接口
  * @data 2019-06-28 09:50
  */
 
@@ -26,6 +26,8 @@ public class ApiCollectionController {
 
     /**
      * 前台用户收藏列表接口
+     * @param requestJson (key:userId)
+     * @return JSONObject
      */
     @RequestMapping("/collectionList")
     public JSONObject collectionList(@RequestBody JSONObject requestJson) {
@@ -34,6 +36,8 @@ public class ApiCollectionController {
 
     /**
      * 前台删除收藏中的帖子接口
+     * @param requestJson (key:postId,userId)
+     * @return JSONObject
      */
     @RequestMapping("/deleteCollection")
     public JSONObject deleteCollection(@RequestBody JSONObject requestJson){
@@ -42,6 +46,8 @@ public class ApiCollectionController {
 
     /**
      * 前台添加收藏接口
+     * @param requestJson (key:userId,postId)
+     * @return JSONObject
      */
     @RequestMapping("/addComment")
     public JSONObject addComment(@RequestBody JSONObject requestJson){

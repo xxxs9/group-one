@@ -36,20 +36,22 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     public JSONObject getByUserId(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
-        int exist = externalUserDao.queryExistUUID(jsonObject);
+//        int exist = externalUserDao.queryExistUUID(jsonObject);
 //        //判断用户是否存在
 //        if (exist==0){
 //            //用户不存在
 //        }else {
 //            //判断用户是否为登录用户
+            //判断该用户是否是游客
+        JSONObject userById = externalUserDao.findUserById(jsonObject.getInteger("uuId"));
+        if (userById.getInteger("unionId") != null) {
+
+        }
 //        }
         int count = collectionDao.getByUserIdCount(jsonObject);
         List<JSONObject> list = collectionDao.getByUserId(jsonObject);
-        List<Integer> postIdList = new ArrayList<>();
-        for (JSONObject object : list) {
-            postIdList.add(object.getInteger("postId"));
-        }
-        jsonObject.put("postIdList", postIdList);
+        List<JSONObject> postIdByUserId = collectionDao.getPostIdByUserId(jsonObject);
+        jsonObject.put("postIdList", postIdByUserId);
         List<JSONObject> postListApi = postService.getPostListApi(jsonObject);
         JSONObject collectionList = new JSONObject();
         collectionList.put("postListApi", postListApi);
@@ -59,6 +61,8 @@ public class CollectionServiceImpl implements CollectionService {
 
     /**
      * 用户添加帖子到收藏
+     * @param jsonObject (key:userId,postId)
+     * @return JSONObject
      */
     @Override
     public JSONObject addCollection(JSONObject jsonObject) {
@@ -82,7 +86,9 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     /**
-     * 用户移除收藏中的帖子
+     * 根据用户需求来通过收藏id移除收藏里的帖子
+     * @param jsonObject (key:postId,userId)
+     * @return JSONObject
      */
     @Override
     public JSONObject deleteCollection(JSONObject jsonObject) {
