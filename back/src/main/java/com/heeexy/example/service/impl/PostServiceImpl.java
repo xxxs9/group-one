@@ -272,7 +272,7 @@ public class PostServiceImpl implements PostService {
     public List<JSONObject> getPostListApi(JSONObject jsonObject) {
         JSONArray postIdList = jsonObject.getJSONArray("postIdList");
         //判断帖子列表是否为空
-        if (postIdList == null && postIdList.size() ==0){
+        if (postIdList.size() == 0){
             return null;
         }
         Integer userId = jsonObject.getInteger("userId");
@@ -387,10 +387,14 @@ public class PostServiceImpl implements PostService {
         CommonUtil.fillPageParam(jsonObject);
         Object userId = jsonObject.get("userId");
         String stickId = jsonObject.getString("stickId");
+        ArrayList<JSONObject> postList = new ArrayList<>();
         //获取置顶帖子
         List<JSONObject> postById = stickDao.getPostById(jsonObject);
-        List<JSONObject> topPostList = getPostList(postById, userId);
-        if(topPostList != null || topPostList.size()>0){
+        List<JSONObject> topPostList = new ArrayList<>();
+        topPostList = getPostList(postById, userId);
+        if(null == topPostList || topPostList.size() ==0){
+
+        }else {
             for (JSONObject object : topPostList) {
                 String postStick = object.getString("postStick");
                 if(!postStick.equals(stickId) && !"1".equals(postStick)){
@@ -398,6 +402,7 @@ public class PostServiceImpl implements PostService {
                 }
                 object.put("top",true);
             }
+            postList.addAll(topPostList);
         }
 
         //获取剩余帖子
@@ -412,8 +417,8 @@ public class PostServiceImpl implements PostService {
                 return ((Integer)o2.get("seepeople")).compareTo((Integer)o1.get("seepeople"));
             }
         });
-        topPostList.addAll(otherPostList);
-        jsonObject.put("postList",topPostList);
+        postList.addAll(otherPostList);
+        jsonObject.put("postList",postList);
         return jsonObject;
     }
 

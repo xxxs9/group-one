@@ -269,6 +269,7 @@
                 post_id                 postId,
                 post_text               postText,
                 post_owner_id           postOwnerId,
+                post_type_id           postTypeId,
                 DATE_FORMAT(post_time, '%Y-%m-%d %T') postTime,
                 browse_offset           browseOffset,
                 like_offset             likeOffset,
