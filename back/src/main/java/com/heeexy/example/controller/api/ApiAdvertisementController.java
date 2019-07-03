@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author L-YX
  * @version 1.0
- * @description 广告接口
+ * @description 前台广告接口
  * @data 2019-06-28 09:43
  */
 @RestController
@@ -24,6 +24,8 @@ public class ApiAdvertisementController {
 
     /**
      * 前台广告轮播接口
+     * @param request
+     * @return JSONObject
      */
     @GetMapping("/swiper")
     public JSONObject advertisementList(HttpServletRequest request){

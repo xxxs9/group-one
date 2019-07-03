@@ -23,6 +23,8 @@ public class CommentController {
 
     /**
      * 后台评论列表
+     * @param request (key:commentText,commentTime,commentUserName)
+     * @return JSONObject
      */
     @GetMapping("/list")
     public JSONObject listUser(HttpServletRequest request) {
@@ -31,6 +33,8 @@ public class CommentController {
 
     /**
      * 后台移除评论
+     * @param requestJson (key:commentId)
+     * @return JSONObject
      */
     @PostMapping("/removeComment")
     public JSONObject removeComment(@RequestBody JSONObject requestJson){
@@ -39,6 +43,8 @@ public class CommentController {
 
     /**
      * 后台评论详情
+     * @param request (key:postId)
+     * @return JSONObject
      */
     @GetMapping("/commentDetails")
     public JSONObject commentDetails(HttpServletRequest request){

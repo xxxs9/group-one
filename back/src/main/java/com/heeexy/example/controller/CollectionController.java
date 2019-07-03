@@ -25,7 +25,7 @@ public class CollectionController {
     CollectionServiceImpl collectionService;
 
     /**
-     * 用户收藏列表
+     * 后台用户收藏列表
      */
     @RequestMapping("/collectionList")
     public JSONObject collectionList(HttpServletRequest request) {
