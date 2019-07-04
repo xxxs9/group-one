@@ -1,3 +1,11 @@
+<style xmlns:30pxwidth="http://www.w3.org/1999/xhtml" xmlns:height="http://www.w3.org/1999/xhtml">
+  .cell {
+    height: 70px !important;
+    overflow: auto !important;
+    line-height: 70px !important;
+  }
+</style>
+
 <template>
   <div class="app-container">
     <div class="filter-container">
@@ -24,20 +32,33 @@
             <el-form-item>
               <el-button type="primary" class="el-icon-search" @click="getList">搜索</el-button>
             </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="el-icon-refresh" circle @click="refashList"></el-button>
+            </el-form-item>
           </el-form>
         </el-form-item>
       </el-form>
     </div>
     <el-table :data="list" v-loading.body="listLoading" element-loading-text="拼命加载中" border fit
               highlight-current-row>
-      <el-table-column align="center" label="评论ID" prop="commentId" style="width: 50px;"></el-table-column>
-      <el-table-column align="center" label="帖子ID" prop="postId" style="width: 50px;"></el-table-column>
+      <el-table-column align="center" label="序号" width="80">
+        <template slot-scope="scope">
+          <span v-text="getIndex(scope.$index)"> </span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="发帖用户" prop="postUserName" style="width: 50px;"></el-table-column>
       <el-table-column align="center" label="评论用户" prop="commentUserName" style="width: 50px;"></el-table-column>
       <el-table-column align="center" label="接收评论用户" prop="acceptUserName" style="width: 120px;"></el-table-column>
-      <el-table-column align="center" label="评论内容" prop="commentText" width="140"></el-table-column>
+      <!--<el-table-column align="center" label="评论内容" prop="commentText" width="140">-->
+        <!---->
+      <!--</el-table-column>-->
+      <el-table-column align="center" label="帖子内容" style="line-height:10px" width="300px">
+        <template slot-scope="scope">
+          <div v-text="scope.row.commentText" style="line-height:25px">
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="评论时间" prop="commentTime" width="170"></el-table-column>
-      <el-table-column align="center" label="评论状态" prop="commentState" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="评论详情" width="120">
         <template slot-scope="scope">
           <el-button type="primary" icon="edit" @click="showDetail(scope.$index)"
@@ -47,6 +68,7 @@
       </el-table-column>
       <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
+          <el-button type="warning" icon="el-icon-warning" @click="warningComment(scope.$index)">警告</el-button>
           <el-button type="primary" icon="el-icon-view" v-if="scope.row.commentState==0" @click="removeComment(scope.$index)">显示</el-button>
           <el-button type="info" icon="el-icon-delete" v-if="scope.row.commentState==1" @click="removeComment(scope.$index)">隐藏</el-button>
         </template>
@@ -215,23 +237,22 @@
         })
       },
 
-      removeUser($index) {
+      warningComment($index) {
         let _vue = this;
-        this.$confirm('确定删除此用户?', '提示', {
+        this.$confirm('确定警告此用户?', '提示', {
           confirmButtonText: '确定',
           showCancelButton: false,
           type: 'warning'
         }).then(() => {
-          let user = _vue.list[$index];
-          user.deleteStatus = '2';
+          let comment = _vue.list[$index];
           _vue.api({
             url: "/user/updateUser",
             method: "post",
-            data: user
+            data: comment
           }).then(() => {
             _vue.getList()
           }).catch(() => {
-            _vue.$message.error("删除失败")
+            _vue.$message.error("警告失败")
           })
         })
       },
@@ -261,6 +282,12 @@
         this.dialogFormVisible = true
         // this.refs.detail.getDetailData()
       },
+      refashList() {
+        this.tempComment.commentText = '';
+        this.tempComment.commentTime = '';
+        this.commentUserName = '';
+        this.getList();
+      }
     }
   }
 </script>

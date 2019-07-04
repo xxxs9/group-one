@@ -124,9 +124,23 @@ public interface PostDao {
     /********************************小程序数据*******************************************/
     
     /**
-     *
-     * @param
-     * @return 
+     * 获取前台帖子列表
+     * @param jsonObject postIdList[]
+     * @return
      */
     List<JSONObject> getPostListApi(JSONObject jsonObject);
+
+    /**
+     * 获取板块的帖子ID
+     * @param
+     * @return
+     */
+    List<JSONObject> getPostIdByStick(JSONObject jsonObject);
+
+    /**
+     *根据帖子内容查帖子id
+     * @param jsonObject
+     * @return List<JSONObject>
+     */
+    List<JSONObject> getPostTextByPostId (JSONObject jsonObject);
 }

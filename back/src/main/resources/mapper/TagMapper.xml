@@ -33,6 +33,11 @@
         ORDER BY t.tag_id ASC
         LIMIT #{offSet}, #{pageRow}
     </select>
+
+    <!--根据标签名查标签id-->
+    <select id="getTagTextByTagId" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT tag_id FROM tag WHERE tag_name LIKE  concat('%',#{queryText},'%')
+    </select>
     <!--所有标签-->
     <select id="listAllTag" resultType="com.alibaba.fastjson.JSONObject">
         SELECT

@@ -13,21 +13,21 @@ import java.util.List;
 public interface CollectionService {
     /**
      * 根据用户id去查询该用户下收藏的帖子列表
-     * @param jsonObject
+     * @param jsonObject (key:userId)
      * @return JSONObject
      */
     JSONObject getByUserId(JSONObject jsonObject);
 
     /**
      * 添加收藏
-     * @param jsonObject
+     * @param jsonObject (key:userId,postId)
      * @return JSONObject
      */
     JSONObject addCollection(JSONObject jsonObject);
 
     /**
      * 根据用户需求来通过收藏id移除收藏里的帖子
-     * @param jsonObject
+     * @param jsonObject (key:postId,userId)
      * @return JSONObject
      */
     JSONObject deleteCollection(JSONObject jsonObject);

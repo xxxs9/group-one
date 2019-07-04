@@ -13,43 +13,43 @@ import java.util.List;
 public interface CommentService {
 
     /**
-     *当评论内容和用户名为空时查询全部评论列表，反之根据用户名或者评论内容模糊查询评论列表
-     * @param jsonObject
+     *当评论内容和评论用户名为空时查询全部评论列表，反之根据评论用户名或者评论内容模糊查询评论列表
+     * @param jsonObject (key:commentText,commentTime,commentUserName)
      * @return JSONObject
      */
     JSONObject listAllComment(JSONObject jsonObject);
 
     /**
      * 根据评论id去改变评论的状态来决定评论的显示/隐藏
-     * @param jsonObject
+     * @param jsonObject (key:commentId)
      * @return JSONObject
      */
     JSONObject removeComment(JSONObject jsonObject);
 
     /**
      * 添加评论
-     * @param jsonObject
+     * @param jsonObject (key:postId,postUserId,commentUserId,acceptUserId,commentText)
      * @return JSONObject
      */
     JSONObject addComment(JSONObject jsonObject);
 
     /**
      * 根据评论用户查询评论（commentUserId）
-     * @param jsonObject
+     * @param jsonObject (key:commentUserId)
      * @return JSONObject
      */
     JSONObject getByCommentUserId(JSONObject jsonObject);
 
     /**
      * 根据接收评论用户查询评论(acceptUserId)
-     * @param jsonObject
+     * @param jsonObject (key:acceptUserId)
      * @return JSONObject
      */
     JSONObject getByAcceptUserId(JSONObject jsonObject);
 
     /**
      * 根据帖子id查询评论
-     * @param jsonObject
+     * @param jsonObject (key:postId)
      * @return JSONObject
      */
     JSONObject getByPostId(JSONObject jsonObject);

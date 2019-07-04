@@ -461,7 +461,7 @@
         this.tempPost.dataValue = '';
         this.tempPost.queryOwnewName = '';
         this.tempPost.queryPostTypeId = '';
-        this.tempPost.queryPostTagId = '';
+        this.tempPost.queryPostTagId = [];
         this.getList();
       },         //刷新表格（清空搜索条件）
       showDetail($index) {
@@ -584,6 +584,8 @@
             type: 'success',
             duration: 1 * 1000,
             onClose: () => {
+              _vue.getList();
+              this.updateData.addPostTagId = [];
             }
           })
         }).catch(errors =>{

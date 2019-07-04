@@ -29,7 +29,9 @@ public class CommentServiceImpl implements CommentService {
     private PostDao postDao;
 
     /**
-     * 评论列表
+     * 后台评论列表
+     * @param jsonObject (key:commentText,commentTime,commentUserName)
+     * @return JSONObject
      */
     @Override
     public JSONObject listAllComment(JSONObject jsonObject) {
@@ -51,6 +53,8 @@ public class CommentServiceImpl implements CommentService {
 
     /**
      * 移除评论
+     * @param jsonObject (key:commentId)
+     * @return JSONObject
      */
     @Override
     public JSONObject removeComment(JSONObject jsonObject) {
@@ -59,7 +63,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
-     * 添加评论
+     * 前台添加评论
+     * @param jsonObject (key:postId,postUserId,commentUserId,acceptUserId,commentText)
+     * @return JSONObject
      */
     @Override
     public JSONObject addComment(JSONObject jsonObject) {
@@ -68,30 +74,45 @@ public class CommentServiceImpl implements CommentService {
     }
 
     /**
-     * 我评论过谁
+     * 前台我评论过谁
+     * @param jsonObject (key:commentUserId)
+     * @return JSONObject
      */
     @Override
     public JSONObject getByCommentUserId(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
-        jsonObject.put("commentUserId",10001 );
         List<JSONObject> list = commentDao.getByCommentUserId(jsonObject);
+        jsonObject.put("postIdList", list);
         int count = commentDao.countByCommentUserId(jsonObject);
-        return CommonUtil.successPage(jsonObject, list, count);
+        List<JSONObject> postListApi = postDao.getPostListApi(jsonObject);
+        JSONObject commentUser = new JSONObject();
+        commentUser.put("postIdList",postListApi );
+        commentUser.put("count", count);
+        return CommonUtil.successJson(commentUser);
     }
 
     /**
-     * 谁评论过我
+     * 前台谁评论过我
+     * @param jsonObject (key:acceptUserId)
+     * @return JSONObject
      */
     @Override
     public JSONObject getByAcceptUserId(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
         int count = commentDao.countByAcceptUserId(jsonObject);
         List<JSONObject> list = commentDao.getByAcceptUserId(jsonObject);
-        return CommonUtil.successPage(jsonObject, list, count);
+        jsonObject.put("postIdList", list);
+        List<JSONObject> postListApi = postDao.getPostListApi(jsonObject);
+        JSONObject acceptUser = new JSONObject();
+        acceptUser.put("postIdList",postListApi );
+        acceptUser.put("count", count);
+        return CommonUtil.successJson(acceptUser);
     }
 
     /**
      * 某帖子下的评论详情
+     * @param jsonObject (key:postId)
+     * @return JSONObject
      */
     @Override
     public JSONObject getByPostId(JSONObject jsonObject) {
