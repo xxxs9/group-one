@@ -120,6 +120,13 @@ public interface PostDao {
      */
     JSONObject getTagById(JSONObject jsonObject);
 
+    /**
+     * 根据板块ID查找帖子
+     * @param typeId 板块ID typeID
+     * @return
+     */
+    List<JSONObject> getPostByTypeId(Integer typeId);
+
 
     /********************************小程序数据*******************************************/
     

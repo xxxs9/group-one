@@ -59,7 +59,7 @@
     </select>
     <select id="getRecordsByName" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
-        u.uuid                                                           uuId,
+        u.uuid                                                                uuId,
         u.username                                                            username,
         u.sex                                                                 sex,
         (SELECT categories_name FROM post_categories p1,post_table p2

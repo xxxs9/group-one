@@ -43,10 +43,10 @@ public class CollectionServiceImpl implements CollectionService {
 //        }else {
 //            //判断用户是否为登录用户
             //判断该用户是否是游客
-        JSONObject userById = externalUserDao.findUserById(jsonObject.getInteger("uuId"));
-        if (userById.getInteger("unionId") != null) {
-
-        }
+//        JSONObject userById = externalUserDao.findUserById(jsonObject.getInteger("uuId"));
+//        if (userById.getInteger("unionId") != null) {
+//
+//        }
 //        }
         int count = collectionDao.getByUserIdCount(jsonObject);
         List<JSONObject> list = collectionDao.getByUserId(jsonObject);

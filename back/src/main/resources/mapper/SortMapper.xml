@@ -97,4 +97,12 @@
         where w.status = '1' and w.categories_name = #{sortname} and  w.categories_id != #{id}
     </select>
 
+    <!--根据类型名查ID-->
+    <select id="getIdByName" resultType="java.lang.Integer">
+      SELECT
+        categories_id typeId
+      FROM post_categories
+        WHERE categories_name = #{typeName}
+    </select>
+
 </mapper>
