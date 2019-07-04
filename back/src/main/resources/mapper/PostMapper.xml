@@ -316,7 +316,7 @@
     <!--根据板块ID获取帖子-->
     <select id="getPostByTypeId" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
-          post_id
+          post_id postId
         FROM post_table
         WHERE post_type_id = #{postTypeId}
     </select>

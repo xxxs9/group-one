@@ -30,4 +30,11 @@ public interface SortDao {
     int recoverySort(JSONObject jsonObject);
     List<JSONObject> getSortByName(JSONObject jsonObject);
     List<JSONObject> getSortById(JSONObject jsonObject);
+
+    /**
+     * 根据类型名查询类型ID
+     * @param typeName 类型名
+     * @return
+     */
+    int getIdByName(String typeName);
 }
