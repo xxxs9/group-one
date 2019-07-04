@@ -90,5 +90,19 @@ public interface PostService {
      * @return
      */
     JSONObject getStickPost(JSONObject jsonObject);
+
+    /**
+     * 获取类型对应的帖子
+     * @param jsonObject 类型ID
+     * @return
+     */
+    JSONObject getTypePost(JSONObject jsonObject);
+
+    /**
+     * 发布
+     * @param jsonObject 发布内容
+     * @return
+     */
+    JSONObject release(JSONObject jsonObject);
 }
 

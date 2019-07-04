@@ -462,4 +462,28 @@ public class PostServiceImpl implements PostService {
         stickObj.put("userId",userId);
         return getPostListApi(stickObj);
     }
+
+    /**
+     * 获取对应类型的帖子
+     * @param jsonObject 类型ID
+     * @return
+     */
+    @Override
+    public JSONObject getTypePost(JSONObject jsonObject) {
+        List<JSONObject> typeId = postDao.getPostByTypeId(jsonObject.getInteger("typeId"));
+        jsonObject.put("typePost",getPostList(typeId,jsonObject.get("userId")));
+        return jsonObject;
+    }
+
+    /**
+     * 发布
+     * @param jsonObject 发布的内容
+     * @return
+     */
+    @Override
+    public JSONObject release(JSONObject jsonObject) {
+        String content = jsonObject.getString("content");
+
+        return null;
+    }
 }
