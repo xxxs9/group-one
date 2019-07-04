@@ -61,4 +61,11 @@ public interface TagDao {
      * 根据父标签ID查找标签
      */
     int getTagByParentId(JSONObject jsonObject);
+
+    /**
+     *根据标签名查标签id
+     * @param jsonObject
+     * @return List<JSONObject>
+     */
+    List<JSONObject> getTagTextByTagId (JSONObject jsonObject);
 }

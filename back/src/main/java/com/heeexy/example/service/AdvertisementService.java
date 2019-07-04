@@ -45,4 +45,11 @@ public interface AdvertisementService {
      * @return JSONObject
      */
     JSONObject advertisementList(JSONObject jsonObject);
+
+    /**
+     *  搜索
+     * @param jsonObject (postText,tagName)
+     * @return JSONObject
+     */
+    JSONObject search (JSONObject jsonObject);
 }

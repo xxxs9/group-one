@@ -129,4 +129,11 @@ public interface PostDao {
      * @return 
      */
     List<JSONObject> getPostListApi(JSONObject jsonObject);
+
+    /**
+     *根据帖子内容查帖子id
+     * @param jsonObject
+     * @return List<JSONObject>
+     */
+    List<JSONObject> getPostTextByPostId (JSONObject jsonObject);
 }
