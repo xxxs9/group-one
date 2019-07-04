@@ -30,7 +30,8 @@ public class ApiCollectionController {
      * @return JSONObject
      */
     @RequestMapping("/collectionList")
-    public JSONObject collectionList(@RequestBody JSONObject requestJson) {
+    public JSONObject collectionList(@RequestBody JSONObject requestJson,HttpServletRequest request) {
+        requestJson.put("uuId",request.getSession().getAttribute("userId") );
         return collectionService.getByUserId(requestJson);
     }
 

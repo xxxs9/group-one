@@ -138,7 +138,7 @@
         <result column="postOwnerId" property="postOwnerId"></result>
         <result column="priceTop" property="priceTop"></result>
         <collection property="postImgList" ofType="String">
-            <id column="postImageSrc" property="postImageSrc"></id>
+            <id column="imgUrl" property="imgUrl"></id>
         </collection>
         <collection property="postTagList" ofType="String">
             <id column="postTagName" property="postTagName"/>
@@ -274,7 +274,7 @@
                 post_id                 postId,
                 post_text               postText,
                 post_owner_id           postOwnerId,
-                post_type_id           postTypeId,
+                post_type_id            postTypeId,
                 DATE_FORMAT(post_time, '%Y-%m-%d %T') postTime,
                 browse_offset           browseOffset,
                 like_offset             likeOffset,
@@ -311,6 +311,14 @@
                 post_stick = '3'
             </if>
         </where>
+    </select>
+
+    <!--根据板块ID获取帖子-->
+    <select id="getPostByTypeId" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+          post_id postId
+        FROM post_table
+        WHERE post_type_id = #{postTypeId}
     </select>
 
 

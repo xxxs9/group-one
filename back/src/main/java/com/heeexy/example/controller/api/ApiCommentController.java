@@ -25,7 +25,7 @@ public class ApiCommentController {
      * @param requestJson (key:acceptUserId)
      * @return JSONObject
      */
-    @GetMapping("/acceptCom")
+    @PostMapping("/acceptCom")
     public JSONObject AcceptUser(@RequestBody JSONObject requestJson) {
         return commentService.getByAcceptUserId(requestJson);
     }
@@ -35,7 +35,7 @@ public class ApiCommentController {
      * @param requestJson (key:commentUserId)
      * @return JSONObject
      */
-    @GetMapping("/userCom")
+    @PostMapping("/userCom")
     public JSONObject CommentUser(@RequestBody JSONObject requestJson) {
         return commentService.getByCommentUserId(requestJson);
     }
@@ -56,7 +56,7 @@ public class ApiCommentController {
      * @param requestJson (key:postId)
      * @return JSONObject
      */
-    @GetMapping("/detailsCom")
+    @PostMapping("/detailsCom")
     public JSONObject commentDetails(@RequestBody JSONObject requestJson){
         return commentService.getByPostId(requestJson);
     }

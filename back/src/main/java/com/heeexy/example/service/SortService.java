@@ -18,6 +18,7 @@ public interface SortService {
      * 文章列表
      */
     JSONObject listSort(JSONObject jsonObject);
+    JSONObject getSortType(JSONObject jsonObject);
 
     JSONObject listSortName(JSONObject jsonObject);
 

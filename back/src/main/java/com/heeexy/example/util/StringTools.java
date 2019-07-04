@@ -20,13 +20,14 @@ public class StringTools {
     {
         String time = "";
         Date Today=new Date();
+        int maxtime = 15;
         int days = (int) ((Today.getTime() - date1.getTime()) / (1000*3600*24));
-        if (days < 1){
+        if (days <= 1){
             time = "1天内";
-        }else if(days > 1 && days < 7){
+        }else if(days > 1 && days <= maxtime){
             time = days + "天前";
-        }else {
-            time = "7天前";
+        }else if(days > maxtime){
+            time = "15天前";
         }
         return time;
     }

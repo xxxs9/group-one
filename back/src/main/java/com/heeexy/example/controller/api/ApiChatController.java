@@ -40,4 +40,9 @@ public class ApiChatController {
 //        CommonUtil.hasAllRequired(requestJson, "postId,userId");
         return chatService.getChatMessage(requestJson);
     }
+    @PostMapping("/deleteChatMessage")
+    public JSONObject deleteChatMessage(@RequestBody JSONObject requestJson) {
+//        CommonUtil.hasAllRequired(requestJson, "postId,userId");
+        return chatService.deleteChatMessage(requestJson);
+    }
 }

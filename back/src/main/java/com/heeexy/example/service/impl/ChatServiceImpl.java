@@ -51,4 +51,10 @@ public class ChatServiceImpl implements ChatService {
         List<JSONObject> chatMessage = chatDao.getChatMessage(jsonObject);
         return CommonUtil.successJson(chatMessage);
     }
+
+    @Override
+    public JSONObject deleteChatMessage(JSONObject jsonObject) {
+        chatDao.deleteChatMessage(jsonObject);
+        return CommonUtil.successJson();
+    }
 }
