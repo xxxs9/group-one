@@ -34,13 +34,25 @@ public class ApiPostController {
     }
 
     /**
-     *
-     * @param
+     * 获取首页板块列表
+     * @param requestJson 板块ID 当前用户ID
      * @return
      */
     @PostMapping("/stickPost")
     public JSONObject getStickPost(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "");
+        CommonUtil.hasAllRequired(requestJson, "stickId,userId");
         return postService.getStickPost(requestJson);
+    }
+
+    @PostMapping("/typePost")
+    public JSONObject getTypePost(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "typeId,userId");
+        return postService.getTypePost(requestJson);
+    }
+
+    @PostMapping("/release")
+    public JSONObject release(@RequestBody JSONObject requestJson) {
+        CommonUtil.hasAllRequired(requestJson, "userId");
+        return null;
     }
 }
