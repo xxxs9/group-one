@@ -21,7 +21,7 @@ public class ApiSortController {
     private SortService sortService;
 
 
-    @PostMapping("/getBase")
+    @PostMapping("/getTypes")
     public JSONObject getSortType(@RequestBody JSONObject requestJson) {
 //        CommonUtil.hasAllRequired(requestJson, "postId,userId");
         return sortService.getSortType(requestJson);
