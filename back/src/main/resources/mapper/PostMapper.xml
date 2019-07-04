@@ -80,6 +80,11 @@
         ORDER BY p.postState
     </select>
 
+    <!--根据帖子内容查帖子id-->
+    <select id="getPostTextByPostId" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT post_id FROM post_table WHERE post_text LIKE concat('%',#{queryText},'%')
+    </select>
+
     <!--修改点赞偏移量-->
     <update id="updateLikeOffset">
         UPDATE post_table

@@ -133,7 +133,7 @@ public interface PostDao {
     /**
      * 获取前台帖子列表
      * @param jsonObject postIdList[]
-     * @return 
+     * @return
      */
     List<JSONObject> getPostListApi(JSONObject jsonObject);
 
@@ -143,4 +143,11 @@ public interface PostDao {
      * @return
      */
     List<JSONObject> getPostIdByStick(JSONObject jsonObject);
+
+    /**
+     *根据帖子内容查帖子id
+     * @param jsonObject
+     * @return List<JSONObject>
+     */
+    List<JSONObject> getPostTextByPostId (JSONObject jsonObject);
 }
