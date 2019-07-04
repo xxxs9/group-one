@@ -82,11 +82,9 @@ public class CommentServiceImpl implements CommentService {
     public JSONObject getByCommentUserId(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
         List<JSONObject> list = commentDao.getByCommentUserId(jsonObject);
-        jsonObject.put("postIdList", list);
         int count = commentDao.countByCommentUserId(jsonObject);
-        List<JSONObject> postListApi = postDao.getPostListApi(jsonObject);
         JSONObject commentUser = new JSONObject();
-        commentUser.put("postIdList",postListApi );
+        commentUser.put("commentUserList",list );
         commentUser.put("count", count);
         return CommonUtil.successJson(commentUser);
     }
@@ -101,10 +99,8 @@ public class CommentServiceImpl implements CommentService {
         CommonUtil.fillPageParam(jsonObject);
         int count = commentDao.countByAcceptUserId(jsonObject);
         List<JSONObject> list = commentDao.getByAcceptUserId(jsonObject);
-        jsonObject.put("postIdList", list);
-        List<JSONObject> postListApi = postDao.getPostListApi(jsonObject);
         JSONObject acceptUser = new JSONObject();
-        acceptUser.put("postIdList",postListApi );
+        acceptUser.put("acceptUserList",list );
         acceptUser.put("count", count);
         return CommonUtil.successJson(acceptUser);
     }

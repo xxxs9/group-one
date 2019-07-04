@@ -19,7 +19,7 @@ import java.util.List;
  * @Version:
  */
 @RestController
-@RequestMapping("/api/chat")
+@RequestMapping("/api/message")
 public class ApiChatController {
 
     @Autowired
@@ -30,12 +30,12 @@ public class ApiChatController {
 //        CommonUtil.hasAllRequired(requestJson, "postId,userId");
         return chatService.addChatMessage(requestJson);
     }
-    @PostMapping("/getChatList")
+    @PostMapping("/getmessage")
     public JSONObject getChatList(@RequestBody JSONObject requestJson) {
 //        CommonUtil.hasAllRequired(requestJson, "postId,userId");
         return chatService.getChatList(requestJson);
     }
-    @PostMapping("/getChatMessage")
+    @PostMapping("/getmessagedetail")
     public JSONObject getChatMessage(@RequestBody JSONObject requestJson) {
 //        CommonUtil.hasAllRequired(requestJson, "postId,userId");
         return chatService.getChatMessage(requestJson);
