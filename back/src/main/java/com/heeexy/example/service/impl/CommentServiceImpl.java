@@ -73,7 +73,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public JSONObject getByCommentUserId(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
-        jsonObject.put("commentUserId",10001 );
+        jsonObject.put("commentUserId",10001);
         List<JSONObject> list = commentDao.getByCommentUserId(jsonObject);
         int count = commentDao.countByCommentUserId(jsonObject);
         return CommonUtil.successPage(jsonObject, list, count);

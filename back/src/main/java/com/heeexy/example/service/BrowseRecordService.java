@@ -24,4 +24,11 @@ public interface BrowseRecordService {
      * @return
      */
     public List<JSONObject> getRecordsByName(JSONObject jsonObject);
+
+    /**
+     * 增加浏览记录
+     * @param jsonObject
+     * @return
+     */
+    JSONObject addRecord(JSONObject jsonObject);
 }

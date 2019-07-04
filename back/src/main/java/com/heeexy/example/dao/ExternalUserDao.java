@@ -40,6 +40,13 @@ public interface ExternalUserDao {
     public int addUser(JSONObject jsonObject);
 
     /**
+     * 添加游客
+     * @param jsonObject key:uuId,username,iconUrl,mobile,sex
+     * @return
+     */
+    int addTourist(JSONObject jsonObject);
+
+    /**
      * @author liminhao
      * @date 2019-06-18 09:15
      * @param jsonObject key:fansOffset,uuId

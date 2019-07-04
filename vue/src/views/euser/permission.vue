@@ -41,8 +41,10 @@
         <template slot-scope="scope">
           <el-button type="primary" size="medium" icon="el-icon-edit" @click="showUpdate(scope.$index)" >修改
           </el-button>
-          <el-button type="primary" size="medium" icon="el-icon-refresh" @click="refreshPerm(scope.$index)" >恢复
+          <el-button type="danger" size="medium" icon="el-icon-circle-close" @click="removePerm(scope.$index)" >禁用
           </el-button>
+          <el-button type="success" size="medium" icon="el-icon-refresh" @click="refreshPerm(scope.$index)" >恢复
+        </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -246,7 +248,7 @@
           data: this.tempPerm
         }).then(() => {
           let msg = "恢复成功";
-          this.dialogFormVisible = false
+          this.dialogFormVisible = false;
           // if (this.userId === this.tempUser.userId) {
           //   msg = '修改成功,部分信息重新登录后生效'
           // }
@@ -260,7 +262,32 @@
           })
         })
 
-      }
+      },
+      removePerm($index){
+        //禁用用户权限
+        let _vue = this;
+        let perms = this.list[$index];
+        this.tempPerm.uuId = perms.uuId;
+        this.api({
+          url: "/euser/removePerm",
+          method: "post",
+          data: this.tempPerm
+        }).then(() => {
+          let msg = "已禁用所有权限";
+          this.dialogFormVisible = false
+          // if (this.userId === this.tempUser.userId) {
+          //   msg = '修改成功,部分信息重新登录后生效'
+          // }
+          this.$message({
+            message: msg,
+            type: 'success',
+            duration: 1 * 1000,
+            onClose: () => {
+              _vue.getList();
+            }
+          })
+        })
+      },
 
     }
   }

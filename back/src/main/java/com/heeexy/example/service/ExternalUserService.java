@@ -1,6 +1,7 @@
 package com.heeexy.example.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonAlias;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface ExternalUserService {
     /**
      * 添加用户
      */
-    JSONObject addUser(JSONObject jsonObject);
+    JSONObject userLogin(JSONObject jsonObject);
 
     /**
      * 修改用户
@@ -53,6 +54,13 @@ public interface ExternalUserService {
      * @return
      */
     JSONObject addPermission(JSONObject jsonObject);
+
+    /**
+     * 移除用户的所有权限
+     * @param jsonObject
+     * @return
+     */
+    JSONObject removePermission(JSONObject jsonObject);
 
     /**
      * 获取用户的粉丝列表信息
@@ -96,5 +104,61 @@ public interface ExternalUserService {
      * @return
      */
     JSONObject getOthers(JSONObject jsonObject);
+
+    /**
+     * 获取该用户发布的帖子
+     * @param jsonObject
+     * @return
+     */
+    JSONObject getMyPost(JSONObject jsonObject);
+
+    /**
+     * 获取该用户点赞过的帖子
+     * @param jsonObject
+     * @return
+     */
+    JSONObject getMyLikePost(JSONObject jsonObject);
+
+    /**
+     * 获取该用户的浏览记录
+     * @param jsonObject
+     * @return
+     */
+    JSONObject getMyRecords(JSONObject jsonObject);
+
+    /**
+     * 获取该用户的评论记录
+     * @param jsonObject
+     * @return
+     */
+    JSONObject getMyComments(JSONObject jsonObject);
+
+    /**
+     * 判断是否有发帖权限
+     * @param jsonObject
+     * @return
+     */
+    Boolean isHasPostPerm(JSONObject jsonObject);
+
+    /**
+     * 判断是否有评论权限
+     * @param jsonObject
+     * @return
+     */
+    Boolean isHasCommentPerm(JSONObject jsonObject);
+
+    /**
+     * 判断是否有私信权限
+     * @param jsonObject
+     * @return
+     */
+    Boolean isHasChatPerm(JSONObject jsonObject);
+
+    /**
+     * 判断是否有点赞权限
+     * @param jsonObject
+     * @return
+     */
+    Boolean isHasLikePerm(JSONObject jsonObject);
 }
 
