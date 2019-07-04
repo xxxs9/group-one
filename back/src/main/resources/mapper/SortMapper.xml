@@ -43,6 +43,15 @@
         ORDER BY w.categories_id DESC
         LIMIT #{offSet}, #{pageRow}
     </select>
+    <select id="getSortType" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        w.categories_id                                     id,
+        w.categories_name                                 title,
+        w.categories_img                                  imgUrl
+        FROM post_categories w
+        ORDER BY w.update_time DESC
+        LIMIT 0,8
+    </select>
     <select id="listAllSort" resultType="com.alibaba.fastjson.JSONObject">
           SELECT
             w.categories_id                                     id,
@@ -86,6 +95,14 @@
             w.categories_name                                   sortname
         from post_categories w
         where w.status = '1' and w.categories_name = #{sortname} and  w.categories_id != #{id}
+    </select>
+
+    <!--根据类型名查ID-->
+    <select id="getIdByName" resultType="java.lang.Integer">
+      SELECT
+        categories_id typeId
+      FROM post_categories
+        WHERE categories_name = #{typeName}
     </select>
 
 </mapper>

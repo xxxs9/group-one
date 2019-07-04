@@ -1,11 +1,14 @@
 package com.heeexy.example.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.heeexy.example.dao.CollectionDao;
-import com.heeexy.example.dao.ExternalUserDao;
-import com.heeexy.example.dao.UserAttentionDao;
+import com.heeexy.example.dao.*;
+import com.heeexy.example.service.BrowseRecordService;
+import com.heeexy.example.service.CommentService;
 import com.heeexy.example.service.ExternalUserService;
+import com.heeexy.example.service.PostService;
 import com.heeexy.example.util.CommonUtil;
+import com.heeexy.example.util.EmojiUtil;
+import com.heeexy.example.util.UuidUtil;
 import com.heeexy.example.util.constants.ErrorEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,18 @@ public class ExternalUserServiceImpl implements ExternalUserService {
 
     @Autowired
     CollectionDao collectionDao;
+
+    @Autowired
+    PostService postService;
+
+    @Autowired
+    BrowseRecordDao browseRecordDao;
+
+    @Autowired
+    CommentService commentService;
+
+    @Autowired
+    CommentDao commentDao;
 
     /**
      * 用户列表
@@ -67,24 +82,11 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         }
     }
 
-    /**
-     * 添加用户
-     * @param jsonObject
-     * @return
-     */
-    @Override
-    public JSONObject addUser(JSONObject jsonObject) {
-        int exist = userDao.queryExistUUID(jsonObject);
-        if (exist > 0) {
-            return CommonUtil.errorJson(ErrorEnum.E_10009);
-        }
-        userDao.addUser(jsonObject);
-        return CommonUtil.successJson();
-    }
+
 
     /**
      * 修改用户
-     * @param jsonObject
+     * @param jsonObject key:fansOffset,uuId
      * @return
      */
     @Override
@@ -103,7 +105,7 @@ public class ExternalUserServiceImpl implements ExternalUserService {
 
     /**
      * 获取用户权限
-     * @param jsonObject
+     * @param jsonObject key:querykey
      * @return
      */
     @Override
@@ -134,7 +136,7 @@ public class ExternalUserServiceImpl implements ExternalUserService {
 
     /**
      * 修改用户的权限状态
-     * @param jsonObject
+     * @param jsonObject key:epermissionList,uuId
      * @return
      */
     @Override
@@ -184,7 +186,7 @@ public class ExternalUserServiceImpl implements ExternalUserService {
 
     /**
      * 修改用户被禁用的权限状态 delete_status改为'1'
-     * @param jsonObject
+     * @param jsonObject key:uuId
      * @return
      */
     @Override
@@ -195,7 +197,7 @@ public class ExternalUserServiceImpl implements ExternalUserService {
 
     /**
      * 给用户添加权限
-     * @param jsonObject
+     * @param jsonObject key:uuId
      * @return
      */
     @Override
@@ -212,8 +214,20 @@ public class ExternalUserServiceImpl implements ExternalUserService {
     }
 
     /**
+     * 移除用户的所有权限
+     * @param jsonObject key:uuId
+     * @return
+     */
+    @Override
+    public JSONObject removePermission(JSONObject jsonObject) {
+
+        userDao.removeUserAllPermission(jsonObject);
+        return CommonUtil.successJson();
+    }
+
+    /**
      * 获取用户的粉丝列表信息
-     * @param jsonObject
+     * @param jsonObject key:uuId
      * @return
      */
     @Override
@@ -234,7 +248,7 @@ public class ExternalUserServiceImpl implements ExternalUserService {
 
     /**
      * 查询权限列表
-     * @param jsonObject
+     * @param jsonObject key:uuId
      * @return
      */
     @Override
@@ -263,10 +277,6 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         return CommonUtil.successPage(allPerm);
     }
 
-    @Override
-    public JSONObject getPostByUUID(JSONObject jsonObject) {
-        return null;
-    }
 
     @Override
     public JSONObject getPostIdByLike(JSONObject jsonObject) {
@@ -279,33 +289,230 @@ public class ExternalUserServiceImpl implements ExternalUserService {
     }
 
 
+    /********************************************************************************************/
+
+    /**
+     * 添加用户
+     * @param jsonObject key:uuId,unionId,username,iconUrl,mobile,sex
+     * @return
+     */
+    @Override
+    public JSONObject userLogin(JSONObject jsonObject) {
+        int exist = userDao.queryExistUUID(jsonObject);
+        if (exist > 0) {
+            return CommonUtil.errorJson(ErrorEnum.E_10009);
+        }
+//        Integer uuId = jsonObject.getInteger("uuId");
+        String username = jsonObject.getString("username");
+        String sex = jsonObject.getString("sex");
+        if(sex.equals("0")){
+            jsonObject.put("sex","未知");
+        }else if(sex.equals("1")){
+            jsonObject.put("sex","男");
+        }else if(sex.equals("2")){
+            jsonObject.put("sex","女");
+        }
+        String s = EmojiUtil.filterEmoji(username);
+        jsonObject.put("username",s);
+        jsonObject.put("uuId", UuidUtil.getId());
+        if(jsonObject.get("unionId")!=null){
+            userDao.addUser(jsonObject);
+        }else {
+            userDao.addTourist(jsonObject);
+        }
+        return CommonUtil.successJson();
+    }
+
     /**
      * 获取用户信息(发帖数量，关注数量，粉丝数量，点赞数量，收藏数量，头像、昵称)
-     * @param jsonObject
+     * @param jsonObject key；uuId
      * @return
      */
     @Override
     public JSONObject getMyself(JSONObject jsonObject) {
         Integer uuId = jsonObject.getInteger("uuId");
-        int myrelease = userDao.countPostByUUID(jsonObject);//发帖数量
-        int myattention = userAttentionDao.countIdolByUUID(jsonObject);//关注数量
-        int myfans = userAttentionDao.countFansByUUID(jsonObject);//粉丝数量
-        int mygood = userDao.countGoodByUUID(jsonObject);//点赞数量
+        //发帖数量
+        int myrelease = userDao.countPostByUUID(jsonObject);
+        //关注数量
+        int myattention = userAttentionDao.countIdolByUUID(jsonObject);
+        //粉丝数量
+        int myfans = userAttentionDao.countFansByUUID(jsonObject);
+        //点赞数量
+        int mygood = userDao.countGoodByUUID(jsonObject);
         jsonObject.put("userId",uuId);
-        int mycollention = collectionDao.getByUserIdCount(jsonObject);//收藏数量
-        JSONObject myicon = userDao.findIconById(jsonObject);//头像、昵称
+        //收藏数量
+        int mycollention = collectionDao.getByUserIdCount(jsonObject);
+        //头像、昵称
+        JSONObject myicon = userDao.findIconById(jsonObject);
+        String myavatar = myicon.getString("iconUrl");
+        String myname = myicon.getString("username");
+        //评论数
+        int commentcount = commentDao.countByCommentUserId(jsonObject);
 
         JSONObject myself = new JSONObject();
+        myself.put("myavatar",myavatar);
+        myself.put("myname",myname);
         myself.put("myrelease",myrelease);
         myself.put("myattention",myattention);
         myself.put("myfans",myfans);
         myself.put("mygood",mygood);
         myself.put("mycollention",mycollention);
-        myself.put("myicon",myicon);
+        myself.put("mycommentcount",commentcount);
 
         return CommonUtil.successJson(myself);
     }
 
+    /**
+     * 获取关注的用户的信息
+     * @param jsonObject key:uuId(关注的用户的uuid),userId(当前登录用户的uuid)
+     * @return
+     */
+    @Override
+    public JSONObject getOthers(JSONObject jsonObject) {
 
+        List<JSONObject> postIdList = userDao.getPostByUUID(jsonObject);
+        JSONObject postIds = new JSONObject();
+        postIds.put("postIdList",postIdList);
+        postIds.put("userId",jsonObject.getInteger("userId"));
+        List<JSONObject> postList = postService.getPostListApi(postIds);
+        JSONObject object = new JSONObject();
+        object.put("postList",postList);
+        object.put("others",getMyself(jsonObject));
+        return CommonUtil.successJson(object);
+    }
+
+    /**
+     * 获取当前用户发布的帖子信息
+     * @param jsonObject key:uuId,userId
+     * @return
+     */
+    @Override
+    public JSONObject getMyPost(JSONObject jsonObject) {
+
+        List<JSONObject> postIdList = userDao.getPostByUUID(jsonObject);
+        JSONObject postIds = new JSONObject();
+        postIds.put("postIdList",postIdList);
+        postIds.put("userId",jsonObject.getInteger("uuId"));
+        List<JSONObject> postList = postService.getPostListApi(postIds);
+        JSONObject object = new JSONObject();
+        object.put("postList",postList);
+
+        return CommonUtil.successJson(object);
+    }
+
+    /**
+     * 获取该用户点赞过的帖子
+     * @param jsonObject key:uuId,userId
+     * @return
+     */
+    @Override
+    public JSONObject getMyLikePost(JSONObject jsonObject) {
+        List<JSONObject> postIdList = userDao.getPostIdByLike(jsonObject);
+        JSONObject postIds = new JSONObject();
+        postIds.put("postIdList",postIdList);
+        postIds.put("userId",jsonObject.getInteger("uuId"));
+        List<JSONObject> postList = postService.getPostListApi(postIds);
+        JSONObject object = new JSONObject();
+        object.put("postList",postList);
+        return CommonUtil.successJson(object);
+    }
+
+    /**
+     * 获取该用户的浏览记录
+     * @param jsonObject key:uuId,userId
+     * @return
+     */
+    @Override
+    public JSONObject getMyRecords(JSONObject jsonObject) {
+        List<JSONObject> postIdList = browseRecordDao.getRecordsByUUID(jsonObject);
+        JSONObject postIds = new JSONObject();
+        postIds.put("postIdList",postIdList);
+        postIds.put("userId",jsonObject.getInteger("uuId"));
+        List<JSONObject> postList = postService.getPostListApi(postIds);
+        JSONObject object = new JSONObject();
+        object.put("postList",postList);
+        return CommonUtil.successJson(object);
+    }
+
+    /**
+     * 获取该用户的评论记录
+     * @param jsonObject
+     * @return
+     */
+    @Override
+    public JSONObject getMyComments(JSONObject jsonObject) {
+
+        return null;
+    }
+
+    /**
+     * 判断是否有发帖权限
+     * @param jsonObject
+     * @return
+     */
+    @Override
+    public Boolean isHasPostPerm(JSONObject jsonObject) {
+        List<JSONObject> permByUUID = userDao.getPermByUUID(jsonObject);
+        boolean flag = false;
+        for(JSONObject perm:permByUUID){
+            if(perm.getInteger("permId")==101){
+                flag = true;
+            }
+        }
+        return flag;
+    }
+
+    /**
+     * 判断是否有评论权限
+     * @param jsonObject
+     * @return
+     */
+    @Override
+    public Boolean isHasCommentPerm(JSONObject jsonObject) {
+
+        List<JSONObject> permByUUID = userDao.getPermByUUID(jsonObject);
+        boolean flag = false;
+        for(JSONObject perm:permByUUID){
+            if(perm.getInteger("permId")==102){
+                flag = true;
+            }
+        }
+        return flag;
+    }
+
+    /**
+     * 判断是否有私信权限
+     * @param jsonObject
+     * @return
+     */
+    @Override
+    public Boolean isHasChatPerm(JSONObject jsonObject) {
+        List<JSONObject> permByUUID = userDao.getPermByUUID(jsonObject);
+        boolean flag = false;
+        for(JSONObject perm:permByUUID){
+            if(perm.getInteger("permId")==104){
+                flag = true;
+            }
+        }
+        return flag;
+    }
+
+    /**
+     *
+     * 判断是否有点赞权限
+     * @param jsonObject
+     * @return
+     */
+    @Override
+    public Boolean isHasLikePerm(JSONObject jsonObject) {
+        List<JSONObject> permByUUID = userDao.getPermByUUID(jsonObject);
+        boolean flag = false;
+        for(JSONObject perm:permByUUID){
+            if(perm.getInteger("permId")==103){
+                flag = true;
+            }
+        }
+        return flag;
+    }
 }
 

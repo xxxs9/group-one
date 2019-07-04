@@ -36,12 +36,24 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject addChatTemplate(JSONObject jsonObject) {
         List<JSONObject> ulist = templateDao.getAllUserId(jsonObject);
         jsonObject.put("ulist",ulist);
-        int i = templateDao.addChatTemplate(jsonObject);
+        int i = templateDao.addAllUserTemplate(jsonObject);
 
-        return CommonUtil.successJson();
+        return CommonUtil.successJson(ulist);
+    }
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public JSONObject addWarningTemplate(JSONObject jsonObject) {
+        String content =  templateDao.getWarningContentByName();
+        String conmentTest = (String) jsonObject.get("conmentTest");
+        String newContent = "您该评论："+conmentTest+","+content;
+        jsonObject.put("content",newContent);
+        int i = templateDao.addWarningTemplate(jsonObject);
+
+        return CommonUtil.successJson(jsonObject);
     }
 
     @Override

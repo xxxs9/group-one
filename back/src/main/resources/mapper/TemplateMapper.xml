@@ -9,14 +9,19 @@
         VALUES
             (#{tname},#{content})
     </insert>
-    <insert id="addChatTemplate" parameterType="com.alibaba.fastjson.JSONObject">
-        insert into chat_message (chat_content,first_user_id,second_user_id)
+    <insert id="addAllUserTemplate" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into chat_message (chat_content,first_user_id,second_user_id,chatlist_id)
         values
 
         <foreach collection="ulist" item="item" index="index" separator=",">
-            (#{content},'1',#{item.id})
+            (#{content},1,#{item.id},CONCAT(1,#{item.id}))
         </foreach>
 
+    </insert>
+    <insert id="addWarningTemplate" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into chat_message (chat_content,first_user_id,second_user_id,chatlist_id)
+        values
+        (#{content},1,#{id},CONCAT(1,'-',#{id}))
     </insert>
 
 
@@ -40,8 +45,9 @@
 
     <select id="getAllUserId" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
-           id
-        FROM test
+        unionid id
+        FROM user
+        where unionid != 'null'
     </select>
 
     <update id="updateTemplate" parameterType="com.alibaba.fastjson.JSONObject">
@@ -70,5 +76,11 @@
             w.template_name                                   tname
         from message_template w
         where  w.status = '1' and w.template_name = #{tname} and  w.template_id != #{id}
+    </select>
+    <select id="getWarningContentByName" resultType="java.lang.String">
+        select
+            w.template_content                                   content
+        from message_template w
+        where  w.status = '1' and w.template_name = '警告模板'
     </select>
 </mapper>

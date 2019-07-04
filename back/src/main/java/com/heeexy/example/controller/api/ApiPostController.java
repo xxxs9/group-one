@@ -29,16 +29,16 @@ public class ApiPostController {
      */
     @PostMapping("/postDetail")
     public JSONObject postDetail(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "postId,userId");
+        CommonUtil.hasAllRequired(requestJson, "tid,userId");
         return postService.getDetailById(requestJson);
     }
 
     /**
-     * 
+     *
      * @param
      * @return
      */
-    @PostMapping("/StickPost")
+    @PostMapping("/stickPost")
     public JSONObject getStickPost(@RequestBody JSONObject requestJson) {
         CommonUtil.hasAllRequired(requestJson, "");
         return postService.getStickPost(requestJson);

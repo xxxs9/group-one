@@ -44,6 +44,13 @@ public class SortServiceImpl implements SortService {
     }
 
     @Override
+    public JSONObject getSortType(JSONObject jsonObject) {
+        List<JSONObject> sortType = sortDao.getSortType(jsonObject);
+
+        return  CommonUtil.successJson(sortType);
+    }
+
+    @Override
     public JSONObject listSortName(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
         int count = sortDao.countSort(jsonObject);
