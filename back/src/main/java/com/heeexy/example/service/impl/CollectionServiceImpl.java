@@ -7,10 +7,12 @@ import com.heeexy.example.dao.PostDao;
 import com.heeexy.example.dao.UserDao;
 import com.heeexy.example.service.CollectionService;
 import com.heeexy.example.util.CommonUtil;
+import com.heeexy.example.util.Permission;
 import com.heeexy.example.util.constants.ErrorEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +30,10 @@ public class CollectionServiceImpl implements CollectionService {
     private ExternalUserDao externalUserDao;
 
     @Autowired
-    PostServiceImpl postService;
+    private PostServiceImpl postService;
+
+    @Autowired
+    private Permission permission;
 
     /**
      * 用户收藏帖子列表
@@ -36,27 +41,17 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     public JSONObject getByUserId(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
-//        int exist = externalUserDao.queryExistUUID(jsonObject);
-//        //判断用户是否存在
-//        if (exist==0){
-//            //用户不存在
-//        }else {
-//            //判断用户是否为登录用户
-            //判断该用户是否是游客
-        JSONObject userById = externalUserDao.findUserById(jsonObject.getInteger("uuId"));
-        if (userById.getInteger("unionId") != null) {
-
+        boolean flag = permission.getPermission(jsonObject);
+        if (flag==true) {
+            int count = collectionDao.getByUserIdCount(jsonObject);
+            List<JSONObject> postIdByUserId = collectionDao.getPostIdByUserId(jsonObject);
+            jsonObject.put("postIdList", postIdByUserId);
+            List<JSONObject> postListApi = postService.getPostListApi(jsonObject);
+            JSONObject collectionList = new JSONObject();
+            collectionList.put("postListApi", postListApi);
+            return CommonUtil.successJson(collectionList);
         }
-//        }
-        int count = collectionDao.getByUserIdCount(jsonObject);
-        List<JSONObject> list = collectionDao.getByUserId(jsonObject);
-        List<JSONObject> postIdByUserId = collectionDao.getPostIdByUserId(jsonObject);
-        jsonObject.put("postIdList", postIdByUserId);
-        List<JSONObject> postListApi = postService.getPostListApi(jsonObject);
-        JSONObject collectionList = new JSONObject();
-        collectionList.put("postListApi", postListApi);
-        collectionList.put("collectionList",list );
-        return CommonUtil.successJson(collectionList);
+        return CommonUtil.errorJson(ErrorEnum.E_10018);
     }
 
     /**
@@ -66,23 +61,27 @@ public class CollectionServiceImpl implements CollectionService {
      */
     @Override
     public JSONObject addCollection(JSONObject jsonObject) {
-        //根据帖子id查询总数
-        int exist = collectionDao.getByPostIdCount(jsonObject);
-        //根据总数判断该帖子是否被收藏
-        if (exist>0) {
-            //exist>0返回提示该帖子已被收藏
-            return CommonUtil.errorJson(ErrorEnum.E_10010);
-        }else {
-            //根据用户id查询总数
-            int count = collectionDao.getByUserIdCount(jsonObject);
-            //根据总数判断是否超过最大收藏数
-            if (count>200) {
-                //count>200返回提示已超过最大收藏数
-                return CommonUtil.errorJson(ErrorEnum.E_10011);
+        boolean flag = permission.getPermission(jsonObject);
+        if (flag = true) {
+            //根据帖子id查询总数
+            int exist = collectionDao.getByPostIdCount(jsonObject);
+            //根据总数判断该帖子是否被收藏
+            if (exist>0) {
+                //exist>0返回提示该帖子已被收藏
+                return CommonUtil.errorJson(ErrorEnum.E_10010);
+            }else {
+                //根据用户id查询总数
+                int count = collectionDao.getByUserIdCount(jsonObject);
+                //根据总数判断是否超过最大收藏数
+                if (count>200) {
+                    //count>200返回提示已超过最大收藏数
+                    return CommonUtil.errorJson(ErrorEnum.E_10011);
+                }
             }
+            collectionDao.addCollection(jsonObject);
+            return CommonUtil.successJson();
         }
-        collectionDao.addCollection(jsonObject);
-        return CommonUtil.successJson();
+        return CommonUtil.errorJson(ErrorEnum.E_10018);
     }
 
     /**
