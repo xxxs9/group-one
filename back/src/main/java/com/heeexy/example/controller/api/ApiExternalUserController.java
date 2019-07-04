@@ -71,9 +71,9 @@ public class ApiExternalUserController {
      * @param request
      * @return JSONObject
      */
-    @GetMapping("/myposts")
-    public JSONObject getMyPosts(HttpServletRequest request){
-        return externalUserService.getMyPost(CommonUtil.request2Json(request));
+    @PostMapping("/myposts")
+    public JSONObject getMyPosts(@RequestBody JSONObject requestJson){
+        return externalUserService.getMyPost(requestJson);
     }
 
     /**
@@ -81,9 +81,9 @@ public class ApiExternalUserController {
      * @param request
      * @return JSONObject
      */
-    @GetMapping("/mylikes")
-    public JSONObject getMyLikes(HttpServletRequest request){
-        return externalUserService.getMyLikePost(CommonUtil.request2Json(request));
+    @PostMapping("/mylikes")
+    public JSONObject getMyLikes(@RequestBody JSONObject requestJson){
+        return externalUserService.getMyLikePost(requestJson);
     }
 
     /**
@@ -91,9 +91,16 @@ public class ApiExternalUserController {
      * @param request
      * @return JSONObject
      */
-    @GetMapping("/myrecords")
-    public JSONObject getMyRecords(HttpServletRequest request){
-        return externalUserService.getMyRecords(CommonUtil.request2Json(request));
+    @PostMapping("/myrecords")
+    public JSONObject getMyRecords(@RequestBody JSONObject requestJson){
+        return externalUserService.getMyRecords(requestJson);
+    }
+
+
+    @PostMapping("/release")
+    public JSONObject isHasPost(@RequestBody JSONObject requestJson,HttpServletRequest request){
+        requestJson.put("userId",request.getSession().getAttribute("userId"));
+        return externalUserService.releaseButton(requestJson);
     }
 
 //    @GetMapping("/mycomments")
@@ -177,6 +184,8 @@ public class ApiExternalUserController {
         }
         return map;
     }
+
+
 
 }
 

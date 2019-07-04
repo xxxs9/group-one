@@ -10,6 +10,7 @@ import com.heeexy.example.util.CommonUtil;
 import com.heeexy.example.util.EmojiUtil;
 import com.heeexy.example.util.UuidUtil;
 import com.heeexy.example.util.constants.ErrorEnum;
+import net.sf.json.processors.JsDateJsonBeanProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -513,6 +514,26 @@ public class ExternalUserServiceImpl implements ExternalUserService {
             }
         }
         return flag;
+    }
+
+    @Override
+    public JSONObject releasePost(JSONObject jsonObject) {
+        Integer uuId = jsonObject.getInteger("uuId");
+        String postText = jsonObject.getString("content");
+
+
+
+        return null;
+    }
+
+    @Override
+    public JSONObject releaseButton(JSONObject jsonObject) {
+        Integer uuId = jsonObject.getInteger("uuId");
+
+        if(isHasPostPerm(jsonObject)){
+            return CommonUtil.successJson();
+        }
+        return CommonUtil.errorJson(E_400);
     }
 }
 
