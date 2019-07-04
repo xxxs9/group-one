@@ -9,7 +9,7 @@
         <result column="collectionTime" property="collectionTime" />
     </resultMap>
 
-    <select id="getByUserId" parameterType="java.lang.Integer" resultMap="collectionMap">
+    <select id="getByUserId" resultMap="collectionMap">
         SELECT
         collection_id                                                            collectionId
         ,DATE_FORMAT(collection_time, '%Y.%m.%d %T')                             collectionTime
@@ -18,6 +18,13 @@
         FROM collection c
         WHERE user_id = #{userId}
         ORDER BY collection_time DESC LIMIT #{offSet}, #{pageRow}
+    </select>
+
+    <select id="getPostIdByUserId" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        post_id                                                                 postId
+        FROM collection
+        WHERE user_id = #{userId}
     </select>
 
     <insert id="addCollection" useGeneratedKeys="true" keyProperty="collectionId">

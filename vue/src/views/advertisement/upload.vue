@@ -14,6 +14,9 @@
             <el-form-item>
               <el-button type="primary" class="el-icon-search" @click="getList">搜索</el-button>
             </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="el-icon-refresh" circle @click="refashList"></el-button>
+            </el-form-item>
           </el-form>
         </el-form-item>
       </el-form>
@@ -25,15 +28,13 @@
           <span v-text="getIndex(scope.$index)"> </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="广告ID" prop="advertisementId" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="广告类型" prop="advertisementType" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="广告标题" prop="advertisementType" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="广告链接" prop="advertisementRef" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="图片路径" style="width: 60px;">
         <template slot-scope="scope">
           <img :src="scope.row.srcUrl" width="160" height="80" class="head_pic" style="display: block"/>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="广告状态" prop="advertisementStatus" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="管理" width="220" v-if="hasPerm('user:update')">
         <template slot-scope="scope">
           <el-button type="warning" v-if="hasPerm('advert:update')" icon="el-icon-edit" @click="showUpdate(scope.$index)">修改</el-button>
@@ -73,6 +74,7 @@
             <img v-if="dialogStatus=='update'" :src="tempAdvertisement.srcUrl" style="width: 100%;height:100%;" ref="updateImg"/>
             <i v-if="dialogStatus=='create'" class="el-icon-plus"></i>
           </el-upload>
+          <span style="color: #F56C6C">支持图片大小：414 x 82</span>
           <el-dialog :visible.sync="dialogVisible" >
             <img width="100%" :src="dialogImageUrl" alt="" ref="dialogImage">
           </el-dialog>
@@ -283,6 +285,11 @@
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
+      },
+
+      refashList() {
+        this.tempAdvertisement.name = '';
+        this.getList();
       }
     }
   }

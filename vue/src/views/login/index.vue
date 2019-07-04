@@ -48,6 +48,7 @@
             this.loading = true
             this.$store.dispatch('Login', this.loginForm).then(data => {
               this.loading = false
+
               if ("success" === data.result) {
                 this.$router.push({path: '/'})
               } else {

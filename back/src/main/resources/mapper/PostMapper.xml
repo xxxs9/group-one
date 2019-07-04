@@ -80,6 +80,11 @@
         ORDER BY p.postState
     </select>
 
+    <!--根据帖子内容查帖子id-->
+    <select id="getPostTextByPostId" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT post_id FROM post_table WHERE post_text LIKE concat('%',#{queryText},'%')
+    </select>
+
     <!--修改点赞偏移量-->
     <update id="updateLikeOffset">
         UPDATE post_table
@@ -242,21 +247,22 @@
     <!--前台列表返回Map-->
     <resultMap id="postMapApi" type="com.heeexy.example.util.model.One2Many">
         <id column="postId" property="postId"/>
-        <result column="postType" property="postType" />
-        <result column="postTypeId" property="postTypeId" />
-        <result column="postOwnerId" property="postOwnerId" />
-        <result column="postText" property="postText" />
+        <result column="postType" property="types" />
+        <result column="postOwnerId" property="uid" />
+        <result column="postText" property="desc" />
         <result column="postTime" property="postTime" />
-        <result column="browseOffset" property="browseOffset"/>
-        <result column="postAddress" property="postAddress"/>
-        <result column="postPhone" property="postPhone"/>
-        <result column="postState" property="postState" />
+        <result column="browseOffset" property="seepeople"/>
+        <result column="likeOffset" property="likeOffset"/>
+        <result column="postAddress" property="address"/>
+        <result column="postPhone" property="telephone"/>
+        <result column="postStick" property="postStick" />
         <result column="priceTop" property="priceTop" />
         <result column="priceFloor" property="priceFloor" />
-        <collection property="postImgList" ofType="String">
+        <collection property="imgUrl" ofType="String">
             <id column="postImageSrc" property="postImageSrc"></id>
         </collection>
     </resultMap>
+
     <!--返回前台帖子列表-->
     <select id="getPostListApi" resultMap="postMapApi">
         SELECT
@@ -268,26 +274,44 @@
                 post_id                 postId,
                 post_text               postText,
                 post_owner_id           postOwnerId,
-                post_type_id            postTypeId,
-                DATE_FORMAT(post_time, '%Y.%m.%d %T') postTime,
+                post_type_id           postTypeId,
+                DATE_FORMAT(post_time, '%Y-%m-%d %T') postTime,
                 browse_offset           browseOffset,
+                like_offset             likeOffset,
                 post_address            postAddress,
                 price_floor             priceFloor,
-                price_top               priceTop
+                price_top               priceTop,
+                post_stick              postStick
             FROM
               post_table
-            <where>
-              post_state = '0'
-                <if test="postIdList != null and postIdList.size() > 0">
-                    AND
-                    <foreach collection="postIdList" item="id" open="post_id in(" close=")" separator=",">
-                        #{id.postId}
-                    </foreach>
-                </if>
-            </where>
+            WHERE
+                post_state = '0'
+             AND
+                <foreach collection="postIdList" item="id" open="post_id in(" close=")" separator=",">
+                    #{id.postId}
+                </foreach>
               ORDER BY post_time DESC
+                <if test="offSet != null and offSet != '' and pageRow != null and pageRow != '' ">
+                    LIMIT #{offSet}, #{pageRow}
+                </if>
           ) p
           LEFT JOIN post_image pi ON pi.post_id = p.postId
     </select>
+
+    <!--获取对应板块的帖子ID-->
+    <select id="getPostIdByStick" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+          post_id postId
+        FROM post_table
+        <where>
+            <if test="stickId == 2 ">
+                post_stick = '2'
+            </if>
+            <if test="stickId == 3 ">
+                post_stick = '3'
+            </if>
+        </where>
+    </select>
+
 
 </mapper>
