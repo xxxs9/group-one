@@ -43,6 +43,15 @@
         ORDER BY w.categories_id DESC
         LIMIT #{offSet}, #{pageRow}
     </select>
+    <select id="getSortType" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+        w.categories_id                                     id,
+        w.categories_name                                 title,
+        w.categories_img                                  imgUrl
+        FROM post_categories w
+        ORDER BY w.update_time DESC
+        LIMIT 0,8
+    </select>
     <select id="listAllSort" resultType="com.alibaba.fastjson.JSONObject">
           SELECT
             w.categories_id                                     id,

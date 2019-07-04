@@ -64,6 +64,10 @@
         set status = '2'
         where chatlist_id = CONCAT(#{firstId},'-',#{secondId})
     </update>
+    <delete id="deleteChatMessage" parameterType="com.alibaba.fastjson.JSONObject">
+        DELETE FROM chat_message
+        where chatlist_id = CONCAT(#{firstId},'-',#{secondId})
+    </delete>
 
 
 

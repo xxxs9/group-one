@@ -20,6 +20,7 @@ public interface SortDao {
      */
     List<JSONObject> listSort(JSONObject jsonObject);
     List<JSONObject> listSortName(JSONObject jsonObject);
+    List<JSONObject> getSortType(JSONObject jsonObject);
 
     /**
      * 更新文章
