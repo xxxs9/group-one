@@ -5,6 +5,7 @@
     <button type="button" id="my_file" class="btn btn-primary" @click="uploadFileMethod($event)">导入</button>
     <input class="form-input" type="file" name="filename" @change="getFile($event)"></input>
     <el-button type="primary" icon="plus" @click="uploadFileCoverMethod($event)" >批量添加</el-button>
+    <el-button type="primary" icon="plus" @click="getLike" >dianzan</el-button>
 
   </form>
 </template>
@@ -22,6 +23,9 @@
           selectId:'',
           sortname: '',
           imageUrl: '',
+        },
+        tempLike: {
+          userId: 10001,
         }
       }
     },
@@ -45,6 +49,19 @@
           console.log(err);
         })
 
+      },
+      getLike() {
+        //查询列表
+
+        this.api({
+          url: "/api/like/getThumbsUp",
+          method: "post",
+          params: this.tempLike
+        }).then(data => {
+          console.log(data);
+          this.list = data.list;
+          this.totalCount = data.totalCount;
+        })
       },
       uploadFileCoverMethod(event){
         event.preventDefault();

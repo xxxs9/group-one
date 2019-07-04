@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.heeexy.example.dao.ChatDao">
+
+    <!--获取用户的点赞用户ID-->
+    <select id="getUserById" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        c.second_user_id secondId,
+        c.chatlist_id     chatlistId,
+        u.unionid  userid,
+		u.username username,
+		u.iconurl  userimgUrl,
+		(select chat_content
+        from chat_message
+        where chatlist_id =c.chatlist_id and create_time =(select max(create_time) from chat_message
+        where chatlist_id =c.chatlist_id)) content,
+        (select DATE_FORMAT(create_time, '%Y.%m.%d %T')  createTime
+        from chat_message
+        where chatlist_id =c.chatlist_id and create_time =(select max(create_time) from chat_message
+        where chatlist_id =c.chatlist_id)) createTime
+        from chat_message as c
+		inner JOIN user as u ON u.unionid = c.second_user_id
+        where first_user_id = #{userId}
+		group  by  second_user_id   having count(second_user_id) > 0
+    </select>
+
+    <select id="getChatMessage" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        u.unionid  userid,
+		u.username username,
+		u.iconurl  userimgUrl,
+		chat_content text,
+		status status,
+        case first_user_id when #{firstId} then '1' else '0' end  state,
+        chatlist_id     chatlistId
+        from chat_message
+        inner JOIN user as u ON u.unionid = chat_message.first_user_id
+        where chatlist_id = CONCAT(#{firstId},'-',#{secondId})
+        ORDER BY chat_message.create_time desc
+    </select>
+    <select id="getContentById" resultType="com.alibaba.fastjson.JSONObject">
+        select
+        second_user_id secondId,
+        chatlist_id     chatlistId
+
+        from chat_message
+        where first_user_id = #{userId}
+    </select>
+    <insert id="addFirstChatMessage" parameterType="com.alibaba.fastjson.JSONObject">
+        INSERT INTO chat_message
+            (first_user_id,chat_content,second_user_id,chatlist_id)
+        VALUES
+            (#{firstId},#{content},#{secondId},CONCAT(#{firstId},'-',#{secondId}))
+    </insert>
+    <insert id="addSecondChatMessage" parameterType="com.alibaba.fastjson.JSONObject">
+        INSERT INTO chat_message
+            (first_user_id,chat_content,second_user_id,chatlist_id)
+        VALUES
+            (#{firstId},#{content},#{secondId},CONCAT(#{secondId},'-',#{firstId}))
+    </insert>
+    <update id="updateChatMessageStatus" parameterType="com.alibaba.fastjson.JSONObject">
+        update chat_message
+        set status = '2'
+        where chatlist_id = CONCAT(#{firstId},'-',#{secondId})
+    </update>
+
+
+
+</mapper>

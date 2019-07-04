@@ -9,7 +9,8 @@ public interface TemplateDao {
      * 新增文章
      */
     int addTemplate(JSONObject jsonObject);
-    int addChatTemplate(JSONObject jsonObject);
+    int addAllUserTemplate(JSONObject jsonObject);
+    int addWarningTemplate(JSONObject jsonObject);
     /**
      * 统计文章总数
      */
@@ -30,6 +31,7 @@ public interface TemplateDao {
 
     List<JSONObject> getTemplateByName(JSONObject jsonObject);
     List<JSONObject> getTemplateById(JSONObject jsonObject);
+    String getWarningContentByName();
 
 
 }
