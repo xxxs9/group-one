@@ -194,6 +194,7 @@
         SELECT
         id                                      userId,
         uuid                                    uuId,
+        unionid                                 unionId,
         username                                username,
         iconurl                                 iconUrl,
         sex                                     sex,
