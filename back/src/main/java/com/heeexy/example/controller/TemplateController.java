@@ -46,6 +46,10 @@ public class TemplateController {
         CommonUtil.hasAllRequired(requestJson, "tname,content");
         return templateService.addChatTemplate(requestJson);
     }
+    @PostMapping("/sendWarning")
+    public JSONObject sendWarning(@RequestBody JSONObject requestJson) {
+        return templateService.addWarningTemplate(requestJson);
+    }
     /**
      * 修改文章
      */

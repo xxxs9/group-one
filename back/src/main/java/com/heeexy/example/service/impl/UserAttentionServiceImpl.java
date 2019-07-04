@@ -31,7 +31,13 @@ public class UserAttentionServiceImpl implements UserAttentionService {
         List<JSONObject> fans = new ArrayList<>();
         for(JSONObject object : fansUUID){
             object.put("uuId",object.getInteger("fansId"));
-            fans.add(externalUserDao.findIconById(object));
+            JSONObject fan = externalUserDao.findIconById(object);
+            fan.put("likeid",object.getInteger("fansId"));
+            fan.put("likename",fan.getString("username"));
+            fan.put("likeimg",fan.getString("iconUrl"));
+            fan.remove("username");
+            fan.remove("iconUrl");
+            fans.add(fan);
         }
         
         return CommonUtil.successPage(fans);
@@ -44,7 +50,13 @@ public class UserAttentionServiceImpl implements UserAttentionService {
         List<JSONObject> idols = new ArrayList<>();
         for(JSONObject object : myIdolUUID){
             object.put("uuId",object.getInteger("idolId"));
-            idols.add(externalUserDao.findIconById(object));
+            JSONObject idol = externalUserDao.findIconById(object);
+            idol.put("likeid",object.getInteger("idolId"));
+            idol.put("likename",idol.getString("username"));
+            idol.put("likeimg",idol.getString("iconUrl"));
+            idol.remove("username");
+            idol.remove("iconUrl");
+            idols.add(idol);
         }
 
         return CommonUtil.successPage(idols);

@@ -21,7 +21,7 @@ public interface BrowseRecordDao {
 
     /**
      * 根据用户名查询用户记录列表
-     * @param jsonObject
+     * @param jsonObject key:querykey
      * @return
      */
     public List<JSONObject> getRecordsByName(JSONObject jsonObject);
@@ -42,28 +42,28 @@ public interface BrowseRecordDao {
 
     /**
      * 根据帖子id查询浏览过此帖子的用户列表
-     * @param jsonObject
+     * @param jsonObject key:postId
      * @return
      */
     List<JSONObject> getUUIDByPostId(JSONObject jsonObject);
 
     /**
      * 根据uuid查询用户浏览过的帖子
-     * @param jsonObject
+     * @param jsonObject key:uuId
      * @return
      */
     List<JSONObject> getRecordsByUUID(JSONObject jsonObject);
 
     /**
      * 新增记录
-     * @param jsonObject
+     * @param jsonObject key:uuId,postId
      * @return
      */
     int addRecord(JSONObject jsonObject);
 
     /**
      * 查询帖子的浏览数
-     * @param jsonObject 帖子ID
+     * @param jsonObject key:postId
      * @return
      */
     int countPostBrowse(JSONObject jsonObject);

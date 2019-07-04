@@ -68,6 +68,16 @@
             (#{uuId},#{unionId},#{username},#{iconUrl},#{mobile},#{sex})
     </insert>
     <!--
+        添加游客
+    -->
+    <insert id="addTourist" useGeneratedKeys="true" keyProperty="uuId">
+        INSERT INTO
+            user(uuid,username,iconurl,mobile,sex)
+            VALUES
+            (#{uuId},#{username},#{iconUrl},#{mobile},#{sex})
+    </insert>
+
+    <!--
         修改粉丝偏移量
     -->
     <update id="updateFansOffset">
@@ -230,22 +240,10 @@
 
     <!--根据UUID获取该用户所发的帖子id-->
     <select id="getPostByUUID" resultType="com.alibaba.fastjson.JSONObject">
-        SELECT
-        p.*,
-        (SELECT categories_name FROM post_categories pc WHERE p.postId = pc.categories_id) categoriesName,
-        (SELECT count(0) FROM click_goods WHERE click_goods.post_id = p.postId)            likeCount
-        FROM
-        (
-          SELECT
-          post_id                                                                 postId,
-          post_owner_id                                                           uuId,
-          post_text                                                               postText,
-          post_time                                                               postTime,
-          post_phone                                                              postPhone,
-          post_address                                                            postAddress
-          FROM post_table
-          WHERE post_owner_id = #{uuId}
-        ) p
+          select
+          post_id           postId
+          from post_table
+          where post_owner_id = #{uuId}
 
     </select>
 
@@ -281,6 +279,24 @@
         SELECT count(post_id)
         FROM click_goods
         WHERE user_id = #{uuId}
+    </select>
+    <select id="ddd">
+--         SELECT
+--         p.*,
+--         (SELECT categories_name FROM post_categories pc WHERE p.postId = pc.categories_id) categoriesName,
+--         (SELECT count(0) FROM click_goods WHERE click_goods.post_id = p.postId)            likeCount
+--         FROM
+--         (
+--           SELECT
+--           post_id                                                                 postId,
+--           post_owner_id                                                           uuId,
+--           post_text                                                               postText,
+--           post_time                                                               postTime,
+--           post_phone                                                              postPhone,
+--           post_address                                                            postAddress
+--           FROM post_table
+--           WHERE post_owner_id = #{uuId}
+--         ) p
     </select>
 
 
