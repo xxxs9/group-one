@@ -41,8 +41,8 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     public JSONObject getByUserId(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
-        boolean flag = permission.getPermission(jsonObject);
-        if (flag==true) {
+//        boolean flag = permission.getPermission(jsonObject);
+//        if (flag==true) {
             int count = collectionDao.getByUserIdCount(jsonObject);
             List<JSONObject> postIdByUserId = collectionDao.getPostIdByUserId(jsonObject);
             jsonObject.put("postIdList", postIdByUserId);
@@ -50,8 +50,8 @@ public class CollectionServiceImpl implements CollectionService {
             JSONObject collectionList = new JSONObject();
             collectionList.put("postListApi", postListApi);
             return CommonUtil.successJson(collectionList);
-        }
-        return CommonUtil.errorJson(ErrorEnum.E_10018);
+//        }
+//        return CommonUtil.errorJson(ErrorEnum.E_10018);
     }
 
     /**

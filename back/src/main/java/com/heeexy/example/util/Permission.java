@@ -2,6 +2,7 @@ package com.heeexy.example.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.ExternalUserDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,18 +13,20 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Permission {
-    private static ExternalUserDao externalUserDao;
 
-    public static boolean getPermission (JSONObject jsonObject){
+    @Autowired
+    ExternalUserDao externalUserDao;
+
+    public boolean getPermission (JSONObject jsonObject){
         int exist = externalUserDao.queryExistUUID(jsonObject);
         boolean flag = false;
         //判断用户是否存在
         if (exist!=0){
             //用户存在
             //判断用户是否为登录用户
-            if (jsonObject.getInteger("uuId")==(jsonObject.getInteger("userId"))) {
+            if (jsonObject.getInteger("uuId").equals(jsonObject.getInteger("userId"))) {
                 //是登录用户
-                Integer uuId = Integer.valueOf(jsonObject.getString("userId"));
+                Integer uuId = jsonObject.getInteger("userId");
                 JSONObject userById = externalUserDao.findUserById(uuId);
                 //判断该用户是否是游客
                 if (userById.getString("unionId") != null) {
