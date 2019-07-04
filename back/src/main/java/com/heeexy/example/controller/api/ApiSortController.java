@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
  * @Version:
  */
 @RestController
-@RequestMapping("/api/sort")
+@RequestMapping("/api/types")
 public class ApiSortController {
     @Autowired
     private SortService sortService;
 
 
-    @PostMapping("/getSortType")
+    @PostMapping("/getBase.api")
     public JSONObject getSortType(@RequestBody JSONObject requestJson) {
 //        CommonUtil.hasAllRequired(requestJson, "postId,userId");
         return sortService.getSortType(requestJson);
