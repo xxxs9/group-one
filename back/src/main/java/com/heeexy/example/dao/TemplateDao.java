@@ -32,6 +32,8 @@ public interface TemplateDao {
     List<JSONObject> getTemplateByName(JSONObject jsonObject);
     List<JSONObject> getTemplateById(JSONObject jsonObject);
     String getWarningContentByName();
+    String getBeginContentByName();
+    String getBanContentByName();
 
 
 }
