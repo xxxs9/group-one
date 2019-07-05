@@ -51,7 +51,8 @@ public class ApiExternalUserController {
      */
     @PostMapping("/myself")
     public JSONObject getMyself(@RequestBody JSONObject requestJson){
-        CommonUtil.hasAllRequired(requestJson, "uuId");
+//        CommonUtil.hasAllRequired(requestJson, "uuId");
+        requestJson.put("uuId",requestJson.getInteger("userId"));
         return externalUserService.getMyself(requestJson);
     }
 
