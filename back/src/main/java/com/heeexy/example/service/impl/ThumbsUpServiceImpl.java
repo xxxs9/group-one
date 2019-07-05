@@ -5,11 +5,13 @@ import com.heeexy.example.dao.ExternalUserDao;
 import com.heeexy.example.dao.ThumbsUpDao;
 import com.heeexy.example.service.ThumbsUpService;
 import com.heeexy.example.util.CommonUtil;
+import com.heeexy.example.util.StringTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,15 +41,16 @@ public class ThumbsUpServiceImpl implements ThumbsUpService {
             List<JSONObject> likeList = thumbsUpDao.getLikeList(postIds);
             for (JSONObject userIDs : likeList) {
                 Object userID = userIDs.get("userId");
-                Object createTime = userIDs.get("createTime");
+                Date createTime = userIDs.getDate("createTime");
+                String s = StringTools.differentDaysByMillisecond(createTime);
                 JSONObject jsonObject1 = new JSONObject();
                 jsonObject1.put("uuId",userID);
                 JSONObject iconById = externalUserDao.findIconById(jsonObject1);
                 Object iconUrl = iconById.get("iconUrl");
                 Object username = iconById.get("username");
-                jsonObject1.put("iconUrl",iconById);
-                jsonObject1.put("username",username);
-                jsonObject1.put("createTime",createTime);
+                jsonObject1.put("likeimg",iconUrl);
+                jsonObject1.put("likename",username);
+                jsonObject1.put("time",s);
                 list.add(jsonObject1);
             }
         }

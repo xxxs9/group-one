@@ -25,18 +25,27 @@ public class ApiThumbsUpController {
     @Autowired
     private ThumbsUpService thumbsUpService;
 
-    @PostMapping("/getThumbsUp")
+    @PostMapping("/wholikeme")
     public List<JSONObject> getThumbsUp(@RequestBody JSONObject requestJson) {
 //        CommonUtil.hasAllRequired(requestJson, "postId,userId");
+        Integer userid = requestJson.getInteger("userid");
+        requestJson.put("userId",userid);
         return thumbsUpService.getThumbsUp(requestJson);
     }
-    @PostMapping("/getMyThumbsUp")
+    @PostMapping("/mylike")
     public JSONObject getMyThumbsUp(@RequestBody JSONObject requestJson) {
 //        CommonUtil.hasAllRequired(requestJson, "postId,userId");
+        Integer userid = requestJson.getInteger("userid");
+        requestJson.put("userId",userid);
+
         return thumbsUpService.getMyThumbsUp(requestJson);
     }
     @PostMapping("/addpostlike")
     public JSONObject updateThumbsUp(@RequestBody JSONObject requestJson) {
+        Integer userid = requestJson.getInteger("userid");
+        Integer tid = requestJson.getInteger("tid");
+        requestJson.put("userId",userid);
+        requestJson.put("postId",tid);
 //        CommonUtil.hasAllRequired(requestJson, "postId,userId");
         return thumbsUpService.updateThumbsUp(requestJson);
     }

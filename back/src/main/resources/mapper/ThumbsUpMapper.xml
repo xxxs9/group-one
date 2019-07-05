@@ -13,7 +13,7 @@
 
     <select id="getLikeList" resultType="com.alibaba.fastjson.JSONObject">
         select user_id userId,
-         DATE_FORMAT(create_time, '%Y.%m.%d %T')  createTime,
+         DATE_FORMAT(create_time, '%Y-%m-%d %T')  createTime,
          status   status
         from click_goods
         where
