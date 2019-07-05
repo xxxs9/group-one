@@ -129,7 +129,6 @@ public class PostController {
     @ResponseBody
     @RequestMapping(value = "/photoupload")
     public JSONObject myphotoupload(HttpServletRequest request) {
-        Map<String,Object> map = new HashMap<>();
         JSONObject ret = new JSONObject();
         String key = "";
         String fileName = "";
@@ -142,7 +141,7 @@ public class PostController {
             while (iterator.hasNext()) {
                 MultipartFile file = req.getFile(iterator.next());
                 fileName = file.getOriginalFilename();
-                String prefix=fileName.substring(fileName.lastIndexOf(".")+1);
+                String prefix = fileName.substring(fileName.lastIndexOf(".") + 1);
                 fileNames = UUID.randomUUID() + String.valueOf(new Date().getTime()) + "." + prefix;
                 InputStream input = file.getInputStream();
                 // 创建OSSClient实例
@@ -157,8 +156,10 @@ public class PostController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ret.put("url","http://group-one.oss-cn-shenzhen.aliyuncs.com/images/" + key + fileNames);
-        return ret;
+//        ret.put("url","http://group-one.oss-cn-shenzhen.aliyuncs.com/images/" + key + fileNames);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("url","http://group-one.oss-cn-shenzhen.aliyuncs.com/images/" + key + fileNames);
+        return jsonObject;
     }
 
     /**

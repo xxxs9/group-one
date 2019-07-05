@@ -482,6 +482,11 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public JSONObject release(JSONObject jsonObject) {
+
+        return null;
+    }
+
+    private boolean verify(JSONObject jsonObject){
         JSONObject releaseData = new JSONObject();
         //帖子正文
         String content = jsonObject.getString("content");
@@ -498,8 +503,10 @@ public class PostServiceImpl implements PostService {
         Date enddata = jsonObject.getDate("enddata");//结束时间
         //发帖用户ID
         String uuid = jsonObject.getString("uuid");
-
+        //图片数组
         JSONArray imglist = jsonObject.getJSONArray("imglist");
-        return null;
+
+
+        return true;
     }
 }
