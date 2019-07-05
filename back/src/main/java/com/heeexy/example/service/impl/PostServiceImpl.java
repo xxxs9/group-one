@@ -383,7 +383,9 @@ public class PostServiceImpl implements PostService {
         }else {
             comusername = commentUserName + ": " + "@" + acceptUserName;
         }
-        comment.put("commentUserName",comusername);
+        comment.put("commentsname",comusername);
+        comment.remove("acceptUserName");
+        comment.remove("commentUserName");
     }
 
     /**
