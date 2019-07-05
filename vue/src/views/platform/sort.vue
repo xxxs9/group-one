@@ -76,9 +76,10 @@
         </el-form-item>
         <el-upload
           class="avatar-uploader"
-          action="/api/sort/upload"
+          action="/api/post/photoupload"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
+          :on-preview="handlePictureCardPreview"
           :before-upload="beforeAvatarUpload">
           <img v-if="dialogStatus=='update'"  :src="tempUser.imageUrl" class="avatar">
           <img v-else-if="imageUrl"  :src="tempUser.imageUrl" class="avatar">
@@ -139,22 +140,28 @@
       ])
     },
     methods: {
-      handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
+      handleAvatarSuccess(response, file, fileList) {
+        this.imageUrl = response.url;
         this.tempUser.imageUrl = this.imageUrl;
-
+      },
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
       },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg';
+        const isGIF = file.type === 'image/gif';
+        const isPNG = file.type === 'image/png';
+        const isBMP = file.type === 'image/bmp';
         const isLt2M = file.size / 1024 / 1024 < 2;
 
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
+        if (!isJPG && !isGIF && !isPNG && !isBMP) {
+          this.$message.error('上传图片必须是JPG/GIF/PNG/BMP 格式!');
         }
         if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
+          this.$message.error('上传图片大小不能超过 2MB!');
         }
-        return isJPG && isLt2M;
+        return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
       },
       getList() {
         //查询列表
@@ -213,7 +220,6 @@
       },
       showUpdate($index) {
         let sort = this.list[$index];
-        alert(sort.imageUrl);
         this.tempUser.id = sort.id;
         this.tempUser.sortname = sort.sortname;
         this.tempUser.imageUrl = sort.imageUrl;
