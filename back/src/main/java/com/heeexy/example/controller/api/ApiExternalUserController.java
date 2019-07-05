@@ -38,10 +38,12 @@ public class ApiExternalUserController {
      */
     @PostMapping("/login")
     public JSONObject UserLogin(@RequestBody JSONObject requestJson,HttpServletRequest request){
+        JSONObject user = externalUserService.userLogin(requestJson);
         HttpSession session = request.getSession();
-        session.setAttribute("userId",requestJson.getInteger("uuId"));
-        session.setAttribute("uuId",requestJson.getInteger("uuId"));
-        return externalUserService.userLogin(requestJson);
+        session.setAttribute("userId",user.getInteger("userId"));
+        session.setAttribute("uuId",user.getInteger("userId"));
+
+        return CommonUtil.successJson(user);
     }
 
     /**
@@ -51,7 +53,8 @@ public class ApiExternalUserController {
      */
     @PostMapping("/myself")
     public JSONObject getMyself(@RequestBody JSONObject requestJson){
-        CommonUtil.hasAllRequired(requestJson, "uuId");
+//        CommonUtil.hasAllRequired(requestJson, "uuId");
+        requestJson.put("uuId",requestJson.getInteger("userId"));
         return externalUserService.getMyself(requestJson);
     }
 
@@ -62,38 +65,49 @@ public class ApiExternalUserController {
      */
     @PostMapping("/others")
     public JSONObject getOthers(@RequestBody JSONObject requestJson){
-        CommonUtil.hasAllRequired(requestJson, "uuId");
+//        CommonUtil.hasAllRequired(requestJson, "uuId");oe
+//        requestJson.put("uuId",requestJson.getInteger("userId"));
         return externalUserService.getOthers(requestJson);
     }
 
     /**
      * 获取当前用户发布的帖子信息
-     * @param request
+     * @param requestJson
      * @return JSONObject
      */
-    @GetMapping("/myposts")
-    public JSONObject getMyPosts(HttpServletRequest request){
-        return externalUserService.getMyPost(CommonUtil.request2Json(request));
+    @PostMapping("/myposts")
+    public JSONObject getMyPosts(@RequestBody JSONObject requestJson){
+        requestJson.put("uuId",requestJson.getInteger("userId"));
+        return externalUserService.getMyPost(requestJson);
     }
 
     /**
      * 获取该用户点赞过的帖子
-     * @param request
+     * @param requestJson
      * @return JSONObject
      */
-    @GetMapping("/mylikes")
-    public JSONObject getMyLikes(HttpServletRequest request){
-        return externalUserService.getMyLikePost(CommonUtil.request2Json(request));
+    @PostMapping("/mylikes")
+    public JSONObject getMyLikes(@RequestBody JSONObject requestJson){
+        requestJson.put("uuId",requestJson.getInteger("userId"));
+        return externalUserService.getMyLikePost(requestJson);
     }
 
     /**
      * 获取该用户的浏览记录
-     * @param request
+     * @param requestJson
      * @return JSONObject
      */
-    @GetMapping("/myrecords")
-    public JSONObject getMyRecords(HttpServletRequest request){
-        return externalUserService.getMyRecords(CommonUtil.request2Json(request));
+    @PostMapping("/myrecords")
+    public JSONObject getMyRecords(@RequestBody JSONObject requestJson){
+        requestJson.put("uuId",requestJson.getInteger("userId"));
+        return externalUserService.getMyRecords(requestJson);
+    }
+
+
+    @PostMapping("/release")
+    public JSONObject isHasPost(@RequestBody JSONObject requestJson,HttpServletRequest request){
+        requestJson.put("userId",request.getSession().getAttribute("userId"));
+        return externalUserService.releaseButton(requestJson);
     }
 
 //    @GetMapping("/mycomments")
@@ -177,6 +191,8 @@ public class ApiExternalUserController {
         }
         return map;
     }
+
+
 
 }
 

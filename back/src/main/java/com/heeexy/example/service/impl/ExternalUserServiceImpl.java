@@ -10,6 +10,7 @@ import com.heeexy.example.util.CommonUtil;
 import com.heeexy.example.util.EmojiUtil;
 import com.heeexy.example.util.UuidUtil;
 import com.heeexy.example.util.constants.ErrorEnum;
+import net.sf.json.processors.JsDateJsonBeanProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -298,6 +299,9 @@ public class ExternalUserServiceImpl implements ExternalUserService {
      */
     @Override
     public JSONObject userLogin(JSONObject jsonObject) {
+        JSONObject user = new JSONObject();
+        long UUID = UuidUtil.getId();
+        jsonObject.put("uuId",UUID);
         int exist = userDao.queryExistUUID(jsonObject);
         if (exist > 0) {
             return CommonUtil.errorJson(ErrorEnum.E_10009);
@@ -314,13 +318,29 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         }
         String s = EmojiUtil.filterEmoji(username);
         jsonObject.put("username",s);
-        jsonObject.put("uuId", UuidUtil.getId());
+
         if(jsonObject.get("unionId")!=null){
-            userDao.addUser(jsonObject);
+            int i = userDao.addUser(jsonObject);
+            if(i>0){
+                addPermission(jsonObject);
+                user.put("userId",UUID);
+                user.put("unionId",jsonObject.get("unionId"));
+                user.put("username",username);
+                user.put("sex",jsonObject.get("sex"));
+            }
+
         }else {
-            userDao.addTourist(jsonObject);
+            int i = userDao.addTourist(jsonObject);
+            if(i>0){
+                user.put("userId",UUID);
+                user.put("unionId",jsonObject.get("unionId"));
+                user.put("username",username);
+                user.put("sex",jsonObject.get("sex"));
+            }
+
         }
-        return CommonUtil.successJson();
+
+        return user;
     }
 
     /**
@@ -373,10 +393,11 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         List<JSONObject> postIdList = userDao.getPostByUUID(jsonObject);
         JSONObject postIds = new JSONObject();
         postIds.put("postIdList",postIdList);
-        postIds.put("userId",jsonObject.getInteger("userId"));
+        postIds.put("userId",jsonObject.getInteger("otherId"));
         List<JSONObject> postList = postService.getPostListApi(postIds);
         JSONObject object = new JSONObject();
         object.put("postList",postList);
+        jsonObject.put("uuId",jsonObject.getInteger("otherId"));
         object.put("others",getMyself(jsonObject));
         return CommonUtil.successJson(object);
     }
@@ -513,6 +534,26 @@ public class ExternalUserServiceImpl implements ExternalUserService {
             }
         }
         return flag;
+    }
+
+    @Override
+    public JSONObject releasePost(JSONObject jsonObject) {
+        Integer uuId = jsonObject.getInteger("uuId");
+        String postText = jsonObject.getString("content");
+
+
+
+        return null;
+    }
+
+    @Override
+    public JSONObject releaseButton(JSONObject jsonObject) {
+        Integer uuId = jsonObject.getInteger("uuId");
+
+        if(isHasPostPerm(jsonObject)){
+            return CommonUtil.successJson();
+        }
+        return CommonUtil.errorJson(E_400);
     }
 }
 

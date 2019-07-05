@@ -1,12 +1,15 @@
 package com.heeexy.example.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.GetObjectRequest;
 import com.heeexy.example.service.impl.AdvertisementServiceImpl;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import javax.imageio.ImageIO;
 import javax.servlet.Servlet;
@@ -16,6 +19,8 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
 import java.util.List;
+
+import static com.heeexy.example.controller.PostController.*;
 
 /**
  * @author L-YX
@@ -117,5 +122,44 @@ public class AdvertisementController {
         File file = new File(jsonObject.getString("desFilePath"));
         file.delete();
         return CommonUtil.successJson();
+    }
+
+    @ResponseBody
+    @RequestMapping("/phoUpload")
+    public JSONObject myPhotoUpload(HttpServletRequest request) {
+        JSONObject ret = new JSONObject();
+        String key = "";
+        String fileName = "";
+        String fileNames = "";
+        ret.put("success", false);
+        ret.put("msg", "请求失败[PU01]");
+        try {
+            StandardMultipartHttpServletRequest req = (StandardMultipartHttpServletRequest) request;
+            Iterator<String> iterator = req.getFileNames();
+
+            while (iterator.hasNext()) {
+                MultipartFile file = req.getFile(iterator.next());
+
+                fileName = file.getOriginalFilename();
+                String prefix=fileName.substring(fileName.lastIndexOf(".")+1);
+                fileNames = UUID.randomUUID() + String.valueOf(new Date().getTime()) + "." + prefix;
+                InputStream input = file.getInputStream();
+                // 创建OSSClient实例
+                OSSClient ossClient = new OSSClient(ENDPOINT, ACCESSKEYID, ACCESSKEYSECRET);
+                // 上传文件流
+                ossClient.putObject(BUCKETNAME, KEY + fileNames, input);
+                String style = "image/resize,m_fixed,w_414,h_82";
+                GetObjectRequest getObjectRequest = new GetObjectRequest(BUCKETNAME, KEY + fileNames);
+                getObjectRequest.setProcess(style);
+                ossClient.getObject(getObjectRequest, new File("example-resize.jpg"));
+                ossClient.shutdown();
+            }
+            ret.put("success", true);
+            ret.put("msg", key + fileNames);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ret.put("url","http://group-one.oss-cn-shenzhen.aliyuncs.com/images/" + key + fileNames);
+        return ret;
     }
 }
