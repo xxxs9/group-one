@@ -156,10 +156,8 @@ public class PostController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        ret.put("url","http://group-one.oss-cn-shenzhen.aliyuncs.com/images/" + key + fileNames);
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("url","http://group-one.oss-cn-shenzhen.aliyuncs.com/images/" + key + fileNames);
-        return jsonObject;
+        ret.put("url","http://group-one.oss-cn-shenzhen.aliyuncs.com/images/" + key + fileNames);
+        return ret;
     }
 
     /**
