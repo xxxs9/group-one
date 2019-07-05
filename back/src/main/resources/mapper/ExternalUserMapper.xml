@@ -61,7 +61,7 @@
     <!--
         添加用户
     -->
-    <insert id="addUser" useGeneratedKeys="true" keyProperty="uuId">
+    <insert id="addUser">
         INSERT INTO
             user(uuid,unionid,username,iconurl,mobile,sex)
             VALUES

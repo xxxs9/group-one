@@ -487,7 +487,14 @@ public class PostServiceImpl implements PostService {
         if (!verify) {
             return CommonUtil.errorJson(E_20012);
         }
-
+        Integer postId = postDao.addPost(jsonObject);
+        List<JSONObject> taglist = (List<JSONObject>) jsonObject.get("taglist");
+        for (JSONObject object : taglist) {
+            JSONObject addtag = new JSONObject();
+            addtag.put("parentId",object.get("pid"));
+            addtag.put("tagId",object.get("cid"));
+            addtag.put("postId",postId  );
+        }
 
         return CommonUtil.successJson();
 

@@ -214,7 +214,7 @@
     </insert>
 
     <!--增加帖子-->
-    <insert id="addPost">
+    <insert id="addPost"  useGeneratedKeys="true" keyProperty="postId">
       INSERT INTO post_table
         (post_type_id,
         post_owner_id,

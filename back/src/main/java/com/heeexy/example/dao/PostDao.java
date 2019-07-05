@@ -156,6 +156,6 @@ public interface PostDao {
      * @param jsonObject 增加的内容
      * @return
      */
-    int addPost(JSONObject jsonObject);
+    Integer addPost(JSONObject jsonObject);
 
 }
