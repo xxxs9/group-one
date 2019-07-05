@@ -216,6 +216,7 @@
             <el-form-item size="medium" :inline="true" style="margin-left: -7%;">
               <div v-for="imgsrc in tempPost.postImgList" style="float: left; width: 200px;height: 200px;">
                 <el-upload action="/api/post/photoupload"
+                           v-if="tempPost.postImgList.indexOf(imgsrc) < 9"
                            :on-preview="handlePictureCardPreview"
                            :on-success="(response, file, fileList) => handleAvatarSuccess(tempPost.postImgList.indexOf(imgsrc),response, file, fileList)"
                            :on-remove="handleRemove" list-type="picture-card" style="margin-top: 2%;float: right">
@@ -223,6 +224,7 @@
                 </el-upload>
               </div>
               <el-upload action="/api/post/photoupload"
+                         v-if="tempPost.postImgList.length<9"
                          :on-preview="handlePictureCardPreview"
                          :on-success="(response, file, fileList) => handleAvatarSuccess(tempPost.postImgList.indexOf(imgsrc),response, file, fileList)"
                          :on-remove="handleRemove" list-type="picture-card" style="margin-top: 2%; margin-left: 30px;">

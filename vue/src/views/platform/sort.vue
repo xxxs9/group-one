@@ -150,16 +150,18 @@
       },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg';
+        const isGIF = file.type === 'image/gif';
         const isPNG = file.type === 'image/png';
+        const isBMP = file.type === 'image/bmp';
         const isLt2M = file.size / 1024 / 1024 < 2;
 
-        if (!isJPG && !isPNG) {
-          this.$message.error('上传类型图片只能是 JPG或者PNG 格式!');
+        if (!isJPG && !isGIF && !isPNG && !isBMP) {
+          this.$message.error('上传图片必须是JPG/GIF/PNG/BMP 格式!');
         }
         if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
+          this.$message.error('上传图片大小不能超过 2MB!');
         }
-        return isJPG && isLt2M;
+        return (isJPG || isBMP || isGIF || isPNG) && isLt2M;
       },
       getList() {
         //查询列表
