@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+import static com.heeexy.example.util.constants.ErrorEnum.E_20012;
 import static com.heeexy.example.util.constants.ErrorEnum.E_90003;
 import static com.heeexy.example.util.constants.ErrorEnum.E_90004;
 
@@ -482,8 +483,14 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public JSONObject release(JSONObject jsonObject) {
+        boolean verify = verify(jsonObject);
+        if (!verify) {
+            return CommonUtil.errorJson(E_20012);
+        }
 
-        return null;
+
+        return CommonUtil.successJson();
+
     }
 
     private boolean verify(JSONObject jsonObject){
@@ -496,8 +503,6 @@ public class PostServiceImpl implements PostService {
         String address = jsonObject.getString("address");
         //帖子电话
         String telephone = jsonObject.getString("telephone");
-        //帖子发布时间
-        Date nowDate = new Date();
         //月租短租输入时间
         Date startdata = jsonObject.getDate("startdata");//起始时间
         Date enddata = jsonObject.getDate("enddata");//结束时间

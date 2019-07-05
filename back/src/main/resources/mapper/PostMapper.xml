@@ -137,8 +137,8 @@
         <result column="postType" property="postType" />
         <result column="postOwnerId" property="postOwnerId"></result>
         <result column="priceTop" property="priceTop"></result>
-        <collection property="postImgList" ofType="String">
-            <id column="imgUrl" property="imgUrl"></id>
+        <collection property="imgUrl" ofType="String">
+            <id column="postImageSrc" property="postImageSrc"></id>
         </collection>
         <collection property="postTagList" ofType="String">
             <id column="postTagName" property="postTagName"/>
@@ -158,7 +158,7 @@
                 post_text               postText,
                 post_owner_id           postOwnerId,
                 post_phone              postPhone,
-                DATE_FORMAT(post_time, '%Y.%m.%d %T') postTime,
+                DATE_FORMAT(post_time, '%Y-%m-%d %T') postTime,
                 like_offset             likeOffset,
                 browse_offset           browseOffset,
                 post_type_id            postTypeId,
@@ -212,6 +212,28 @@
       VALUES
         (#{postId},#{tagId},#{parentId})
     </insert>
+
+    <!--增加帖子-->
+    <insert id="addPost">
+      INSERT INTO post_table
+        (post_type_id,
+        post_owner_id,
+        post_text,
+        like_offset,
+        browse_offset,
+        post_phone,
+        post_address,
+        price_floor,
+        price_top,
+        post_state,
+        post_stick,
+        start_date,
+        end_date)
+      VALUES
+        (#{typeid},#{uuid},#{content},0,0,#{telephone},#{address},#{lowprice},#{highprice},0,#{postStick},Nullif(#{startdate},null),Nullif(#{enddate},null))
+    </insert>
+
+
 
     <!--返回帖子ID数组-->
     <select id="listPostIdByTag" resultType="com.alibaba.fastjson.JSONObject">

@@ -150,4 +150,12 @@ public interface PostDao {
      * @return List<JSONObject>
      */
     List<JSONObject> getPostTextByPostId (JSONObject jsonObject);
+
+    /**
+     * 增加帖子
+     * @param jsonObject 增加的内容
+     * @return
+     */
+    int addPost(JSONObject jsonObject);
+
 }
