@@ -43,6 +43,7 @@ public class ShiroConfiguration {
           authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问 */
 		filterChainDefinitionMap.put("/", "anon");
 		filterChainDefinitionMap.put("/static/**", "anon");
+		filterChainDefinitionMap.put("/root/static/**", "anon");
 		filterChainDefinitionMap.put("/api/**", "anon");
 		filterChainDefinitionMap.put("/login/auth", "anon");
 		filterChainDefinitionMap.put("/post/*", "anon");

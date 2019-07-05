@@ -462,4 +462,51 @@ public class PostServiceImpl implements PostService {
         stickObj.put("userId",userId);
         return getPostListApi(stickObj);
     }
+
+    /**
+     * 获取对应类型的帖子
+     * @param jsonObject 类型ID
+     * @return
+     */
+    @Override
+    public JSONObject getTypePost(JSONObject jsonObject) {
+        List<JSONObject> typeId = postDao.getPostByTypeId(jsonObject.getInteger("typeId"));
+        jsonObject.put("typePost",getPostList(typeId,jsonObject.get("userId")));
+        return jsonObject;
+    }
+
+    /**
+     * 发布
+     * @param jsonObject 发布的内容
+     * @return
+     */
+    @Override
+    public JSONObject release(JSONObject jsonObject) {
+
+        return null;
+    }
+
+    private boolean verify(JSONObject jsonObject){
+        JSONObject releaseData = new JSONObject();
+        //帖子正文
+        String content = jsonObject.getString("content");
+        //帖子类型ID
+        int typeId = sortDao.getIdByName(jsonObject.getString("type"));
+        //帖子地址
+        String address = jsonObject.getString("address");
+        //帖子电话
+        String telephone = jsonObject.getString("telephone");
+        //帖子发布时间
+        Date nowDate = new Date();
+        //月租短租输入时间
+        Date startdata = jsonObject.getDate("startdata");//起始时间
+        Date enddata = jsonObject.getDate("enddata");//结束时间
+        //发帖用户ID
+        String uuid = jsonObject.getString("uuid");
+        //图片数组
+        JSONArray imglist = jsonObject.getJSONArray("imglist");
+
+
+        return true;
+    }
 }

@@ -1,5 +1,9 @@
 package com.heeexy.example.util;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.net.URL;
 import java.util.Date;
 
 /**
@@ -30,5 +34,16 @@ public class StringTools {
             time = "15天前";
         }
         return time;
+    }
+
+    public static void getPicture(String urlHttp, String path){
+        String file = path + "/" + new Date().getTime() + ".jpg";
+        try {
+            URL url = new URL(urlHttp);
+            BufferedImage img = ImageIO.read(url);
+            ImageIO.write(img, "jpg", new File(file));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
