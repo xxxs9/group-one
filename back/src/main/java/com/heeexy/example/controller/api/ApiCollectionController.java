@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 
 @RestController
-@RequestMapping("/api/collection")
+@RequestMapping("/api")
 public class ApiCollectionController {
     @Autowired
     CollectionServiceImpl collectionService;
@@ -29,28 +29,18 @@ public class ApiCollectionController {
      * @param requestJson (key:userId)
      * @return JSONObject
      */
-    @RequestMapping("/collectionList")
+    @RequestMapping("/collection/collection")
     public JSONObject collectionList(@RequestBody JSONObject requestJson,HttpServletRequest request) {
         requestJson.put("uuId",request.getSession().getAttribute("userId") );
         return collectionService.getByUserId(requestJson);
     }
 
     /**
-     * 前台删除收藏中的帖子接口
-     * @param requestJson (key:postId,userId)
-     * @return JSONObject
-     */
-    @RequestMapping("/deleteCollection")
-    public JSONObject deleteCollection(@RequestBody JSONObject requestJson){
-        return collectionService.deleteCollection(requestJson);
-    }
-
-    /**
-     * 前台添加收藏接口
+     * 前台添加和刪除收藏接口
      * @param requestJson (key:userId,postId)
      * @return JSONObject
      */
-    @RequestMapping("/addComment")
+    @RequestMapping("/collect/collect")
     public JSONObject addComment(@RequestBody JSONObject requestJson){
         return collectionService.addCollection(requestJson);
     }

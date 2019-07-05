@@ -111,8 +111,8 @@
 
     <select id="getByPostId" resultMap="commentMap">
         SELECT
-        comment_id                                                               commentsidid,
-        commentuser_id                                                           commentsid,
+        comment_id                                                               commentsid,
+        commentuser_id                                                           commentsuserid,
         (select username from user where user.uuid = c.commentuser_id)           commentUserName,
         (select iconurl from user where user.uuid = c.commentuser_id)            commentsimg,
         (select username from user where user.uuid = c.acceptuser_id)            acceptUserName,

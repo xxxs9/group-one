@@ -160,5 +160,19 @@ public interface ExternalUserService {
      * @return
      */
     Boolean isHasLikePerm(JSONObject jsonObject);
+
+    /**
+     * 发布帖子
+     * @param jsonObject
+     * @return
+     */
+    JSONObject releasePost(JSONObject jsonObject);
+
+    /**
+     * 发布按钮
+     * @param jsonObject
+     * @return
+     */
+    JSONObject releaseButton(JSONObject jsonObject);
 }
 
