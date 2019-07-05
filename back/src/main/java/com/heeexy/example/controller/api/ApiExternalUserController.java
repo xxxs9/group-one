@@ -38,10 +38,12 @@ public class ApiExternalUserController {
      */
     @PostMapping("/login")
     public JSONObject UserLogin(@RequestBody JSONObject requestJson,HttpServletRequest request){
+        JSONObject user = externalUserService.userLogin(requestJson);
         HttpSession session = request.getSession();
-        session.setAttribute("userId",requestJson.getInteger("uuId"));
-        session.setAttribute("uuId",requestJson.getInteger("uuId"));
-        return externalUserService.userLogin(requestJson);
+        session.setAttribute("userId",user.getInteger("userId"));
+        session.setAttribute("uuId",user.getInteger("userId"));
+
+        return CommonUtil.successJson(user);
     }
 
     /**
@@ -63,37 +65,41 @@ public class ApiExternalUserController {
      */
     @PostMapping("/others")
     public JSONObject getOthers(@RequestBody JSONObject requestJson){
-        CommonUtil.hasAllRequired(requestJson, "uuId");
+//        CommonUtil.hasAllRequired(requestJson, "uuId");oe
+//        requestJson.put("uuId",requestJson.getInteger("userId"));
         return externalUserService.getOthers(requestJson);
     }
 
     /**
      * 获取当前用户发布的帖子信息
-     * @param request
+     * @param requestJson
      * @return JSONObject
      */
     @PostMapping("/myposts")
     public JSONObject getMyPosts(@RequestBody JSONObject requestJson){
+        requestJson.put("uuId",requestJson.getInteger("userId"));
         return externalUserService.getMyPost(requestJson);
     }
 
     /**
      * 获取该用户点赞过的帖子
-     * @param request
+     * @param requestJson
      * @return JSONObject
      */
     @PostMapping("/mylikes")
     public JSONObject getMyLikes(@RequestBody JSONObject requestJson){
+        requestJson.put("uuId",requestJson.getInteger("userId"));
         return externalUserService.getMyLikePost(requestJson);
     }
 
     /**
      * 获取该用户的浏览记录
-     * @param request
+     * @param requestJson
      * @return JSONObject
      */
     @PostMapping("/myrecords")
     public JSONObject getMyRecords(@RequestBody JSONObject requestJson){
+        requestJson.put("uuId",requestJson.getInteger("userId"));
         return externalUserService.getMyRecords(requestJson);
     }
 

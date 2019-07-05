@@ -5,9 +5,7 @@ import com.heeexy.example.service.UserAttentionService;
 import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,24 +25,24 @@ public class ApiAttentionController {
 
     /**
      * 获取当前用户的粉丝信息
-     * @param request
+     * @param requestJson
      * @return JSONObject
      */
-    @GetMapping("/myfans")
-    public JSONObject getFansList(HttpServletRequest request){
+    @PostMapping("/myfans")
+    public JSONObject getFansList(@RequestBody JSONObject requestJson){
 
-        return userAttentionService.getFans(CommonUtil.request2Json(request));
+        return userAttentionService.getFans(requestJson);
     }
 
     /**
      * 获取当用户的关注用户信息
-     * @param request
+     * @param requestJson
      * @return JSONObject
      */
-    @GetMapping("/myidols")
-    public JSONObject getIdolList(HttpServletRequest request){
+    @PostMapping("/myidols")
+    public JSONObject getIdolList(@RequestBody JSONObject requestJson){
 
-        return userAttentionService.getIdol(CommonUtil.request2Json(request));
+        return userAttentionService.getIdol(requestJson);
     }
 
 }

@@ -488,25 +488,49 @@ public class PostServiceImpl implements PostService {
 
     private boolean verify(JSONObject jsonObject){
         JSONObject releaseData = new JSONObject();
+        boolean flag = true;
         //帖子正文
         String content = jsonObject.getString("content");
+        if(content.length()>=200){
+            flag = false;
+        }
         //帖子类型ID
-        int typeId = sortDao.getIdByName(jsonObject.getString("type"));
+        Integer typeId = sortDao.getIdByName(jsonObject.getString("typeId"));
+        if(!typeId.toString().matches("/^\\d+/")){
+            flag = false;
+        }
         //帖子地址
         String address = jsonObject.getString("address");
+        if(!address.matches("/[a-zA-Z0-9\\u0391-\\uFFE5]+$/")){
+            flag = false;
+        }
         //帖子电话
         String telephone = jsonObject.getString("telephone");
+        if(!telephone.matches("/^1[3|4|5|8][0-9]\\d{8}$/")){
+            flag = false;
+        }
         //帖子发布时间
         Date nowDate = new Date();
+        if(!nowDate.toString().matches(" /^[1-9]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\\s+(20|21|22|23|[0-1]\\d):[0-5]\\d:[0-5]\\d$/")){
+            flag = false;
+        }
         //月租短租输入时间
         Date startdata = jsonObject.getDate("startdata");//起始时间
         Date enddata = jsonObject.getDate("enddata");//结束时间
+        if((startdata.toString()!=null && !startdata.toString().equals("")) && (enddata.toString()!=null && !enddata.toString().equals(""))){
+            if(!startdata.toString().
+                    matches("^[1-9]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$") ||
+                    !enddata.toString().
+                            matches("^[1-9]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$")){
+                flag = false;
+            }
+        }
         //发帖用户ID
-        String uuid = jsonObject.getString("uuid");
+        String uuid = jsonObject.getString("userId");
         //图片数组
         JSONArray imglist = jsonObject.getJSONArray("imglist");
 
 
-        return true;
+        return flag;
     }
 }
