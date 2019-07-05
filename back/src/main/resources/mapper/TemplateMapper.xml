@@ -83,4 +83,16 @@
         from message_template w
         where  w.status = '1' and w.template_name = '警告模板'
     </select>
+    <select id="getWarningContentByName" resultType="java.lang.String">
+        select
+            w.template_content                                   content
+        from message_template w
+        where  w.status = '1' and w.template_name = '警告模板'
+    </select>
+    <select id="getWarningContentByName" resultType="java.lang.String">
+        select
+            w.template_content                                   content
+        from message_template w
+        where  w.status = '1' and w.template_name = '警告模板'
+    </select>
 </mapper>

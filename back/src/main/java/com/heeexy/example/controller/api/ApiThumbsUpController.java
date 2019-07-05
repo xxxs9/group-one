@@ -19,15 +19,25 @@ import java.util.List;
  * @Version:
  */
 @RestController
-@RequestMapping("/api/like")
+    @RequestMapping("/api/like")
 public class ApiThumbsUpController {
 
     @Autowired
     private ThumbsUpService thumbsUpService;
 
     @PostMapping("/getThumbsUp")
-    public List<JSONObject> getThumbsUp(HttpServletRequest request) {
+    public List<JSONObject> getThumbsUp(@RequestBody JSONObject requestJson) {
 //        CommonUtil.hasAllRequired(requestJson, "postId,userId");
-        return thumbsUpService.getThumbsUp(CommonUtil.request2Json(request));
+        return thumbsUpService.getThumbsUp(requestJson);
+    }
+    @PostMapping("/getMyThumbsUp")
+    public JSONObject getMyThumbsUp(@RequestBody JSONObject requestJson) {
+//        CommonUtil.hasAllRequired(requestJson, "postId,userId");
+        return thumbsUpService.getMyThumbsUp(requestJson);
+    }
+    @PostMapping("/addpostlike")
+    public JSONObject updateThumbsUp(@RequestBody JSONObject requestJson) {
+//        CommonUtil.hasAllRequired(requestJson, "postId,userId");
+        return thumbsUpService.updateThumbsUp(requestJson);
     }
 }

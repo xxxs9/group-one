@@ -13,6 +13,8 @@ public interface ThumbsUpService {
      */
     List<JSONObject> getThumbsUp(JSONObject jsonObject);
 
-    List<JSONObject> getMyThumbsUp(JSONObject jsonObject);
+    JSONObject getMyThumbsUp(JSONObject jsonObject);
+
+    JSONObject updateThumbsUp (JSONObject jsonObject);
 
 }

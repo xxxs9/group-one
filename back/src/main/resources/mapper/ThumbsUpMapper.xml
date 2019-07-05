@@ -43,14 +43,14 @@
         </selectKey>
 
         insert into click_goods (like_id, post_id,user_id)
-        values (#{id,jdbcType=VARCHAR}, #{postId},#{uuId})
+        values (#{id,jdbcType=VARCHAR}, #{postId},#{userId})
     </insert>
 
     <!--取消点赞-->
     <delete id="removeLike" parameterType="com.alibaba.fastjson.JSONObject">
         delete from click_goods
 
-        WHERE user_id = #{uuId} AND post_id = #{postId}
+        WHERE user_id = #{userId} AND post_id = #{postId}
 
     </delete>
 
@@ -58,9 +58,15 @@
     <select id="queryExist" resultType="java.lang.Integer">
         SELECT count(0)
         FROM click_goods
-        WHERE user_id = #{uuId} AND post_id = #{postId}
+        WHERE user_id = #{userId} AND post_id = #{postId}
     </select>
 
+    <select id="getMyLikePostList" resultType="com.alibaba.fastjson.JSONObject">
+        select post_id postId
+        from click_goods
+        where
+        user_id = #{userId}
+    </select>
 
 
 
