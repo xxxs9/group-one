@@ -13,21 +13,21 @@
         </div>
         <br/>
         <span>
-            <img :src="addDetailData.postImgList[0]" style="width: 130px;height: 130px"/>
-            <img :src="addDetailData.postImgList[1]" style="width: 130px;height: 130px"/>
-            <img :src="addDetailData.postImgList[2]" style="width: 130px;height: 130px"/>
+            <img :src="addDetailData.imgUrl[0]" style="width: 130px;height: 130px"/>
+            <img :src="addDetailData.imgUrl[1]" style="width: 130px;height: 130px"/>
+            <img :src="addDetailData.imgUrl[2]" style="width: 130px;height: 130px"/>
           </span>
         <br/>
         <span>
-            <img :src="addDetailData.postImgList[3]" style="width: 130px;height: 130px"/>
-            <img :src="addDetailData.postImgList[4]" style="width: 130px;height: 130px"/>
-            <img :src="addDetailData.postImgList[5]" style="width: 130px;height: 130px"/>
+            <img :src="addDetailData.imgUrl[3]" style="width: 130px;height: 130px"/>
+            <img :src="addDetailData.imgUrl[4]" style="width: 130px;height: 130px"/>
+            <img :src="addDetailData.imgUrl[5]" style="width: 130px;height: 130px"/>
           </span>
         <br/>
         <span>
-            <img :src="addDetailData.postImgList[6]" style="width: 130px;height: 130px"/>
-            <img :src="addDetailData.postImgList[7]" style="width: 130px;height: 130px;border: none!important;"/>
-            <img :src="addDetailData.postImgList[8]" style="width: 130px;height: 130px"/>
+            <img :src="addDetailData.imgUrl[6]" style="width: 130px;height: 130px"/>
+            <img :src="addDetailData.imgUrl[7]" style="width: 130px;height: 130px;border: none!important;"/>
+            <img :src="addDetailData.imgUrl[8]" style="width: 130px;height: 130px"/>
       </span>
       </div>
     </el-collapse-item>
@@ -48,7 +48,7 @@
 
     <el-collapse-item title="评论" name="4">
       <div v-for="text in addDetailData.comments" style="margin-left: 25px">
-        <span v-if="addDetailData.comments.indexOf(text)==0"><el-button type="text">{{text.commentUserName}}</el-button>： {{text.commentText}}</span>
+        <span v-if="addDetailData.comments.length>0 && addDetailData.comments.indexOf(text)==0"><el-button type="text">{{text.commentUserName}}</el-button>： {{text.commentText}}</span>
         <span v-else><el-button type="text">{{text.commentUserName}}</el-button> 回复<el-button type="text">{{"@"+text.acceptUserName}}</el-button>： {{text.commentText}}</span>
         <br/>
       </div>

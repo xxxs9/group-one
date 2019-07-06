@@ -475,6 +475,7 @@
           method: "post",
           params: this.detailData
         }).then(data => {
+          console.log(data);
           this.postdetailDeta = data;
           this.dialogStatus = "postDetail";
           this.dialogFormVisible = true;

@@ -61,8 +61,8 @@ public class ApiPostController {
 
     @PostMapping("/release")
     public JSONObject release(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "userId");
-        return null;
+        CommonUtil.hasAllRequired(requestJson, "uuid");
+        return postService.release(requestJson);
     }
 
 }

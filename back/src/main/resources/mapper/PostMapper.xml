@@ -216,19 +216,7 @@
     <!--增加帖子-->
     <insert id="addPost"  useGeneratedKeys="true" keyProperty="postId">
       INSERT INTO post_table
-        (post_type_id,
-        post_owner_id,
-        post_text,
-        like_offset,
-        browse_offset,
-        post_phone,
-        post_address,
-        price_floor,
-        price_top,
-        post_state,
-        post_stick,
-        start_date,
-        end_date)
+        (post_type_id, post_owner_id, post_text, like_offset, browse_offset, post_phone, post_address, price_floor, price_top, post_state, post_stick, start_date, end_date)
       VALUES
         (#{typeid},#{uuid},#{content},0,0,#{telephone},#{address},#{lowprice},#{highprice},0,#{postStick},Nullif(#{startdate},null),Nullif(#{enddate},null))
     </insert>
