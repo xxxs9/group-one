@@ -14,6 +14,7 @@ public interface ThumbsUpDao {
     List<JSONObject> getLikeList(JSONObject jsonObject);
     List<JSONObject> getLikePostList(JSONObject jsonObject);
     List<JSONObject> getMyLike(JSONObject jsonObject);
+    List<JSONObject> getMyLikePostList(JSONObject jsonObject);
 
     /**
      * 新增点赞

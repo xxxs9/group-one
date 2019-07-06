@@ -4,10 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.ChatDao;
 import com.heeexy.example.service.ChatService;
 import com.heeexy.example.util.CommonUtil;
+import com.heeexy.example.util.StringTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,6 +44,11 @@ public class ChatServiceImpl implements ChatService {
     @Transactional(rollbackFor = Exception.class)
     public JSONObject getChatList(JSONObject jsonObject) {
         List<JSONObject> userById = chatDao.getUserById(jsonObject);
+        for (JSONObject object : userById) {
+            Date time =  object.getDate("time");
+            String s = StringTools.differentDaysByMillisecond(time);
+            object.put("time",s);
+        }
         return CommonUtil.successJson(userById);
     }
 
