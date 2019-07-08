@@ -71,10 +71,7 @@ public class CommentServiceImpl implements CommentService {
     public JSONObject addComment(JSONObject jsonObject) {
         jsonObject.put("commentState", 1);
         commentDao.addComment(jsonObject);
-        JSONObject comment = new JSONObject();
-        List<JSONObject> comments = commentDao.getByPostId(jsonObject);
-        comment.put("comments",comments );
-        return CommonUtil.successJson(comment);
+        return CommonUtil.successJson();
     }
 
     /**
