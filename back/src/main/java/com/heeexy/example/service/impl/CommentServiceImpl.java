@@ -69,8 +69,12 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public JSONObject addComment(JSONObject jsonObject) {
+        jsonObject.put("commentState", 1);
         commentDao.addComment(jsonObject);
-        return CommonUtil.successJson();
+        JSONObject comment = new JSONObject();
+        List<JSONObject> comments = commentDao.getByPostId(jsonObject);
+        comment.put("comments",comments );
+        return CommonUtil.successJson(comment);
     }
 
     /**
@@ -99,9 +103,17 @@ public class CommentServiceImpl implements CommentService {
         CommonUtil.fillPageParam(jsonObject);
         int count = commentDao.countByAcceptUserId(jsonObject);
         List<JSONObject> list = commentDao.getByAcceptUserId(jsonObject);
+        for (JSONObject object : list) {
+            object.put("commentsid", object.remove("acceptuserid"));
+            object.put("commentsname", object.remove("acceptusername"));
+            object.put("commentsimg", object.remove("acceptsimg"));
+            object.put("commentsdesc", object.remove("commenttext"));
+            object.put("commentstime", object.remove("commenttime"));
+        }
         JSONObject acceptUser = new JSONObject();
         acceptUser.put("acceptUserList",list );
         acceptUser.put("count", count);
+//        acceptUser.put("", acceptUser.remove("acceptUserList"));
         return CommonUtil.successJson(acceptUser);
     }
 
@@ -121,4 +133,5 @@ public class CommentServiceImpl implements CommentService {
         DetailData.put("comments",comment);
         return CommonUtil.successJson(DetailData);
     }
+
 }

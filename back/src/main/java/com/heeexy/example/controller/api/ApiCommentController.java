@@ -47,6 +47,10 @@ public class ApiCommentController {
      */
     @PostMapping("/addCom")
     public JSONObject addComment(@RequestBody JSONObject requestJson){
+        Object acceptUserId = requestJson.get("acceptUserId");
+        if(acceptUserId == null) {
+            requestJson.put("acceptUserId", 0);
+        }
         CommonUtil.hasAllRequired(requestJson, "commentText");
         return commentService.addComment(requestJson);
     }
