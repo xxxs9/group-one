@@ -2,10 +2,7 @@ package com.heeexy.example.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.*;
-import com.heeexy.example.service.BrowseRecordService;
-import com.heeexy.example.service.CommentService;
-import com.heeexy.example.service.ExternalUserService;
-import com.heeexy.example.service.PostService;
+import com.heeexy.example.service.*;
 import com.heeexy.example.util.CommonUtil;
 import com.heeexy.example.util.EmojiUtil;
 import com.heeexy.example.util.UuidUtil;
@@ -49,6 +46,8 @@ public class ExternalUserServiceImpl implements ExternalUserService {
     @Autowired
     CommentDao commentDao;
 
+    @Autowired
+    private TemplateService templateService;
     /**
      * 用户列表
      * @param jsonObject
@@ -221,7 +220,7 @@ public class ExternalUserServiceImpl implements ExternalUserService {
      */
     @Override
     public JSONObject removePermission(JSONObject jsonObject) {
-
+        templateService.addBanContentByName(jsonObject);
         userDao.removeUserAllPermission(jsonObject);
         return CommonUtil.successJson();
     }
@@ -321,12 +320,16 @@ public class ExternalUserServiceImpl implements ExternalUserService {
 
         if(jsonObject.get("unionId")!=null){
             int i = userDao.addUser(jsonObject);
+
             if(i>0){
                 addPermission(jsonObject);
                 user.put("userId",UUID);
                 user.put("unionId",jsonObject.get("unionId"));
                 user.put("username",username);
                 user.put("sex",jsonObject.get("sex"));
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("uuId",jsonObject.get("unionId"));
+                templateService.addBeginContentByName(jsonObject1);
             }
 
         }else {

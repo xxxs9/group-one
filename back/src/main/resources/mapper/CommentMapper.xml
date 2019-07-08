@@ -17,6 +17,7 @@
         SELECT
         comment_id                                                     commentId,
         post_id                                                        postId,
+        commentuser_id                                                  commentUserId,
         (select username from user where user.uuid = c.postuser_id)    postUserName,
         (select username from user where user.uuid = c.commentuser_id) commentUserName,
         (select username from user where user.uuid = c.acceptuser_id)  acceptUserName,

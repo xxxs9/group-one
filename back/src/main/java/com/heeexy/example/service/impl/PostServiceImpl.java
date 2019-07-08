@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+import static com.heeexy.example.util.constants.ErrorEnum.E_20012;
 import static com.heeexy.example.util.constants.ErrorEnum.E_90003;
 import static com.heeexy.example.util.constants.ErrorEnum.E_90004;
 
@@ -484,8 +485,65 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public JSONObject release(JSONObject jsonObject) {
+        boolean verify = verify(jsonObject);
+        if (!verify) {
+            return CommonUtil.errorJson(E_20012);
+        }
+        Date startdate = jsonObject.getDate("startdate");
+        Date enddate = jsonObject.getDate("enddate");
+        if("".equals(startdate) || startdate == null){
+            startdate = null;
+        }
+        if("".equals(enddate) || enddate == null){
+            enddate = null;
+        }
+        jsonObject.put("startdate",startdate);
+        jsonObject.put("enddate",enddate);
+        List<Map<String,Object>> taglist = (List<Map<String,Object>>) jsonObject.get("taglist");
+        boolean sticktwo = false;
+        boolean stickthree = false;
+        if(taglist != null){
+            for (Map<String, Object> stringObjectMap : taglist) {
+                Object pid = stringObjectMap.get("pid");
+                if("1".equals(pid)){
+                    sticktwo = true;
+                }
+                if("2".equals(pid)){
+                    stickthree = true;
+                }
+            }
+        }
+        int postStick = 0;
+        if(sticktwo && stickthree){
+            postStick = 1;
+        }else if(sticktwo){
+            postStick = 2;
+        }else if(stickthree){
+            postStick = 3;
+        }
+        jsonObject.put("postStick",postStick);
+        postDao.addPost(jsonObject);
+        Integer postId = jsonObject.getInteger("postId");
+        if(taglist != null){
+            for (Map<String, Object> stringObjectMap : taglist) {
+                JSONObject addtag = new JSONObject();
+                addtag.put("parentId",stringObjectMap.get("pid"));
+                addtag.put("tagId",stringObjectMap.get("cid"));
+                addtag.put("postId",postId);
+                postDao.addPostTag(addtag);
+            }
+        }
+        List<String> imglist = (List<String>) jsonObject.get("imglist");
+        if((imglist != null) || (imglist.size() > 0)){
+            for (String img : imglist) {
+                JSONObject addimg = new JSONObject();
+                addimg.put("postId",postId);
+                addimg.put("postImageSrc",img);
+                postDao.addPostImg(addimg);
+            }
+        }
+        return CommonUtil.successJson();
 
-        return null;
     }
 
     private boolean verify(JSONObject jsonObject){
@@ -494,45 +552,47 @@ public class PostServiceImpl implements PostService {
         //帖子正文
         String content = jsonObject.getString("content");
         if(content.length()>=200){
-            flag = false;
-        }
-        //帖子类型ID
-        Integer typeId = sortDao.getIdByName(jsonObject.getString("typeId"));
-        if(!typeId.toString().matches("/^\\d+/")){
-            flag = false;
+            return false;
         }
         //帖子地址
         String address = jsonObject.getString("address");
-        if(!address.matches("/[a-zA-Z0-9\\u0391-\\uFFE5]+$/")){
-            flag = false;
+        if(!address.matches("[a-zA-Z0-9\\u0391-\\uFFE5]+$")){
+            return false;
         }
         //帖子电话
         String telephone = jsonObject.getString("telephone");
-        if(!telephone.matches("/^1[3|4|5|8][0-9]\\d{8}$/")){
-            flag = false;
+        if(!telephone.matches("^1[3|4|5|8][0-9]\\d{8}$")){
+            return false;
         }
-        //帖子发布时间
-        Date nowDate = new Date();
-        if(!nowDate.toString().matches(" /^[1-9]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\\s+(20|21|22|23|[0-1]\\d):[0-5]\\d:[0-5]\\d$/")){
-            flag = false;
+        //最低价
+        String lowprice = jsonObject.getString("lowprice");
+        if(!lowprice.matches("(^[-+]?[1-9]\\d*(\\.\\d{1,2})?$)|(^[-+]?[0]{1}(\\.\\d{1,2})?$)")){
+            return false;
         }
+        //最高价
+        String highprice = jsonObject.getString("highprice");
+        if(!highprice.matches("(^[-+]?[1-9]\\d*(\\.\\d{1,2})?$)|(^[-+]?[0]{1}(\\.\\d{1,2})?$)")){
+            return false;
+        }
+        if(Integer.parseInt(lowprice) >= Integer.parseInt(highprice)){
+            return false;
+        }
+
         //月租短租输入时间
         Date startdata = jsonObject.getDate("startdata");//起始时间
         Date enddata = jsonObject.getDate("enddata");//结束时间
-        if((startdata.toString()!=null && !startdata.toString().equals("")) && (enddata.toString()!=null && !enddata.toString().equals(""))){
+        if(startdata != null && enddata != null){
             if(!startdata.toString().
                     matches("^[1-9]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$") ||
                     !enddata.toString().
                             matches("^[1-9]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$")){
-                flag = false;
+                return false;
             }
         }
-        //发帖用户ID
-        String uuid = jsonObject.getString("userId");
         //图片数组
         JSONArray imglist = jsonObject.getJSONArray("imglist");
 
 
-        return flag;
+        return true;
     }
 }

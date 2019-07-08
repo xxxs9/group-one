@@ -143,13 +143,7 @@ export const asyncRouterMap = [
       {
       path: '', name: '消息模块管理', component: _import('template/msgtemplate'), meta: {title: '消息模块管理', icon: 'message'}, menu: 'message'
 },
-      {
-        path: 'chat',
-        name: '聊天信息管理',
-        component: _import('template/chat'),
-        meta: {title: '聊天信息管理', icon: 'message2'},
-        menu: 'message'
-      },
+
     ]
   },
 
