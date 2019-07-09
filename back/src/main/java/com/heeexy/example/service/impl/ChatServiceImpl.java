@@ -14,15 +14,20 @@ import java.util.List;
 
 /**
  * @author: linchen
- * @description:
+ * @description:消息imp层
  * @date: 2019/7/2
- * @Version:
+ * @Version:1.0
  */
 @Service
 public class ChatServiceImpl implements ChatService {
 
     @Autowired
     private ChatDao chatDao;
+    /**
+     * 私聊发送消息
+     * @param jsonObject 接收用户ID 发送内容 当前用户ID
+     * @return
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject addChatMessage(JSONObject jsonObject) {
@@ -40,6 +45,11 @@ public class ChatServiceImpl implements ChatService {
 
         return  CommonUtil.successJson();
     }
+    /**
+     * 获取消息列表
+     * @param jsonObject 当前用户ID
+     * @return 消息列表
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public JSONObject getChatList(JSONObject jsonObject) {
@@ -51,7 +61,11 @@ public class ChatServiceImpl implements ChatService {
         }
         return CommonUtil.successJson(userById);
     }
-
+    /**
+     * 获取消息详情
+     * @param jsonObject 接收用户ID ，当前用户ID
+     * @return 消息详情
+     */
     @Override
     public JSONObject getChatMessage(JSONObject jsonObject) {
         chatDao.updateChatMessageStatus(jsonObject);
@@ -59,6 +73,11 @@ public class ChatServiceImpl implements ChatService {
         return CommonUtil.successJson(chatMessage);
     }
 
+    /**
+     * 删除消息
+     * @param jsonObject 接收用户ID ，当前用户ID
+     * @return
+     */
     @Override
     public JSONObject deleteChatMessage(JSONObject jsonObject) {
         chatDao.deleteChatMessage(jsonObject);

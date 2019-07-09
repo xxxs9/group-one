@@ -24,7 +24,14 @@ public class ApiThumbsUpController {
 
     @Autowired
     private ThumbsUpService thumbsUpService;
-
+    /**
+     * create by: lc
+     * description:
+     * create time: 2019/7/9 18:09
+     *
+      * @param requestJson
+     * @return java.util.List<com.alibaba.fastjson.JSONObject>
+     */
     @PostMapping("/wholikeme")
     public List<JSONObject> getThumbsUp(@RequestBody JSONObject requestJson) {
 //        CommonUtil.hasAllRequired(requestJson, "postId,userId");
