@@ -76,7 +76,6 @@
 
     <select id="getByCommentUserId" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
-        comment_id                                                     commentid,
         post_id                                                        postid,
         commentuser_id                                                 commentuserid,
         (select username from user where user.uuid = c.commentuser_id) commentusername,
@@ -94,8 +93,6 @@
 
     <select id="getByAcceptUserId" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
-        comment_id                                                     commentid,
-        post_id                                                        postid,
         acceptuser_id                                                  acceptuserid,
         (select username from user where user.uuid = c.acceptuser_id)  acceptusername,
         (select iconurl from user where user.uuid = c.acceptuser_id)   acceptsimg,
@@ -112,7 +109,7 @@
 
     <select id="getByPostId" resultMap="commentMap">
         SELECT
-        comment_id                                                               commentsid,
+        comment_id                                                                commentsid,
         commentuser_id                                                           commentsuserid,
         (select username from user where user.uuid = c.commentuser_id)           commentUserName,
         (select iconurl from user where user.uuid = c.commentuser_id)            commentsimg,
