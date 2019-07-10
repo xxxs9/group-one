@@ -368,6 +368,7 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         String myavatar = myicon.getString("iconUrl");
         String myname = myicon.getString("username");
         //评论数
+        jsonObject.put("commentUserId",uuId);
         int commentcount = commentDao.countByCommentUserId(jsonObject);
 
         JSONObject myself = new JSONObject();
@@ -385,7 +386,7 @@ public class ExternalUserServiceImpl implements ExternalUserService {
 
     /**
      * 获取关注的用户的信息
-     * @param jsonObject key:uuId(关注的用户的uuid),userId(当前登录用户的uuid)
+     * @param jsonObject key:otherId(关注的用户的uuid),userId(当前登录用户的uuid)
      * @return
      */
     @Override
@@ -396,9 +397,17 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         postIds.put("postIdList",postIdList);
         postIds.put("userId",jsonObject.getInteger("otherId"));
         List<JSONObject> postList = postService.getPostListApi(postIds);
+        JSONObject other = getMyself(jsonObject).getJSONObject("info");
         JSONObject object = new JSONObject();
         object.put("postList",postList);
-        object.put("others",getMyself(jsonObject));
+        object.put("myavatar",other.get("myavatar"));
+        object.put("myname",other.get("myname"));
+        object.put("myrelease",other.get("myrelease"));
+        object.put("myattention",other.get("myattention"));
+        object.put("myfans",other.get("myfans"));
+        object.put("mygood",other.get("mygood"));
+        object.put("mycollention",other.get("mycollention"));
+        object.put("mycommentcount",other.get("mycommentcount"));
         return CommonUtil.successJson(object);
     }
 

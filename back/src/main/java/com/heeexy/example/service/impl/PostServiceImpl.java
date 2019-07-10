@@ -318,7 +318,7 @@ public class PostServiceImpl implements PostService {
             List<String> likeUserList = new ArrayList<>();
             //获取点赞的用户IDList
             List<JSONObject> likeListId = thumbsUpDao.getLikeList(object);
-            int likeCount = thumbsUpDao.countLikes(jsonObject) + object.getInteger("likeOffset");
+            int likeCount = thumbsUpDao.countLikes(object) + object.getInteger("likeOffset");
             //点赞用户列表循环
             likeListId.size();
             for (JSONObject likeUser : likeListId) {
