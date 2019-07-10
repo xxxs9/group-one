@@ -33,7 +33,7 @@ public class ApiThumbsUpController {
      * @return java.util.List<com.alibaba.fastjson.JSONObject>
      */
     @PostMapping("/wholikeme")
-    public List<JSONObject> getThumbsUp(@RequestBody JSONObject requestJson) {
+    public JSONObject getThumbsUp(@RequestBody JSONObject requestJson) {
 //        CommonUtil.hasAllRequired(requestJson, "postId,userId");
         Integer userid = requestJson.getInteger("userid");
         requestJson.put("userId",userid);
