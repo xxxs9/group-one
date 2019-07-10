@@ -9,15 +9,15 @@
           </template>
         </el-table-column>
         <!--<el-table-column align="center" label="用户ID" prop="userId" style="width: 60px;"></el-table-column>-->
-        <el-table-column align="center" label="UUID" prop="uuId" style="width: 60px;"></el-table-column>
+        <!--<el-table-column align="center" label="UUID" prop="uuId" style="width: 60px;"></el-table-column>-->
         <el-table-column align="center" label="昵称" prop="username" style="width: 60px;"></el-table-column>
-        <el-table-column align="center" label="头像"  style="width: 60px;">
-          <template slot-scope="scope">
+        <el-table-column align="center" label="头像"  width="90">
+          <template slot-scope="scope"  >
             <img :src="scope.row.iconUrl" width="60" height="60"
                  style="border-radius: 50%; display: block" class="head_pic"/>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="电话" prop="mobile" style="width: 60px;"></el-table-column>
+        <!--<el-table-column align="center" label="电话" prop="mobile" style="width: 60px;"></el-table-column>-->
         <el-table-column align="center" label="性别" prop="sex" style="width: 60px;"></el-table-column>
 
 
@@ -41,6 +41,10 @@
     data(){
       return {
         listLoading: false,
+        listQuery: {
+          pageNum: 1,//页码
+          pageRow: 50,//每页条数
+        },
       }
     },
     methods: {

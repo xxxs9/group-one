@@ -36,7 +36,7 @@
         </template>
       </el-table-column>
       <!--<el-table-column align="center" label="用户ID" prop="userId" style="width: 60px;"></el-table-column>-->
-      <el-table-column align="center" label="UUID" prop="uuId" style="width: 60px;"></el-table-column>
+      <!--<el-table-column align="center" label="UUID" prop="uuId" style="width: 60px;"></el-table-column>-->
       <el-table-column align="center" label="昵称" prop="username" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="头像"  style="width: 60px;">
         <template slot-scope="scope">
@@ -44,12 +44,11 @@
                style="border-radius: 50%; display: block" class="head_pic"/>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="电话" prop="mobile" style="width: 60px;"></el-table-column>
+      <!--<el-table-column align="center" label="电话" prop="mobile" style="width: 60px;"></el-table-column>-->
       <el-table-column align="center" label="性别" prop="sex" style="width: 60px;"></el-table-column>
       <el-table-column align="center" label="粉丝数量/偏移量" prop="fansOffset" width="150">
         <template slot-scope="scope">
           <el-button type="primary"  v-text="scope.row.fansCount" size="mini" @click="showfansList(scope.$index)"></el-button>
-
           <span>+</span>
           <el-button v-if="hasPerm('euser:update')" type="primary"  v-text="scope.row.fansOffset" size="mini" @click="showfansOffset(scope.$index)"></el-button>
           <span v-else v-text="scope.row.fansOffset"></span>
@@ -57,7 +56,7 @@
       </el-table-column>
       <el-table-column align="center" label="登录时间" prop="loginTime" width="170"></el-table-column>
       <el-table-column align="center" label="修改时间" prop="modifyTime" width="170"></el-table-column>
-      <el-table-column align="center" label="管理" width="100" v-if="hasPerm('euser:update')">
+      <el-table-column align="center" label="管理" width="140" v-if="hasPerm('euser:update')">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-edit" @click="showUpdate(scope.$index)">修改</el-button>
           <!--<el-button type="danger" icon="delete" v-if="scope.row.userId!=userId "-->
@@ -75,7 +74,7 @@
       :page-sizes="[10, 20, 50, 100]"
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
-    <el-dialog title="粉丝列表" :visible.sync="dialogFansVisible" width="80%" >
+    <el-dialog title="粉丝列表" :visible.sync="dialogFansVisible" width="50%" >
       <all-fans :fanslist="fanslist"></all-fans>
       <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFansVisible = false">确认</el-button>
@@ -85,10 +84,10 @@
 
       <el-form class="small-space" :model="tempUser" label-position="left" label-width="80px"
                style='width: 300px; margin-left:50px;'>
-        <el-form-item label="UUID" v-if="dialogStatus=='fansOffset' ||'update'" >
-          <el-input type="text" v-model="tempUser.uuId" disabled="true">
-          </el-input>
-        </el-form-item>
+        <!--<el-form-item label="UUID" v-if="dialogStatus=='fansOffset' ||'update'" >-->
+          <!--<el-input type="text" v-model="tempUser.uuId" disabled="true">-->
+          <!--</el-input>-->
+        <!--</el-form-item>-->
         <el-form-item label="用户昵称" v-if="dialogStatus=='fansOffset' ||'update'" >
           <el-input type="text" v-model="tempUser.username" disabled="true">
           </el-input>
@@ -101,10 +100,10 @@
                  style="border-radius: 50%; display: block" class="head_pic"/>
           </template>
         </el-form-item>
-        <el-form-item label="电话" v-if="dialogStatus=='update'">
-          <el-input type="text" v-model="tempUser.mobile" disabled="true">
-          </el-input>
-        </el-form-item>
+        <!--<el-form-item label="电话" v-if="dialogStatus=='update'">-->
+          <!--<el-input type="text" v-model="tempUser.mobile" disabled="true">-->
+          <!--</el-input>-->
+        <!--</el-form-item>-->
         <el-form-item label="性别" v-if="dialogStatus=='update'">
           <el-input type="text" v-model="tempUser.sex" disabled="true">
           </el-input>

@@ -42,7 +42,6 @@ public class ApiExternalUserController {
         HttpSession session = request.getSession();
         session.setAttribute("userId",user.getInteger("userId"));
         session.setAttribute("uuId",user.getInteger("userId"));
-
         return CommonUtil.successJson(user);
     }
 
