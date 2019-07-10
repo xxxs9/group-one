@@ -30,7 +30,7 @@ public class ApiChatController {
      * @param requestJson 接收用户ID 发送内容 当前用户ID
      * @return
      */
-    @PostMapping("/seedmessage")
+    @PostMapping("/sendmessage")
     public JSONObject getThumbsUp(@RequestBody JSONObject requestJson) {
 //        CommonUtil.hasAllRequired(requestJson, "postId,userId");
         return chatService.addChatMessage(requestJson);

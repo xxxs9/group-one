@@ -37,7 +37,7 @@
         from chat_message
         inner JOIN user as u ON u.unionid = chat_message.first_user_id
         where chatlist_id = CONCAT(#{firstid},'-',#{secondid})
-        ORDER BY chat_message.create_time desc
+        ORDER BY chat_message.create_time asc
     </select>
 
     <!--添加私聊发送消息-->
