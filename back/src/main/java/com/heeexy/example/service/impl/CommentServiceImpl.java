@@ -7,6 +7,7 @@ import com.heeexy.example.dao.PostDao;
 import com.heeexy.example.service.CommentService;
 import com.heeexy.example.util.CommonUtil;
 import com.heeexy.example.util.StringTools;
+import com.heeexy.example.util.constants.ErrorEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,6 +73,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public JSONObject addComment(JSONObject jsonObject) {
         jsonObject.put("commentState", 1);
+        String commentText = jsonObject.getString("commentText");
+        if (commentText.length()>30){
+            return CommonUtil.errorJson(ErrorEnum.E_10019);
+        }
         commentDao.addComment(jsonObject);
         return CommonUtil.successJson();
     }
