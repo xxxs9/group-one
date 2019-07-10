@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
  * @data 2019-06-28 09:53
  */
 @RestController
-@RequestMapping("/api/wxDynamic")
+@RequestMapping("/api")
 public class ApiCommentController {
     @Autowired
     private CommentService commentService;
@@ -25,7 +25,7 @@ public class ApiCommentController {
      * @param requestJson (key:acceptUserId)
      * @return JSONObject
      */
-    @PostMapping("/acceptCom")
+    @PostMapping("/whocomments/whocommentsme")
     public JSONObject AcceptUser(@RequestBody JSONObject requestJson) {
         return commentService.getByAcceptUserId(requestJson);
     }
@@ -35,7 +35,7 @@ public class ApiCommentController {
      * @param requestJson (key:commentUserId)
      * @return JSONObject
      */
-    @PostMapping("/userCom")
+    @PostMapping("/mycomments/mycomments")
     public JSONObject CommentUser(@RequestBody JSONObject requestJson) {
         return commentService.getByCommentUserId(requestJson);
     }
@@ -45,7 +45,7 @@ public class ApiCommentController {
      * @param requestJson (key:postId,postUserId,commentUserId,acceptUserId,commentText)
      * @return JSONObject
      */
-    @PostMapping("/addCom")
+    @PostMapping("/comments/comments")
     public JSONObject addComment(@RequestBody JSONObject requestJson){
         Object acceptUserId = requestJson.get("acceptUserId");
         if(acceptUserId == null) {
@@ -70,7 +70,7 @@ public class ApiCommentController {
      * @param requestJson (key:commentId)
      * @return JSONObject
      */
-    @PostMapping("/delCom")
+    @PostMapping("/deletecomments/deletecomments")
     public JSONObject removeComment(@RequestBody JSONObject requestJson){
         return commentService.removeComment(requestJson);
     }

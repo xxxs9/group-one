@@ -459,7 +459,7 @@ public class PostServiceImpl implements PostService {
      * @param
      * @return
      */
-    private List<JSONObject> getPostList(List<JSONObject> postIdList, Object userId){
+    public List<JSONObject> getPostList(List<JSONObject> postIdList, Object userId){
         JSONObject stickObj = new JSONObject();
         stickObj.put("postIdList",postIdList);
         stickObj.put("userId",userId);

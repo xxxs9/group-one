@@ -119,23 +119,24 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         }
         jsonObject.put("queryPostTagId",queryPostTagId );
         List<Object> postIdListApi = new ArrayList<>();
-        List<JSONObject> postIdList = postDao.listPostIdByTag(jsonObject);
-        List<JSONObject> id = postDao.getPostTextByPostId(jsonObject);
-        for (JSONObject object : id) {
+        List<JSONObject> tagPost = postDao.listPostIdByTag(jsonObject);
+        List<JSONObject> textPost = postDao.getPostTextByPostId(jsonObject);
+        for (JSONObject object : textPost) {
             postIdListApi.add(object.getInteger("post_id"));
         }
-        for (JSONObject object : postIdList) {
+        for (JSONObject object : tagPost) {
             postIdListApi.add(object.getInteger("postId"));
         }
         List<Object> objects = postIdListApi.stream().distinct().collect(Collectors.toList());
+        List<JSONObject> allPost = new ArrayList<>();
+            for (Object o : objects) {
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("postId", o);
+                allPost.add(jsonObject1);
+            }
+        List<JSONObject> userId = postService.getPostList(allPost, jsonObject.get("userId"));
         JSONObject searchList = new JSONObject();
-        List<JSONObject> postDetailList = new ArrayList<>();
-        for (Object object : objects) {
-           jsonObject.put("postId", object);
-            JSONObject search = postDao.queryPostById(jsonObject);
-            postDetailList.add(search);
-        }
-        searchList.put("searchDetail",postDetailList );
+        searchList.put("searchDetail",userId );
         return CommonUtil.successJson(searchList);
     }
 }
