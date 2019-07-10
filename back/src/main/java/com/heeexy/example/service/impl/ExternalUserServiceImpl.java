@@ -55,9 +55,9 @@ public class ExternalUserServiceImpl implements ExternalUserService {
      */
     @Override
     public JSONObject getUser(JSONObject jsonObject) {
+
         CommonUtil.fillPageParam(jsonObject);
         int count = userDao.countUser(jsonObject);
-
         List<JSONObject> list = userDao.getUser(jsonObject);
         for (JSONObject object : list) {
             object.put("fansCount",Integer.parseInt(object.getString("fansCount")));
@@ -117,7 +117,6 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         String querykey = jsonObject.getString("querykey");
         boolean flag = false;
         if(!querykey.equals("")){
-
             if(jsonObject.getString("querykey").matches(reg)){
                 System.out.println(jsonObject.getString("querykey"));
                 flag = true;
@@ -359,7 +358,9 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         //关注数量
         int myattention = userAttentionDao.countIdolByUUID(jsonObject);
         //粉丝数量
-        int myfans = userAttentionDao.countFansByUUID(jsonObject);
+        Integer fansOffset = userDao.queryFansOffset(jsonObject).getInteger("fansOffset");
+        int myfans = userAttentionDao.countFansByUUID(jsonObject)+fansOffset;
+
         //点赞数量
         int mygood = userDao.countGoodByUUID(jsonObject);
         jsonObject.put("userId",uuId);
@@ -392,7 +393,7 @@ public class ExternalUserServiceImpl implements ExternalUserService {
      */
     @Override
     public JSONObject getOthers(JSONObject jsonObject) {
-
+        jsonObject.put("uuId",jsonObject.getInteger("otherId"));
         List<JSONObject> postIdList = userDao.getPostByUUID(jsonObject);
         JSONObject postIds = new JSONObject();
         postIds.put("postIdList",postIdList);
@@ -400,7 +401,6 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         List<JSONObject> postList = postService.getPostListApi(postIds);
         JSONObject object = new JSONObject();
         object.put("postList",postList);
-        jsonObject.put("uuId",jsonObject.getInteger("otherId"));
         object.put("others",getMyself(jsonObject));
         return CommonUtil.successJson(object);
     }

@@ -25,7 +25,7 @@
         </template>
       </el-table-column>
       <!--<el-table-column align="center" label="用户ID" prop="userId" width="150"></el-table-column>-->
-      <el-table-column align="center" label="UUID" prop="uuId" width="150"></el-table-column>
+      <!--<el-table-column align="center" label="UUID" prop="uuId" width="150"></el-table-column>-->
       <el-table-column align="center" label="用户昵称" prop="username"></el-table-column>
       <el-table-column align="center" label="用户权限" width="420">
         <template slot-scope="scope">
@@ -37,7 +37,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="管理" width="220" v-if="hasPerm('euser:update')" >
+      <el-table-column align="center" label="管理" width="350" v-if="hasPerm('euser:update')" >
         <template slot-scope="scope">
           <el-button type="primary" size="medium" icon="el-icon-edit" @click="showUpdate(scope.$index)" >修改
           </el-button>
@@ -60,10 +60,10 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="tempPerm" label-position="left" label-width="100px"
                style='width: 600px; margin-left:50px;' >
-        <el-form-item label="UUID" required>
-          <el-input type="text" v-model="tempPerm.uuId" style="width: 250px;" disabled="true">
-          </el-input>
-        </el-form-item>
+        <!--<el-form-item label="UUID" required>-->
+          <!--<el-input type="text" v-model="tempPerm.uuId" style="width: 250px;" disabled="true">-->
+          <!--</el-input>-->
+        <!--</el-form-item>-->
         <el-form-item label="用户昵称" required>
           <el-input type="text" v-model="tempPerm.username" style="width: 250px;" disabled="true">
           </el-input>

@@ -198,4 +198,11 @@ public interface ExternalUserDao {
      * @return
      */
     int countGoodByUUID(JSONObject jsonObject);
+
+    /**
+     * 查询用户粉丝偏移量
+     * @param jsonObject
+     * @return
+     */
+    JSONObject queryFansOffset(JSONObject jsonObject);
 }
