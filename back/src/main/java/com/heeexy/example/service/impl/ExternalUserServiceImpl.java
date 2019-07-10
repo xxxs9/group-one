@@ -56,9 +56,9 @@ public class ExternalUserServiceImpl implements ExternalUserService {
      */
     @Override
     public JSONObject getUser(JSONObject jsonObject) {
+
         CommonUtil.fillPageParam(jsonObject);
         int count = userDao.countUser(jsonObject);
-
         List<JSONObject> list = userDao.getUser(jsonObject);
         for (JSONObject object : list) {
             object.put("fansCount",Integer.parseInt(object.getString("fansCount")));

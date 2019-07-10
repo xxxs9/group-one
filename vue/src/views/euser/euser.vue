@@ -299,7 +299,7 @@
         this.tempUser.iconUrl = user.iconUrl;
         this.tempUser.mobile = user.mobile;
         this.tempUser.sex = user.sex;
-        this.tempUser.fansOffset = user.fansOffset;
+        this.tempUser.fansOffset = user.fansOffset.toString();
         this.tempUser.loginTime = user.loginTime;
         this.tempUser.modifyTime = user.modifyTime;
         this.dialogStatus = "update";
