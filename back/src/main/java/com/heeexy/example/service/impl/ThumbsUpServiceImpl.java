@@ -33,7 +33,7 @@ public class ThumbsUpServiceImpl implements ThumbsUpService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public List<JSONObject> getThumbsUp(JSONObject jsonObject) {
+    public JSONObject getThumbsUp(JSONObject jsonObject) {
         List<JSONObject> likePostList = thumbsUpDao.getLikePostList(jsonObject);
         List<JSONObject> list = new ArrayList<>();
 
@@ -55,7 +55,7 @@ public class ThumbsUpServiceImpl implements ThumbsUpService {
             }
         }
 
-        return list;
+        return CommonUtil.successJson(list);
     }
 
     @Override
