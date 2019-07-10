@@ -58,7 +58,7 @@
     <update id="updateChatMessageStatus" parameterType="com.alibaba.fastjson.JSONObject">
         update chat_message
         set status = '2'
-        where chatlist_id = CONCAT(#{firstId},'-',#{secondId})
+        where chatlist_id = CONCAT(#{firstid},'-',#{secondid})
     </update>
     <!--删除消息-->
     <delete id="deleteChatMessage" parameterType="com.alibaba.fastjson.JSONObject">
