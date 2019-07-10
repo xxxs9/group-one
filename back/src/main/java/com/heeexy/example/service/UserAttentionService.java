@@ -25,6 +25,17 @@ public interface UserAttentionService {
     JSONObject getIdol(JSONObject jsonObject);
 
 
+    /**
+     * 添加关注
+     * @param jsonObject
+     * @return
+     */
+    JSONObject addAttention(JSONObject jsonObject);
 
-
+    /**
+     * 取消关注
+     * @param jsonObject
+     * @return
+     */
+    JSONObject removeAttention(JSONObject jsonObject);
 }

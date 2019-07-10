@@ -47,18 +47,18 @@
       </el-table-column>
       <!--<el-table-column align="center" label="用户ID" prop="userId" style="width: 60px;"></el-table-column>-->
       <!--<el-table-column align="center" label="UUID" prop="uuId" style="width: 60px;"></el-table-column>-->
-      <el-table-column align="center" label="昵称" prop="username" style="width: 60px;"></el-table-column>
-      <el-table-column align="center" label="性别" prop="sex" style="width: 60px;"></el-table-column>
+      <el-table-column align="center" label="昵称" prop="username" width="100"></el-table-column>
+      <el-table-column align="center" label="性别" prop="sex" width="60"></el-table-column>
       <!--<el-table-column align="center" label="帖子ID" prop="postId" style="width: 60px;"></el-table-column>-->
       <el-table-column align="center" label="帖子类型" prop="categoriesName" width="100"></el-table-column>
 
-      <el-table-column align="center" label="帖子内容" width="100">
+      <el-table-column align="center" label="帖子内容" width="300">
         <template slot-scope="scope">
           <div v-text="scope.row.postText" style="line-height:25px">
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="帖子状态" prop="postState" width="100"></el-table-column>
+      <!--<el-table-column align="center" label="帖子状态" prop="postState" width="100"></el-table-column>-->
       <el-table-column align="center" label="浏览时间" property="browseTime" sortable width="170" ></el-table-column>
       <el-table-column align="center" label="帖子详情" width="150">
         <template slot-scope="scope">
