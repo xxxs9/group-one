@@ -14,14 +14,14 @@
         values
 
         <foreach collection="ulist" item="item" index="index" separator=",">
-            (#{content},1,#{item.id},CONCAT(1,#{item.id}))
+            (#{content},1,#{item.id},CONCAT(#{item.id},'-',1))
         </foreach>
 
     </insert>
     <insert id="addWarningTemplate" parameterType="com.alibaba.fastjson.JSONObject">
         insert into chat_message (chat_content,first_user_id,second_user_id,chatlist_id)
         values
-        (#{content},#{userId},1,CONCAT(#{userId},'-',1))
+        (#{content},1,#{userId},CONCAT(#{userId},'-',1))
     </insert>
 
 
