@@ -24,9 +24,12 @@
         where chatlist_id =c.chatlist_id)) time
         from chat_message as c
 		inner JOIN user as u ON u.unionid = c.second_user_id
-        where first_user_id = #{uuid}
-		group  by  second_user_id   having count(second_user_id) > 0
+        where chatlist_id like  CONCAT(#{uuid},'-','%')
+		group  by  chatlist_id   having count(chatlist_id) > 0
     </select>
+
+
+
     <!--获取用户消息详情的所有信息-->
     <select id="getChatMessage" resultType="com.alibaba.fastjson.JSONObject">
         select
