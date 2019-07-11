@@ -102,6 +102,9 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     public JSONObject updateByStatus(JSONObject jsonObject) {
+        if(jsonObject.getString("tname").equals("封禁模板") || jsonObject.getString("tname").equals("引导模板") || jsonObject.getString("tname").equals("警告模板")){
+            return CommonUtil.errorJson(ErrorEnum.E_10021);
+        }
         templateDao.updateByStatus(jsonObject);
 
         return CommonUtil.successJson();

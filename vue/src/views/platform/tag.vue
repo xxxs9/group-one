@@ -30,10 +30,10 @@
 
         <label>请选择excel表：</label>
         <input class="form-input" type="file" name="filename" @change="getFile($event)" width="300"></input>
-        <el-button type="primary" id="my_file"  @click="uploadFileMethod($event)">增量添加</el-button>
+        <el-button type="primary"  icon="el-icon-circle-plus" id="my_file"  @click="uploadFileMethod($event)">增量添加</el-button>
 
-        <el-button type="primary" icon="plus" @click="uploadFileCoverMethod($event)" >覆盖添加</el-button>
-        <el-button type="danger" icon="delete" @click="removeUser()" v-if="hasPerm('post:delete')">删除
+        <el-button type="primary" icon="el-icon-circle-plus" @click="uploadFileCoverMethod($event)" >覆盖添加</el-button>
+        <el-button type="danger" icon="el-icon-delete" @click="removeUser()" v-if="hasPerm('post:delete')">删除
         </el-button>
       </form>
     </el-form>
@@ -59,7 +59,7 @@
       <!--<el-table-column align="center" label="等级" prop="rank" width="170"></el-table-column>-->
       <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)">修改</el-button>
+          <el-button type="primary" icon="el-icon-edit" @click="showUpdate(scope.$index)">修改</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -264,7 +264,7 @@
         })
       },
       removeUser() {
-        this.$confirm('确定删除此用户标签?', '提示', {
+        this.$confirm('确定删除此标签?', '提示', {
           confirmButtonText: '确定',
           showCancelButton: false,
           type: 'warning'

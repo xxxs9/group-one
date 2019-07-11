@@ -7,7 +7,7 @@
 
       <el-form>
         <el-form-item>
-          <el-button type="primary" icon="plus"  @click="showCreate">添加
+          <el-button type="primary" icon="el-icon-circle-plus"  @click="showCreate">添加
           </el-button>
 
           <el-select v-model="tempUser.selectId" placeholder="请选择"  @change="getList">
@@ -33,7 +33,7 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="类别名称" prop="sortname" style="width: 60px;"></el-table-column>
-      <el-table-column label="头像" width="100">
+      <el-table-column label="图标" width="100">
         <template slot-scope="scope">
           <img :src="scope.row.imageUrl" width="40" height="40" class="head_pic"/>
         </template>
@@ -50,10 +50,10 @@
       </el-table-column>
       <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)" v-if="hasPerm('post:update')">修改</el-button>
-          <el-button type="danger" v-if="scope.row.status=='1'" icon="delete" @click="removeSort(scope.$index)">删除
+          <el-button type="primary" icon="el-icon-edit" @click="showUpdate(scope.$index)" v-if="hasPerm('post:update')">修改</el-button>
+          <el-button type="danger" v-if="scope.row.status=='1'" icon="el-icon-delete" @click="removeSort(scope.$index)">删除
           </el-button>
-          <el-button type="success" v-if="scope.row.status=='2'" icon="edit" @click="recoverySort(scope.$index)">恢复</el-button>
+          <el-button type="success" v-if="scope.row.status=='2'" icon="el-icon-circle-check" @click="recoverySort(scope.$index)">恢复</el-button>
 
         </template>
       </el-table-column>
@@ -74,18 +74,21 @@
           <el-input type="text" v-model="tempUser.sortname">
           </el-input>
         </el-form-item>
-        <el-upload
-          class="avatar-uploader"
-          action="/api/post/photoupload"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :on-preview="handlePictureCardPreview"
-          :before-upload="beforeAvatarUpload">
-          <img v-if="dialogStatus=='update'"  :src="tempUser.imageUrl" class="avatar">
-          <img v-else-if="imageUrl"  :src="tempUser.imageUrl" class="avatar">
+        <el-form-item label="类别图标" required>
+          <el-upload
+            class="avatar-uploader"
+            action="/api/post/photoupload"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :on-preview="handlePictureCardPreview"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="dialogStatus=='update'"  :src="tempUser.imageUrl" class="avatar">
+            <img v-else-if="imageUrl"  :src="tempUser.imageUrl" class="avatar">
 
-          <i v-else="dialogStatus=='create'" class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
+            <i v-else="dialogStatus=='create'" class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -117,7 +120,7 @@
         dialogFormVisible: false,
         textMap: {
           update: '编辑',
-          create: '新建用户'
+          create: '新建类别'
         },
         tempUser: {
           selectId:'',

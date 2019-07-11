@@ -3,9 +3,11 @@ package com.heeexy.example.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.ExternalUserDao;
 import com.heeexy.example.dao.ThumbsUpDao;
+import com.heeexy.example.service.ExternalUserService;
 import com.heeexy.example.service.ThumbsUpService;
 import com.heeexy.example.util.CommonUtil;
 import com.heeexy.example.util.StringTools;
+import com.heeexy.example.util.constants.ErrorEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,8 @@ public class ThumbsUpServiceImpl implements ThumbsUpService {
     private ThumbsUpDao thumbsUpDao;
     @Autowired
     private ExternalUserDao externalUserDao;
+    @Autowired
+    private ExternalUserService externalUserService;
 
     @Autowired
     private PostServiceImpl postService;
@@ -69,7 +73,15 @@ public class ThumbsUpServiceImpl implements ThumbsUpService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public JSONObject updateThumbsUp(JSONObject jsonObject) {
+        Integer userId = jsonObject.getInteger("userId");
+        JSONObject jsonObject1 = new JSONObject();
+        jsonObject1.put("uuId",userId);
+        if(!externalUserService.isHasLikePerm(jsonObject1)){
+            return CommonUtil.errorJson(ErrorEnum.E_10020 );
+
+        }
         int i = thumbsUpDao.queryExist(jsonObject);
         if(i>0) {
             thumbsUpDao.removeLike(jsonObject);
