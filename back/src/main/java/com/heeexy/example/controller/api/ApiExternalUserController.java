@@ -47,7 +47,7 @@ public class ApiExternalUserController {
 
     /**
      * 获取用户信息(发帖数量，关注数量，粉丝数量，点赞数量，收藏数量，头像、昵称)
-     * @param requestJson
+     * @param requestJson key:userId
      * @return JSONObject
      */
     @PostMapping("/myself")
@@ -59,7 +59,7 @@ public class ApiExternalUserController {
 
     /**
      * 获取关注的用户的信息
-     * @param requestJson
+     * @param requestJson key:userId
      * @return JSONObject
      */
     @PostMapping("/others")
@@ -71,7 +71,7 @@ public class ApiExternalUserController {
 
     /**
      * 获取当前用户发布的帖子信息
-     * @param requestJson
+     * @param requestJson key:userId
      * @return JSONObject
      */
     @PostMapping("/myposts")
@@ -82,7 +82,7 @@ public class ApiExternalUserController {
 
     /**
      * 获取该用户点赞过的帖子
-     * @param requestJson
+     * @param requestJson key:userId
      * @return JSONObject
      */
     @PostMapping("/mylikes")
@@ -93,7 +93,7 @@ public class ApiExternalUserController {
 
     /**
      * 获取该用户的浏览记录
-     * @param requestJson
+     * @param requestJson key:userId
      * @return JSONObject
      */
     @PostMapping("/myrecords")
@@ -102,17 +102,18 @@ public class ApiExternalUserController {
         return externalUserService.getMyRecords(requestJson);
     }
 
-
+    /**
+     * 发布按钮
+     * @param requestJson key:userId
+     * @param request
+     * @return
+     */
     @PostMapping("/release")
     public JSONObject isHasPost(@RequestBody JSONObject requestJson,HttpServletRequest request){
         requestJson.put("userId",request.getSession().getAttribute("userId"));
         return externalUserService.releaseButton(requestJson);
     }
 
-//    @GetMapping("/mycomments")
-//    public JSONObject getMyComments(HttpServletRequest request){
-//        return externalUserService.getMyComments(CommonUtil.request2Json(request));
-//    }
 
     /**
      * @Title: decodeUserInfo
@@ -154,8 +155,7 @@ public class ApiExternalUserController {
         String sr = HttpRequest.sendGet("https://api.weixin.qq.com/sns/jscode2session", params);
         // 解析相应内容（转换成json对象）
         net.sf.json.JSONObject json = net.sf.json.JSONObject.fromObject(sr);
-//        net.sf.json.JSONObject json  = new net.sf.json.JSONObject(sr);
-//        net.sf.json.JSONObject json = new net.sf.json.JSONObject(sr);
+
         // 获取会话密钥（session_key）
         String session_key = json.get("session_key").toString();
         // 用户的唯一标识（openid）

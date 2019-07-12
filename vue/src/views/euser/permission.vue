@@ -8,7 +8,16 @@
               <el-input type="text"  v-model="tempPerm.querykey" placeholder="输入用户昵称关键字搜索"/>
             </el-form-item>
             <el-form-item>
+              <el-button type="primary" class="el-icon-search" @click="getNoPerm">显示禁言的用户</el-button>
+            </el-form-item>
+            <el-form-item>
               <el-button type="primary" class="el-icon-search" @click="getList"></el-button>
+            </el-form-item>
+            <el-form-item>
+              <el-input type="text"  v-model="tempPerm.permName" placeholder="输入权限名搜索"/>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" class="el-icon-search" @click="getListByName"></el-button>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" class="el-icon-close" @click="refleshList"></el-button>
@@ -97,6 +106,7 @@
         list: [],//表格的数据
         totalCount: 0, //分页组件--数据总条数
         listQuery: {
+          permName:'',
           querykey:'',
           pageNum: 1,//页码
           pageRow: 50,//每页条数
@@ -117,6 +127,7 @@
           username: '',
           querykey: '',
           epermissionList: [],
+          permName:''
 
         },
         tempUUId: {
@@ -147,9 +158,39 @@
           this.totalCount = data.totalCount;
         })
       },
+      getNoPerm(){
+        //查询列表
+        this.listQuery.querykey = this.tempPerm.querykey;
+        this.listLoading = true;
+        this.api({
+          url: "/euser/userNoPerm",
+          method: "get",
+          params: this.listQuery,
+        }).then(data => {
+          this.listLoading = false;
+          this.list = data.list;
+          this.totalCount = data.totalCount;
+        })
+      },
+      getListByName(){
+        //查询列表
+        this.listQuery.querykey = this.tempPerm.querykey;
+        this.listQuery.permName = this.tempPerm.permName;
+        this.listLoading = true;
+        this.api({
+          url: "/euser/userByPerm",
+          method: "get",
+          params: this.listQuery,
+        }).then(data => {
+          this.listLoading = false;
+          this.list = data.list;
+          this.totalCount = data.totalCount;
+        })
+      },
       refleshList(){
         this.listLoading = true;
         this.tempPerm.querykey="";
+        this.tempPerm.permName="";
         this.getList();
       },
 

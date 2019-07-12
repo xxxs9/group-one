@@ -29,7 +29,7 @@ public class ApiBrowseRecord {
      */
     @PostMapping("/add")
     public JSONObject addRecord(@RequestBody JSONObject requestJson){
-
+        requestJson.put("uuId",requestJson.getInteger("userId"));
         return browseRecordService.addRecord(requestJson);
     }
 

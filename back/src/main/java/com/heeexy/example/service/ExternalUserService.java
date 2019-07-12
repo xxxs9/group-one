@@ -1,9 +1,6 @@
 package com.heeexy.example.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.annotation.JsonAlias;
-
-import java.util.List;
 
 /**
  * @author: liminhao
@@ -33,6 +30,21 @@ public interface ExternalUserService {
      * @return
      */
     JSONObject getUserPermission(JSONObject jsonObject);
+
+    /**
+     * 获取被禁用权限的用户
+     * @param jsonObject
+     * @return
+     */
+    JSONObject getNoPermUser(JSONObject jsonObject);
+
+    /**
+     * 根据权限名查询用户
+     * @param jsonObject
+     * @return
+     */
+    JSONObject getUserByPermName(JSONObject jsonObject);
+
 
     /**
      * 修改用户的权限状态

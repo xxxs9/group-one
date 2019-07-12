@@ -93,7 +93,6 @@
         SELECT
             u.*,
             p.permission_name                               permissionName
-
         FROM
             (
                  SELECT
@@ -109,11 +108,12 @@
                         AND unionid IS NOT NULL
                     </where>
                  ORDER BY id
-                 LIMIT #{offSet}, #{pageRow}
+                <if test="offSet != null and offSet != '' and pageRow != null and pageRow != '' ">
+                    LIMIT #{offSet}, #{pageRow}
+                </if>
              ) u
              LEFT JOIN user_permission up ON u.uuid = up.user_uuid AND up.delete_status='1'
              LEFT JOIN permission p ON p.id = up.permission_id
-
     </select>
 
     <!--修改用户当前的权限-->
@@ -218,8 +218,8 @@
     <!--统计有效用户用户数-->
     <select id="countByUnionId" resultType="java.lang.Integer">
         SELECT count(0) from user where unionid is not null;
-
     </select>
+
 
     <!--获取所有权限信息-->
     <select id="getPerm" resultType="com.alibaba.fastjson.JSONObject">
@@ -286,5 +286,7 @@
         FROM user
         WHERE uuid = #{uuId}
     </select>
+
+
 
 </mapper>

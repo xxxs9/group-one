@@ -67,4 +67,11 @@ public interface BrowseRecordDao {
      * @return
      */
     int countPostBrowse(JSONObject jsonObject);
+
+    /**
+     * 判断是否存在该浏览记录
+     * @param jsonObject
+     * @return
+     */
+    int queryExist(JSONObject jsonObject);
 }
