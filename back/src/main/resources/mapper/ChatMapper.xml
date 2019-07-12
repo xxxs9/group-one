@@ -23,7 +23,7 @@
         where chatlist_id =c.chatlist_id and create_time =(select max(create_time) from chat_message
         where chatlist_id =c.chatlist_id)) time
         from chat_message as c
-		inner JOIN user as u ON u.unionid = c.second_user_id
+		inner JOIN user as u ON u.unionid = substr(chatlist_id,instr(chatlist_id,'-')+1,length(chatlist_id)-instr(chatlist_id,'-'))
         where chatlist_id like  CONCAT(#{uuid},'-','%')
 		group  by  chatlist_id   having count(chatlist_id) > 0
     </select>
