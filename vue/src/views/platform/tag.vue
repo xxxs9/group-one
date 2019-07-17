@@ -1,10 +1,39 @@
 
 <style>
   .el-tree-node__label{
-    font-size: 25px;
+    font-size: 35px;
     font-weight: bolder;
     font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 
+  }
+  .el-tree-node__content {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 40px;
+    cursor: pointer;
+  }
+  .el-icon-caret-right:before {
+    content: "\E60E";
+    font-size: 25px;
+    font-weight: bolder;
+  }
+  .el-checkbox__inner {
+    display: inline-block;
+    position: relative;
+    border: 1px solid #dcdfe6;
+    border-radius: 2px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    z-index: 1;
+    -webkit-transition: border-color .25s cubic-bezier(.71,-.46,.29,1.46),background-color .25s cubic-bezier(.71,-.46,.29,1.46);
+    transition: border-color .25s cubic-bezier(.71,-.46,.29,1.46),background-color .25s cubic-bezier(.71,-.46,.29,1.46);
   }
 </style>
 <template>
@@ -16,8 +45,9 @@
       accordion
       show-checkbox
       node-key="id"
-
+      icon-class="el-icon-caret-right"
       @node-click="handleNodeClick" >
+
     </el-tree>
     <el-form>
       <form class="form-horizontal" enctype="multipart/form-data" >

@@ -39,7 +39,6 @@ public class SortController {
     @RequiresPermissions("post:add")
     @PostMapping("/addSort")
     public JSONObject addSort(@RequestBody JSONObject requestJson) {
-        requestJson.put("imageUrl",string);
         CommonUtil.hasAllRequired(requestJson, "sortname,imageUrl");
         return sortService.addSort(requestJson);
     }
