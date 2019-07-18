@@ -17,6 +17,7 @@
         SELECT
         comment_id                                                     commentId,
         post_id                                                        postId,
+        commentuser_id                                                  commentUserId,
         (select username from user where user.uuid = c.postuser_id)    postUserName,
         (select username from user where user.uuid = c.commentuser_id) commentUserName,
         (select username from user where user.uuid = c.acceptuser_id)  acceptUserName,
@@ -75,13 +76,12 @@
 
     <select id="getByCommentUserId" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
-        comment_id                                                     commentid,
         post_id                                                        postid,
         commentuser_id                                                 commentuserid,
         (select username from user where user.uuid = c.commentuser_id) commentusername,
         (select iconurl from user where user.uuid = c.commentuser_id)  commentsimg,
         comment_text                                                   commenttext,
-        DATE_FORMAT(comment_time, '%Y.%m.%d %T')                       commenttime
+        DATE_FORMAT(comment_time, '%Y-%m-%d %T')                       commenttime
         FROM comment c
         WHERE commentuser_id = #{commentUserId}  AND c.comment_state = 1
         ORDER BY comment_time
@@ -93,13 +93,11 @@
 
     <select id="getByAcceptUserId" resultType="com.alibaba.fastjson.JSONObject">
         SELECT
-        comment_id                                                     commentid,
-        post_id                                                        postid,
         acceptuser_id                                                  acceptuserid,
         (select username from user where user.uuid = c.acceptuser_id)  acceptusername,
         (select iconurl from user where user.uuid = c.acceptuser_id)   acceptsimg,
         comment_text                                                   commenttext,
-        DATE_FORMAT(comment_time, '%Y.%m.%d %T')                       commenttime
+        DATE_FORMAT(comment_time, '%Y-%m-%d %T')                       commenttime
         FROM comment c
         WHERE acceptuser_id = #{acceptUserId}  AND c.comment_state = 1
         ORDER BY comment_time
@@ -111,8 +109,8 @@
 
     <select id="getByPostId" resultMap="commentMap">
         SELECT
-        comment_id                                                               commentsidid,
-        commentuser_id                                                           commentsid,
+        comment_id                                                                commentsid,
+        commentuser_id                                                           commentsuserid,
         (select username from user where user.uuid = c.commentuser_id)           commentUserName,
         (select iconurl from user where user.uuid = c.commentuser_id)            commentsimg,
         (select username from user where user.uuid = c.acceptuser_id)            acceptUserName,

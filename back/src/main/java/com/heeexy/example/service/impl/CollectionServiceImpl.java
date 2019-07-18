@@ -68,7 +68,7 @@ public class CollectionServiceImpl implements CollectionService {
             //根据总数判断该帖子是否被收藏
             if (exist>0) {
                 //exist>0返回提示该帖子已被收藏
-                return CommonUtil.errorJson(ErrorEnum.E_10010);
+               collectionDao.deleteCollection(jsonObject);
             }else {
                 //根据用户id查询总数
                 int count = collectionDao.getByUserIdCount(jsonObject);
@@ -76,9 +76,10 @@ public class CollectionServiceImpl implements CollectionService {
                 if (count>200) {
                     //count>200返回提示已超过最大收藏数
                     return CommonUtil.errorJson(ErrorEnum.E_10011);
+                }else {
+                    collectionDao.addCollection(jsonObject);
                 }
             }
-            collectionDao.addCollection(jsonObject);
             return CommonUtil.successJson();
 //        }
 //        return CommonUtil.errorJson(ErrorEnum.E_10018);

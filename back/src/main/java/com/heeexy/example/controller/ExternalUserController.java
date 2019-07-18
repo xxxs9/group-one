@@ -115,6 +115,7 @@ public class ExternalUserController {
     @PostMapping("/removePerm")
     public JSONObject removePermission(@RequestBody JSONObject requestJson){
         CommonUtil.hasAllRequired(requestJson,"uuId");
+
         return service.removePermission(requestJson);
     }
 

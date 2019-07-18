@@ -68,9 +68,8 @@
       </el-table-column>
       <el-table-column align="center" label="管理" width="220">
         <template slot-scope="scope">
-          <el-button type="warning" icon="el-icon-warning" @click="warningComment(scope.$index)">警告</el-button>
           <el-button type="primary" icon="el-icon-view" v-if="scope.row.commentState==0" @click="removeComment(scope.$index)">显示</el-button>
-          <el-button type="info" icon="el-icon-delete" v-if="scope.row.commentState==1" @click="removeComment(scope.$index)">隐藏</el-button>
+          <el-button type="warning" icon="el-icon-warning" v-if="scope.row.commentState==1" @click="removeComment(scope.$index)">警告</el-button>
         </template>
       </el-table-column>
     </el-table>

@@ -66,7 +66,7 @@
         <el-form-item label="上传" required>
           <el-upload
             ref="upload"
-            action="/api/src/upload"
+            action="/api/src/phoUpload"
             list-type="picture-card"
             :on-preview="handlePictureCardPreview"
             :on-success="handleAvatarSuccess"
@@ -276,10 +276,8 @@
 
       handleAvatarSuccess(response, file, fileList) {
         //response这个
-        this.imgData.desFilePath = response.desFilePath;
+        console.log(response);
         this.tempAdvertisement.imgList.push(response.url);
-        console.log(response.url);
-        console.log("传回的地址：" + response.desFilePath)
         this.$refs.updateImg.style.display = "none"
       },
       handlePictureCardPreview(file) {

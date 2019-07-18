@@ -66,6 +66,13 @@ public class TagSeviceImpl implements TagSevice {
     }
 
     @Override
+    public JSONObject getAllTags(JSONObject jsonObject) {
+        List<JSONObject> list = tagDao.listAllTag(jsonObject);
+
+        return CommonUtil.successJson(list);
+    }
+
+    @Override
     public JSONObject updateTag (JSONObject jsonObject) {
         /**
          * create by: lc

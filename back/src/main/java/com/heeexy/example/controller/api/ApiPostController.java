@@ -61,40 +61,8 @@ public class ApiPostController {
 
     @PostMapping("/release")
     public JSONObject release(@RequestBody JSONObject requestJson) {
-        CommonUtil.hasAllRequired(requestJson, "userId");
-        return null;
+        CommonUtil.hasAllRequired(requestJson, "uuid");
+        return postService.release(requestJson);
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/photoupload")
-    public String myphotoupload(HttpServletRequest request) {
-        JSONObject ret = new JSONObject();
-        String key = "";
-        String fileName = "";
-        String fileNames = "";
-        ret.put("success", false);
-        ret.put("msg", "请求失败[PU01]");
-        try {
-            StandardMultipartHttpServletRequest req = (StandardMultipartHttpServletRequest) request;
-            Iterator<String> iterator = req.getFileNames();
-            while (iterator.hasNext()) {
-                MultipartFile file = req.getFile(iterator.next());
-                fileName = file.getOriginalFilename();
-                String prefix = fileName.substring(fileName.lastIndexOf(".") + 1);
-                fileNames = UUID.randomUUID() + String.valueOf(new Date().getTime()) + "." + prefix;
-                InputStream input = file.getInputStream();
-                // 创建OSSClient实例
-                OSSClient ossClient = new OSSClient(ENDPOINT, ACCESSKEYID, ACCESSKEYSECRET);
-                // 上传文件流
-                ossClient.putObject(BUCKETNAME, KEY + fileNames, input);
-                ossClient.shutdown();
-            }
-            ret.put("success", true);
-            ret.put("msg", key + fileNames);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "http://group-one.oss-cn-shenzhen.aliyuncs.com/images/" + key + fileNames;
-    }
 }

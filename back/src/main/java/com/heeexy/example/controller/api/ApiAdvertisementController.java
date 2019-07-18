@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  * @data 2019-06-28 09:43
  */
 @RestController
-@RequestMapping("/api/home")
+@RequestMapping("/api")
 public class ApiAdvertisementController {
     @Autowired
     AdvertisementServiceImpl advertisementService;
@@ -29,12 +29,12 @@ public class ApiAdvertisementController {
      * @param request
      * @return JSONObject
      */
-    @PostMapping("/swiper")
+    @PostMapping("/home/swiper")
     public JSONObject advertisementList(HttpServletRequest request){
         return advertisementService.advertisementList(CommonUtil.request2Json(request));
     }
 
-    @PostMapping("/search")
+    @PostMapping("/search/searchpost")
     public JSONObject search (@RequestBody JSONObject requestJson){
         return advertisementService.search(requestJson);
     }

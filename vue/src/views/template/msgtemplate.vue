@@ -6,7 +6,7 @@
     <div class="filter-container">
       <el-form>
         <el-form-item>
-          <el-button type="primary" icon="plus" @click="showCreate" v-if="hasPerm('message:add')">添加
+          <el-button type="primary" icon="el-icon-circle-plus" @click="showCreate" v-if="hasPerm('message:add')">添加
           </el-button>
         </el-form-item>
       </el-form>
@@ -25,9 +25,9 @@
       <el-table-column align="center" label="最近修改时间" prop="updateTime" width="170"></el-table-column>
       <el-table-column align="center" label="管理" >
         <template slot-scope="scope">
-          <el-button type="primary" icon="edit" @click="showUpdate(scope.$index)" v-if="hasPerm('message:update')">修改</el-button>
-          <el-button type="danger" icon="delete" @click="removeTemplate(scope.$index)" v-if="hasPerm('message:delete')">删除</el-button>
-          <el-button type="danger" icon="delete" @click="sendAlltest(scope.$index)">发送所有人</el-button>
+          <el-button type="primary" icon="el-icon-edit" @click="showUpdate(scope.$index)" v-if="hasPerm('message:update')">修改</el-button>
+          <el-button type="danger" icon="el-icon-delete" @click="removeTemplate(scope.$index)" v-if="hasPerm('message:delete')">删除</el-button>
+          <el-button type="warning" icon="el-icon-info" @click="sendAlltest(scope.$index)">发送所有人</el-button>
 
         </template>
 
@@ -82,7 +82,7 @@
           dialogFormVisible: false,
           textMap: {
             update: '编辑',
-            create: '创建文章',
+            create: '创建模板',
             send: '发送'
           },
           tempTemplate: {
@@ -197,7 +197,7 @@
             }).then(() => {
               _vue.getList()
             }).catch(() => {
-              _vue.$message.error("删除失败")
+              // _vue.$message.error("删除失败")
             })
           })
         },

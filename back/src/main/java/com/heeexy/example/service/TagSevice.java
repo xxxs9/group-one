@@ -13,6 +13,7 @@ public interface TagSevice {
      * 显示所有标签
      */
     JSONObject listAllTag(JSONObject jsonObject);
+    JSONObject getAllTags(JSONObject jsonObject);
 
 
     /**

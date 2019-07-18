@@ -14,14 +14,14 @@
         values
 
         <foreach collection="ulist" item="item" index="index" separator=",">
-            (#{content},1,#{item.id},CONCAT(1,#{item.id}))
+            (#{content},1,#{item.id},CONCAT(#{item.id},'-',1))
         </foreach>
 
     </insert>
     <insert id="addWarningTemplate" parameterType="com.alibaba.fastjson.JSONObject">
         insert into chat_message (chat_content,first_user_id,second_user_id,chatlist_id)
         values
-        (#{content},1,#{id},CONCAT(1,'-',#{id}))
+        (#{content},1,#{userId},CONCAT(#{userId},'-',1))
     </insert>
 
 
@@ -83,4 +83,17 @@
         from message_template w
         where  w.status = '1' and w.template_name = '警告模板'
     </select>
+    <select id="getBeginContentByName" resultType="java.lang.String">
+        select
+            w.template_content                                   content
+        from message_template w
+        where  w.status = '1' and w.template_name = '引导模板'
+    </select>
+    <select id="getBanContentByName" resultType="java.lang.String">
+        select
+            w.template_content                                   content
+        from message_template w
+        where  w.status = '1' and w.template_name = '封禁模板'
+    </select>
+
 </mapper>

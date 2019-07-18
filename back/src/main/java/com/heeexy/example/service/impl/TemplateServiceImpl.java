@@ -48,9 +48,32 @@ public class TemplateServiceImpl implements TemplateService {
     @Transactional(rollbackFor = Exception.class)
     public JSONObject addWarningTemplate(JSONObject jsonObject) {
         String content =  templateDao.getWarningContentByName();
-        String conmentTest = (String) jsonObject.get("conmentTest");
+        String conmentTest = (String) jsonObject.get("commentText");
         String newContent = "您该评论："+conmentTest+","+content;
         jsonObject.put("content",newContent);
+        jsonObject.put("userId",jsonObject.get("commentUserId"));
+        int i = templateDao.addWarningTemplate(jsonObject);
+
+        return CommonUtil.successJson(jsonObject);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public JSONObject addBeginContentByName(JSONObject jsonObject) {
+        String beginContent = templateDao.getBeginContentByName();
+        jsonObject.put("content",beginContent);
+
+        int i = templateDao.addWarningTemplate(jsonObject);
+
+        return CommonUtil.successJson(jsonObject);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public JSONObject addBanContentByName(JSONObject jsonObject) {
+        String banContent = templateDao.getBanContentByName();
+        jsonObject.put("content",banContent);
+
         int i = templateDao.addWarningTemplate(jsonObject);
 
         return CommonUtil.successJson(jsonObject);
@@ -79,6 +102,9 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     public JSONObject updateByStatus(JSONObject jsonObject) {
+        if(jsonObject.getString("tname").equals("封禁模板") || jsonObject.getString("tname").equals("引导模板") || jsonObject.getString("tname").equals("警告模板")){
+            return CommonUtil.errorJson(ErrorEnum.E_10021);
+        }
         templateDao.updateByStatus(jsonObject);
 
         return CommonUtil.successJson();

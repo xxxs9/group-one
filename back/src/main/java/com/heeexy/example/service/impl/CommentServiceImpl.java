@@ -6,10 +6,13 @@ import com.heeexy.example.dao.ExternalUserDao;
 import com.heeexy.example.dao.PostDao;
 import com.heeexy.example.service.CommentService;
 import com.heeexy.example.util.CommonUtil;
+import com.heeexy.example.util.StringTools;
+import com.heeexy.example.util.constants.ErrorEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -69,6 +72,11 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public JSONObject addComment(JSONObject jsonObject) {
+        jsonObject.put("commentState", 1);
+        String commentText = jsonObject.getString("commentText");
+        if (commentText.length()>30){
+            return CommonUtil.errorJson(ErrorEnum.E_10019);
+        }
         commentDao.addComment(jsonObject);
         return CommonUtil.successJson();
     }
@@ -82,6 +90,11 @@ public class CommentServiceImpl implements CommentService {
     public JSONObject getByCommentUserId(JSONObject jsonObject) {
         CommonUtil.fillPageParam(jsonObject);
         List<JSONObject> list = commentDao.getByCommentUserId(jsonObject);
+        for (JSONObject object : list) {
+            Date commenttime = object.getDate("commenttime");
+            String s = StringTools.differentDaysByMillisecond(commenttime);
+            object.put("commenttime",s );
+        }
         int count = commentDao.countByCommentUserId(jsonObject);
         JSONObject commentUser = new JSONObject();
         commentUser.put("commentUserList",list );
@@ -99,9 +112,21 @@ public class CommentServiceImpl implements CommentService {
         CommonUtil.fillPageParam(jsonObject);
         int count = commentDao.countByAcceptUserId(jsonObject);
         List<JSONObject> list = commentDao.getByAcceptUserId(jsonObject);
+        for (JSONObject object : list) {
+            object.put("commentsid", object.remove("acceptuserid"));
+            object.put("commentsname", object.remove("acceptusername"));
+            object.put("commentsimg", object.remove("acceptsimg"));
+            object.put("commentsdesc", object.remove("commenttext"));
+            Date commenttime = object.getDate("commenttime");
+            String s = StringTools.differentDaysByMillisecond(commenttime);
+            object.put("commentstime", object.remove("commenttime"));
+            object.put("commentstime", s);
+        }
+
         JSONObject acceptUser = new JSONObject();
         acceptUser.put("acceptUserList",list );
         acceptUser.put("count", count);
+//        acceptUser.put("", acceptUser.remove("acceptUserList"));
         return CommonUtil.successJson(acceptUser);
     }
 
@@ -121,4 +146,5 @@ public class CommentServiceImpl implements CommentService {
         DetailData.put("comments",comment);
         return CommonUtil.successJson(DetailData);
     }
+
 }
