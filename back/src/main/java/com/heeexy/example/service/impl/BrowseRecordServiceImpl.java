@@ -7,6 +7,7 @@ import com.heeexy.example.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -50,7 +51,13 @@ public class BrowseRecordServiceImpl implements BrowseRecordService {
     public JSONObject addRecord(JSONObject jsonObject) {
 //        Integer uuId = jsonObject.getInteger("uuId");
 //        Integer postId = jsonObject.getInteger("postId");
-        browseRecordDao.addRecord(jsonObject);
+        if(browseRecordDao.queryExist(jsonObject)>0){
+            jsonObject.put("browseTime",new Date());
+            browseRecordDao.updateRecord(jsonObject);
+        }else {
+            browseRecordDao.addRecord(jsonObject);
+        }
+
         return CommonUtil.successJson();
     }
 }

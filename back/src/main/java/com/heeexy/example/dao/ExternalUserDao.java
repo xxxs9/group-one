@@ -64,6 +64,7 @@ public interface ExternalUserDao {
     */
     public List<JSONObject> getUserPermission(JSONObject jsonObject);
 
+
     /**
      * @author liminhao
      * @date 2019-06-18 09:30
@@ -81,6 +82,7 @@ public interface ExternalUserDao {
      * @description 将用户被禁用的权限恢复为拥有的权限 delete_status改为'1'
      */
     public int updatePermission2(@Param("uuId")Integer uuId,@Param("epermissions")List<Integer> epermissions);
+
     /**
      * @author liminhao
      * @date 2019-06-18 09:33

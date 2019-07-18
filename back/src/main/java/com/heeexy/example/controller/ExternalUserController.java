@@ -65,6 +65,26 @@ public class ExternalUserController {
     }
 
     /**
+     * 获取被禁用权限的用户
+     * @param request
+     * @return
+     */
+    @GetMapping("/userNoPerm")
+    public JSONObject listNoPerm(HttpServletRequest request){
+        return service.getNoPermUser(CommonUtil.request2Json(request));
+    }
+
+    /**
+     * 根据权限名查询用户
+     * @param request
+     * @return
+     */
+    @GetMapping("/userByPerm")
+    public JSONObject listByPermName(HttpServletRequest request){
+        return service.getUserByPermName(CommonUtil.request2Json(request));
+    }
+
+    /**
      * 修改用户权限
      * @param requestJson key:uuId,epermissionList
      * @return

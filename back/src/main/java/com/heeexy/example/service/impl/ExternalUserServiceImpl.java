@@ -3,11 +3,13 @@ package com.heeexy.example.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.heeexy.example.dao.*;
 import com.heeexy.example.service.*;
+import com.heeexy.example.service.CommentService;
+import com.heeexy.example.service.ExternalUserService;
+import com.heeexy.example.service.PostService;
 import com.heeexy.example.util.CommonUtil;
 import com.heeexy.example.util.EmojiUtil;
 import com.heeexy.example.util.UuidUtil;
 import com.heeexy.example.util.constants.ErrorEnum;
-import net.sf.json.processors.JsDateJsonBeanProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -134,24 +136,56 @@ public class ExternalUserServiceImpl implements ExternalUserService {
     }
 
     /**
+     * 获取被禁用权限的用户
+     * @param jsonObject
+     * @return
+     */
+    @Override
+    public JSONObject getNoPermUser(JSONObject jsonObject) {
+        List<JSONObject> userPermission = userDao.getUserPermission(jsonObject);
+        List<JSONObject> list = new ArrayList<>();
+        for(JSONObject object : userPermission){
+            if(object.getJSONArray("epermissionList").size()<4){
+                list.add(object);
+            }
+        }
+        int count = list.size();
+        return CommonUtil.successPage(jsonObject, list, count);
+    }
+
+    /**
+     * 根据权限名查询用户
+     * @param jsonObject key:permName,querykey
+     * @return
+     */
+    @Override
+    public JSONObject getUserByPermName(JSONObject jsonObject) {
+        List<JSONObject> userPermission = userDao.getUserPermission(jsonObject);
+        List<JSONObject> list = new ArrayList<>();
+        String permName = jsonObject.getString("permName");
+        if(permName != null && !"".equals(permName)){
+            for(JSONObject object : userPermission){
+                for(int i=0;i<object.getJSONArray("epermissionList").size();i++)
+                {
+                    if(object.getJSONArray("epermissionList").get(i).toString().contains(permName)){
+                        list.add(object);
+                    }
+                }
+            }
+        }else {
+            list = userPermission;
+        }
+        int count = list.size();
+        return CommonUtil.successPage(jsonObject, list, count);
+    }
+
+    /**
      * 修改用户的权限状态
      * @param jsonObject key:epermissionList,uuId
      * @return
      */
     @Override
     public JSONObject updatePermission(JSONObject jsonObject) {
-//        JSONObject jsonObject1 = new JSONObject();
-//        jsonObject1.put("epermissionList",jsonObject.getJSONArray("epermissionList"));
-//        jsonObject.put("epermissions",userDao.getPermIdByName(jsonObject1));
-//        int i = userDao.removePermission(jsonObject);
-//        List<String> epermissionList = (List<String>) jsonObject.get("epermissionList");
-//        List<JSONObject> permIdByName = userDao.getPermIdByName(epermissionList);
-//        List<Integer> epermissions = new ArrayList<>();
-//        for(int i=0;i<permIdByName.size();i++){
-//
-//            epermissions.add(permIdByName.get(i).getInteger("id"));
-//
-//        }
         List<Integer> epermissions = (List<Integer>) jsonObject.get("epermissionList");
         System.out.println(epermissions);
         Integer uuId = jsonObject.getInteger("uuId");
@@ -223,6 +257,8 @@ public class ExternalUserServiceImpl implements ExternalUserService {
         userDao.removeUserAllPermission(jsonObject);
         return CommonUtil.successJson();
     }
+
+
 
     /**
      * 获取用户的粉丝列表信息
