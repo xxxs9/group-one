@@ -13,7 +13,7 @@
 		(select chat_content
         from chat_message
         where chatlist_id =c.chatlist_id and create_time =(select max(create_time) from chat_message
-        where chatlist_id =c.chatlist_id)) content,
+        where chatlist_id =c.chatlist_id) limit 1) content,
         (select status
         from chat_message
         where chatlist_id =c.chatlist_id and create_time =(select max(create_time) from chat_message
@@ -21,7 +21,7 @@
         (select DATE_FORMAT(create_time, '%Y-%m-%d %T')  createTime
         from chat_message
         where chatlist_id =c.chatlist_id and create_time =(select max(create_time) from chat_message
-        where chatlist_id =c.chatlist_id)) time
+        where chatlist_id =c.chatlist_id) limit 1) time
         from chat_message as c
 		inner JOIN user as u ON u.unionid = substr(chatlist_id,instr(chatlist_id,'-')+1,length(chatlist_id)-instr(chatlist_id,'-'))
         where chatlist_id like  CONCAT(#{uuid},'-','%')
